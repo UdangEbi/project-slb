@@ -22,25 +22,25 @@
             <!-- TAB MENU -->
             <nav class="flex-1 flex justify-center gap-5 text-xl font-extrabold">
 
-                <a href="{{ url('/kasir/transaksi') }}"
+                <a href="{{ route('kasir.transaksi') }}"
                     class="px-5 py-3 rounded-xl shadow-md transition duration-200
-    {{ request()->is('kasir/transaksi')
+    {{ request()->routeIs('kasir.transaksi')
         ? 'bg-[#F0E7D5] text-[#212842]'
         : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
                     Transaksi
                 </a>
 
-                <a href="{{ url('/kasir/stok') }}"
+                <a href="{{ route('kasir.stok') }}"
                     class="px-5 py-3 rounded-xl shadow-md transition duration-200
-    {{ request()->is('kasir/stok')
+    {{ request()->routeIs('kasir.stok')
         ? 'bg-[#F0E7D5] text-[#212842]'
         : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
                     Stok
                 </a>
 
-                <a href="{{ url('/kasir/rekapitulasi') }}"
+                <a href="{{ route('kasir.rekapitulasi') }}"
                     class="px-5 py-3 rounded-xl shadow-md transition duration-200
-    {{ request()->is('kasir/rekapitulasi')
+    {{ request()->routeIs('kasir.rekapitulasi')
         ? 'bg-[#F0E7D5] text-[#212842]'
         : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
                     Rekapitulasi

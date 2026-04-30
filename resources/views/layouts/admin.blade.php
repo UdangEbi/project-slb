@@ -43,17 +43,17 @@
 
                 <div class="px-4 space-y-3 overflow-y-auto" style="height: 300px;">
 
-                    <a href="{{ url('/admin/dashboard') }}"
+                    <a href="{{ route('admin.dashboard') }}"
                         class="block px-4 py-2 text-xl font-bold transition duration-200
-            {{ request()->is('admin/dashboard')
+            {{ request()->routeIs('admin.dashboard')
                 ? 'bg-[#212842] text-[#F0E7D5]'
                 : 'text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
                         Dashboard
                     </a>
 
-                    <a href="{{ url('/admin/rekapitulasi') }}"
+                    <a href="{{ route('admin.rekapitulasi') }}"
                         class="block px-4 py-2 text-xl font-bold transition duration-200
-            {{ request()->is('admin/rekapitulasi')
+            {{ request()->routeIs('admin.rekapitulasi')
                 ? 'bg-[#212842] text-[#F0E7D5]'
                 : 'text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
                         Rekapitulasi
