@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'Admin')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 
 <body class="bg-[#F0E7D5] text-black overflow-hidden">
@@ -102,6 +103,7 @@
         setInterval(updateWaktu, 1000);
         updateWaktu();
     </script>
+    @stack('scripts')
 
 </body>
 
