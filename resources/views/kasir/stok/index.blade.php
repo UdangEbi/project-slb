@@ -11,16 +11,16 @@
             Stok Barang
         </h1>
 
-        <div class="grid grid-cols-3 gap-6">
+        <div class="grid grid-cols-4 gap-4">
 
             {{-- ADD NEW ITEM --}}
             <button
                 type="button"
                 onclick="showFormTambah()"
-                class="bg-[#212842] rounded-xl shadow-md p-5 h-36 text-left border-2 border-dashed border-[#212842] hover:scale-105 transition flex flex-col justify-center items-center">
+                class="bg-[#212842] rounded-xl shadow-md p-4 h-28 text-left border-2 border-dashed border-[#212842] hover:scale-105 transition flex flex-col justify-center items-center">
 
-                <div class="text-4xl font-extrabold text-[#F0E7D5]">+</div>
-                <p class="text-xl font-extrabold text-[#F0E7D5] mt-2">
+                <div class="text-3xl font-extrabold text-[#F0E7D5]">+</div>
+                <p class="text-xl font-extrabold text-[#F0E7D5] mt-1">
                     Add New Item
                 </p>
             </button>
@@ -34,17 +34,17 @@
                         '{{ number_format($item['harga'], 0, ',', '.') }}',
                         '{{ 'BRG-' . date('ymd') . '-' . str_pad($index + 1, 4, '0', STR_PAD_LEFT) }}'
                     )"
-                    class="bg-white rounded-xl shadow-md p-5 h-36 text-left hover:scale-105 transition border-2 border-transparent hover:border-[#212842]">
+                    class="bg-white rounded-xl shadow-md p-4 h-28 text-left hover:scale-105 transition border-2 border-transparent hover:border-[#212842]">
 
-                    <h2 class="text-xl font-extrabold text-[#212842] mb-3">
+                    <h2 class="text-xl font-extrabold text-[#212842] mb-2">
                         {{ $item['nama'] }}
                     </h2>
 
-                    <p class="text-base font-bold text-gray-700">
+                    <p class="text-sm font-bold text-gray-700">
                         Stok: {{ $item['stok'] }} pcs
                     </p>
 
-                    <p class="text-base font-bold text-gray-700">
+                    <p class="text-sm font-bold text-gray-700">
                         Rp {{ number_format($item['harga'], 0, ',', '.') }}
                     </p>
                 </button>

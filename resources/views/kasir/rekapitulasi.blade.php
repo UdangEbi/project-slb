@@ -21,8 +21,8 @@
     <div class="grid grid-cols-4 gap-5 mb-6">
 
         <div class="bg-white rounded-xl shadow-md p-5 flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center text-2xl">
-                💳
+            <div class="w-14 h-14 flex items-center justify-center">
+                <i class="bi bi-wallet2 text-4xl text-[#212842]"></i>
             </div>
             <div>
                 <p class="text-sm font-bold text-gray-500">Modal Awal</p>
@@ -31,8 +31,8 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-md p-5 flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-green-100 flex items-center justify-center text-2xl">
-                🔄
+            <div class="w-14 h-14 flex items-center justify-center">
+                <i class="bi bi-graph-up-arrow text-4xl text-[#212842]"></i>
             </div>
             <div>
                 <p class="text-sm font-bold text-gray-500">Total Penerimaan</p>
@@ -41,8 +41,8 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-md p-5 flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-yellow-100 flex items-center justify-center text-2xl">
-                💵
+            <div class="w-14 h-14 flex items-center justify-center">
+                <i class="bi bi-cash-stack text-4xl text-[#212842]"></i>
             </div>
             <div>
                 <p class="text-sm font-bold text-gray-500">Saldo Akhir</p>
@@ -51,8 +51,8 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-md p-5 flex items-center gap-4">
-            <div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center text-2xl">
-                ✅
+            <div class="w-14 h-14 flex items-center justify-center">
+                <i class="bi bi-check-circle text-4xl text-[#212842]"></i>
             </div>
             <div>
                 <p class="text-sm font-bold text-gray-500">Transaksi Selesai</p>
