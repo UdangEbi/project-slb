@@ -98,93 +98,93 @@
 
         <!-- BODY -->
         <div class="flex flex-1 overflow-hidden">
+            @if (!request()->routeIs('kasir.rekapitulasi'))
+                <!-- SIDEBAR -->
+                <aside class="w-52 bg-[#F0E7D5] flex flex-col">
 
-            <!-- SIDEBAR -->
-            <aside class="w-52 bg-[#F0E7D5] flex flex-col">
-
-                <!-- JUDUL -->
-                <div class="p-6 pb-3">
-                    <h2 class="text-2xl font-extrabold text-[#212842]">Rombel</h2>
-                </div>
-
-                <!-- LIST ROMBEL: hanya 5 yang terlihat, sisanya scroll -->
-                <div class="px-4 space-y-2 flex-1">
-
-                    <a href="{{ request()->fullUrlWithQuery(['rombel' => 'graha']) }}"
-                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
-    {{ request('rombel', 'graha') == 'graha'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
-        : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                        Graha
-                    </a>
-
-                    <a href="{{ request()->fullUrlWithQuery(['rombel' => 'membatik']) }}"
-                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
-    {{ request('rombel') == 'membatik'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
-        : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                        Membatik
-                    </a>
-
-                    <a href="{{ request()->fullUrlWithQuery(['rombel' => 'perkayuan']) }}"
-                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
-    {{ request('rombel') == 'perkayuan'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
-        : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                        Perkayuan
-                    </a>
-
-                    <a href="{{ request()->fullUrlWithQuery(['rombel' => 'busana']) }}"
-                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
-    {{ request('rombel') == 'busana'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
-        : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                        Busana
-                    </a>
-
-                    <a href="{{ request()->fullUrlWithQuery(['rombel' => 'tata-boga']) }}"
-                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
-    {{ request('rombel') == 'tata-boga'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
-        : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                        Tata Boga
-                    </a>
-
-                    <a href="{{ request()->fullUrlWithQuery(['rombel' => 'kecantikan']) }}"
-                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
-    {{ request('rombel') == 'kecantikan'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
-        : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                        Kecantikan
-                    </a>
-
-                    <a href="{{ request()->fullUrlWithQuery(['rombel' => 'logam']) }}"
-                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
-    {{ request('rombel') == 'logam'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
-        : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                        Logam
-                    </a>
-
-                </div>
-
-                <!-- BAWAH SIDEBAR -->
-                {{-- <div class="mt-auto p-6 ">
-
-                    <button
-                        class="w-full bg-[#CA0B00] text-[#F0E7D5] text-xl font-extrabold py-2 rounded-lg hover:bg-red-700">
-                        Tutup Kasir
-                    </button>
-
-                    <div class="mt-6 pt-5">
-                        <div id="tanggal" class="text-base font-bold mb-2 text-[#212842]"></div>
-                        <div id="jam" class="text-2xl font-extrabold text-[#212842]"></div>
+                    <!-- JUDUL -->
+                    <div class="p-6 pb-3">
+                        <h2 class="text-2xl font-extrabold text-[#212842]">Rombel</h2>
                     </div>
 
-                </div> --}}
+                    <!-- LIST ROMBEL: hanya 5 yang terlihat, sisanya scroll -->
+                    <div class="px-4 space-y-2 flex-1">
 
-            </aside>
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'graha']) }}"
+                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
+        {{ request('rombel', 'graha') == 'graha'
+            ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            Graha
+                        </a>
 
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'membatik']) }}"
+                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
+        {{ request('rombel') == 'membatik'
+            ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            Membatik
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'perkayuan']) }}"
+                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
+        {{ request('rombel') == 'perkayuan'
+            ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            Perkayuan
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'busana']) }}"
+                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
+        {{ request('rombel') == 'busana'
+            ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            Busana
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'tata-boga']) }}"
+                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
+        {{ request('rombel') == 'tata-boga'
+            ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            Tata Boga
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'kecantikan']) }}"
+                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
+        {{ request('rombel') == 'kecantikan'
+            ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            Kecantikan
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'logam']) }}"
+                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
+        {{ request('rombel') == 'logam'
+            ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            Logam
+                        </a>
+
+                    </div>
+
+                    <!-- BAWAH SIDEBAR -->
+                    {{-- <div class="mt-auto p-6 ">
+
+                        <button
+                            class="w-full bg-[#CA0B00] text-[#F0E7D5] text-xl font-extrabold py-2 rounded-lg hover:bg-red-700">
+                            Tutup Kasir
+                        </button>
+
+                        <div class="mt-6 pt-5">
+                            <div id="tanggal" class="text-base font-bold mb-2 text-[#212842]"></div>
+                            <div id="jam" class="text-2xl font-extrabold text-[#212842]"></div>
+                        </div>
+
+                    </div> --}}
+
+                </aside>
+            @endif
             <!-- CONTENT -->
             <main class="flex-1 p-6 overflow-y-auto">
                 @yield('content')
