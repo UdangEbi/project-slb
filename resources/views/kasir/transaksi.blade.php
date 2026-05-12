@@ -4,79 +4,81 @@
 
 @section('content')
 
-<div class="grid grid-cols-[1fr_420px] gap-6">
+<div class="xl:scale-[0.92] origin-top max-w-[1500px] mx-auto">
+
+<div class="grid grid-cols-[1fr_320px] gap-3">
 
     {{-- KIRI --}}
-    <div class="space-y-6">
+    <div class="space-y-3">
 
         {{-- DATA PELANGGAN --}}
-        <section class="bg-white rounded-2xl shadow-sm border border-[#D8CDB7] p-5">
-            <h2 class="text-3xl font-extrabold text-[#212842] mb-5">
+        <section class="bg-white rounded-xl shadow-sm border border-[#D8CDB7] p-3">
+            <h2 class="text-xl font-extrabold text-[#212842] mb-3">
                 Data Pelanggan
             </h2>
 
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-3 gap-2">
                 <input type="text" placeholder="Nama Customer"
-                    class="border border-[#D8CDB7] rounded-xl px-5 py-4 text-lg font-semibold">
+                    class="border border-[#D8CDB7] rounded-lg px-3 py-2.5 text-sm font-semibold">
 
                 <input type="text" placeholder="No. Tlp / HP"
                     inputmode="numeric"
                     oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                    class="border border-[#D8CDB7] rounded-xl px-5 py-4 text-lg font-semibold">
+                    class="border border-[#D8CDB7] rounded-lg px-3 py-2.5 text-sm font-semibold">
 
                 <input type="text" placeholder="Instansi / Asal"
-                    class="border border-[#D8CDB7] rounded-xl px-5 py-4 text-lg font-semibold">
+                    class="border border-[#D8CDB7] rounded-lg px-3 py-2.5 text-sm font-semibold">
             </div>
         </section>
 
         {{-- PRODUK --}}
-        <section class="bg-white/80 rounded-2xl shadow-sm border border-[#D8CDB7] p-5">
+        <section class="bg-white/80 rounded-xl shadow-sm border border-[#D8CDB7] p-3">
 
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex justify-between items-center mb-3">
                 <div>
-                    <h2 class="text-3xl font-extrabold text-[#212842]">
+                    <h2 class="text-xl font-extrabold text-[#212842]">
                         Barang Dijual
                     </h2>
-                    <p class="text-base font-semibold text-gray-500">
+                    <p class="text-xs font-semibold text-gray-500">
                         Produk sesuai rombel yang dipilih
                     </p>
                 </div>
 
                 <input type="text" id="searchProduk" placeholder="Cari barang..."
                     oninput="cariProduk()"
-                    class="w-80 border border-[#D8CDB7] rounded-xl px-5 py-4 text-lg font-semibold">
+                    class="w-56 border border-[#D8CDB7] rounded-lg px-3 py-2.5 text-xs font-semibold">
             </div>
 
-            <div id="produkGrid" class="grid grid-cols-3 gap-5">
+            <div id="produkGrid" class="grid grid-cols-5 gap-2">
 
                 @forelse ($produk as $item)
-                    <div class="produk-card bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg transition"
+                    <div class="produk-card bg-white rounded-lg border border-gray-200 shadow-sm p-2.5 hover:shadow-md transition"
                         data-nama="{{ strtolower($item['nama']) }}">
 
-                        <h3 class="text-3xl font-extrabold text-[#212842] leading-tight mb-4">
+                        <h3 class="text-sm font-extrabold text-[#212842] leading-tight min-h-[38px]">
                             {{ $item['nama'] }}
                         </h3>
 
-                        <p class="text-3xl font-black text-[#CA0B00] mb-5">
+                        <p class="text-base font-black text-[#CA0B00] mt-1.5">
                             Rp {{ number_format($item['harga'], 0, ',', '.') }}
                         </p>
 
                         <button
                             onclick="tambahKeranjang('{{ $item['nama'] }}', {{ $item['harga'] }})"
-                            class="w-full bg-[#212842] text-[#F0E7D5] py-4 rounded-xl text-xl font-extrabold hover:bg-[#11172d] transition">
-                            Tambah
+                            class="mt-2 w-full bg-[#212842] text-[#F0E7D5] py-1.5 rounded-md text-xs font-extrabold hover:bg-[#11172d] transition">
+                            + Tambah
                         </button>
 
                     </div>
                 @empty
-                    <div class="col-span-3 text-center py-10 text-gray-500 font-bold">
+                    <div class="col-span-5 text-center py-6 text-gray-500 font-bold text-sm">
                         Tidak ada produk untuk rombel ini
                     </div>
                 @endforelse
 
             </div>
 
-            <p id="produkTidakDitemukan" class="hidden text-center py-8 text-gray-500 font-bold">
+            <p id="produkTidakDitemukan" class="hidden text-center py-5 text-gray-500 font-bold text-sm">
                 Barang tidak ditemukan.
             </p>
 
@@ -85,48 +87,48 @@
     </div>
 
     {{-- KANAN: KERANJANG --}}
-    <aside class="bg-white rounded-2xl shadow-sm border border-[#D8CDB7] p-5 flex flex-col">
+    <aside class="bg-white rounded-xl shadow-sm border border-[#D8CDB7] p-3 flex flex-col">
 
-        <h2 class="text-3xl font-extrabold text-[#212842] mb-5">
+        <h2 class="text-xl font-extrabold text-[#212842] mb-3">
             Keranjang Belanja
         </h2>
 
-        <div id="keranjangList" class="flex-1 space-y-4 overflow-y-auto">
-            <p class="text-gray-400 font-semibold">
+        <div id="keranjangList" class="flex-1 space-y-2 overflow-y-auto">
+            <p class="text-gray-400 font-semibold text-xs">
                 Belum ada barang.
             </p>
         </div>
 
-        <div class="border-t mt-5 pt-5 space-y-2">
-            <div class="flex justify-between text-xl font-extrabold text-[#212842]">
+        <div class="border-t mt-3 pt-3 space-y-1.5">
+            <div class="flex justify-between text-sm font-extrabold text-[#212842]">
                 <span>Jumlah Item</span>
                 <span id="jumlahItem">0 item</span>
             </div>
 
-            <div class="flex justify-between text-3xl font-extrabold">
+            <div class="flex justify-between text-xl font-extrabold">
                 <span>Total</span>
                 <span id="totalHarga" class="text-[#CA0B00]">Rp 0</span>
             </div>
         </div>
 
         <button onclick="kosongkanKeranjang()"
-            class="mt-4 w-full bg-red-600 text-white py-4 rounded-xl text-lg font-extrabold hover:bg-red-700">
+            class="mt-2.5 w-full bg-red-600 text-white py-2.5 rounded-lg text-sm font-extrabold hover:bg-red-700">
             Kosongkan Keranjang
         </button>
 
-        <div class="mt-6">
-            <h3 class="text-2xl font-extrabold text-[#212842] mb-3">
+        <div class="mt-4">
+            <h3 class="text-lg font-extrabold text-[#212842] mb-2">
                 Pembayaran
             </h3>
 
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-2 gap-2">
                 <button onclick="bukaCash()"
-                    class="bg-green-600 text-white py-5 rounded-xl text-xl font-extrabold hover:bg-green-700">
+                    class="bg-green-600 text-white py-3 rounded-lg text-sm font-extrabold hover:bg-green-700">
                     Cash
                 </button>
 
                 <button onclick="bukaQris()"
-                    class="bg-blue-600 text-white py-5 rounded-xl text-xl font-extrabold hover:bg-blue-700">
+                    class="bg-blue-600 text-white py-3 rounded-lg text-sm font-extrabold hover:bg-blue-700">
                     QRIS
                 </button>
             </div>
@@ -136,50 +138,52 @@
 
 </div>
 
+</div>
+
 {{-- MODAL CASH --}}
 <div id="modalCash" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center">
-    <div class="bg-white rounded-2xl w-[460px] p-6 shadow-xl">
-        <h2 class="text-3xl font-extrabold text-[#212842] mb-5">
+    <div class="bg-white rounded-xl w-[390px] p-4 shadow-xl">
+        <h2 class="text-xl font-extrabold text-[#212842] mb-3">
             Pembayaran Cash
         </h2>
 
-        <div class="space-y-4">
-            <div class="flex justify-between text-xl font-bold">
+        <div class="space-y-2.5">
+            <div class="flex justify-between text-base font-bold">
                 <span>Total Bayar</span>
                 <span id="cashTotal" class="text-[#CA0B00]">Rp 0</span>
             </div>
 
             <div>
-                <label class="block font-extrabold text-[#212842] mb-2">
+                <label class="block font-extrabold text-[#212842] mb-1.5 text-sm">
                     Tunai Diterima
                 </label>
 
-                <div class="flex border border-[#D8CDB7] rounded-xl overflow-hidden">
-                    <span class="bg-[#F7F3EA] px-4 py-4 font-extrabold text-[#212842]">
+                <div class="flex border border-[#D8CDB7] rounded-lg overflow-hidden">
+                    <span class="bg-[#F7F3EA] px-3 py-2.5 font-extrabold text-[#212842] text-sm">
                         Rp
                     </span>
 
                     <input type="text" id="tunaiDiterima"
                         inputmode="numeric"
                         placeholder="0"
-                        class="w-full px-4 py-4 text-xl font-bold outline-none">
+                        class="w-full px-3 py-2.5 text-base font-bold outline-none">
                 </div>
             </div>
 
-            <div class="flex justify-between text-2xl font-extrabold">
+            <div class="flex justify-between text-lg font-extrabold">
                 <span>Kembalian</span>
                 <span id="kembalian" class="text-green-700">Rp 0</span>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mt-6">
+        <div class="grid grid-cols-2 gap-2 mt-4">
             <button onclick="tutupCash()"
-                class="bg-gray-200 py-4 rounded-xl text-lg font-extrabold">
+                class="bg-gray-200 py-2.5 rounded-lg text-sm font-extrabold">
                 Batal
             </button>
 
             <button onclick="selesaiBayar()"
-                class="bg-green-600 text-white py-4 rounded-xl text-lg font-extrabold">
+                class="bg-green-600 text-white py-2.5 rounded-lg text-sm font-extrabold">
                 Selesai
             </button>
         </div>
@@ -188,26 +192,26 @@
 
 {{-- MODAL QRIS --}}
 <div id="modalQris" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center">
-    <div class="bg-white rounded-2xl w-[420px] p-6 shadow-xl text-center">
-        <h2 class="text-3xl font-extrabold text-[#212842] mb-5">
+    <div class="bg-white rounded-xl w-[350px] p-4 shadow-xl text-center">
+        <h2 class="text-xl font-extrabold text-[#212842] mb-3">
             Pembayaran QRIS
         </h2>
 
-        <p class="text-lg font-semibold text-gray-500">
+        <p class="text-sm font-semibold text-gray-500">
             Total yang harus dibayar
         </p>
 
-        <p id="qrisTotal" class="text-4xl font-black text-[#CA0B00] mt-3">
+        <p id="qrisTotal" class="text-2xl font-black text-[#CA0B00] mt-2">
             Rp 0
         </p>
 
         <button onclick="selesaiBayar()"
-            class="mt-6 w-full bg-blue-600 text-white py-4 rounded-xl text-xl font-extrabold hover:bg-blue-700">
+            class="mt-4 w-full bg-blue-600 text-white py-2.5 rounded-lg text-base font-extrabold hover:bg-blue-700">
             OK, Sudah Dibayar
         </button>
 
         <button onclick="tutupQris()"
-            class="mt-3 w-full bg-gray-200 py-3 rounded-xl font-extrabold">
+            class="mt-2.5 w-full bg-gray-200 py-2.5 rounded-lg font-extrabold text-sm">
             Batal
         </button>
     </div>
@@ -296,7 +300,7 @@
 
         if (keranjang.length === 0) {
             list.innerHTML = `
-                <p class="text-gray-400 font-semibold">
+                <p class="text-gray-400 font-semibold text-xs">
                     Belum ada barang.
                 </p>
             `;
@@ -315,35 +319,35 @@
             totalItem += item.qty;
 
             list.innerHTML += `
-                <div class="border rounded-xl p-4">
-                    <div class="flex justify-between items-start gap-3">
+                <div class="border rounded-lg p-2.5">
+                    <div class="flex justify-between items-start gap-2">
                         <div>
-                            <p class="text-xl font-extrabold text-[#212842]">${item.nama}</p>
-                            <p class="text-base text-gray-500">${item.qty} x ${formatRupiah(item.harga)}</p>
+                            <p class="text-sm font-extrabold text-[#212842] leading-tight">${item.nama}</p>
+                            <p class="text-xs text-gray-500">${item.qty} x ${formatRupiah(item.harga)}</p>
                         </div>
 
                         <button onclick="hapusItem('${item.nama}')"
-                            class="w-9 h-9 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-xl">
+                            class="w-7 h-7 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-base">
                             ×
                         </button>
                     </div>
 
-                    <div class="flex justify-between items-center mt-4">
-                        <div class="flex items-center gap-3">
+                    <div class="flex justify-between items-center mt-2">
+                        <div class="flex items-center gap-1.5">
                             <button onclick="kurangiQty('${item.nama}')"
-                                class="w-10 h-10 bg-gray-200 rounded-lg text-xl font-bold">
+                                class="w-7 h-7 bg-gray-200 rounded-md text-base font-bold">
                                 -
                             </button>
 
-                            <span class="text-xl font-extrabold">${item.qty}</span>
+                            <span class="text-sm font-extrabold">${item.qty}</span>
 
                             <button onclick="tambahQty('${item.nama}')"
-                                class="w-10 h-10 bg-[#212842] text-[#F0E7D5] rounded-lg text-xl font-bold">
+                                class="w-7 h-7 bg-[#212842] text-[#F0E7D5] rounded-md text-base font-bold">
                                 +
                             </button>
                         </div>
 
-                        <p class="text-xl font-extrabold">
+                        <p class="text-sm font-extrabold">
                             ${formatRupiah(subtotal)}
                         </p>
                     </div>
