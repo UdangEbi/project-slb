@@ -12,7 +12,7 @@
     <div class="h-screen flex flex-col">
 
         <!-- HEADER -->
-        <header class="h-15 bg-[#212842] px-6 flex items-center">
+        <header class="h-13 bg-[#212842] px-6 flex items-center relative">
 
             <!-- LOGO -->
             <div class="w-48">
@@ -20,10 +20,10 @@
             </div>
 
             <!-- TAB MENU -->
-            <nav class="flex-1 flex justify-center gap-5 text-xl font-extrabold">
+            <nav class="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 text-lg font-extrabold">
 
                 <a href="{{ route('kasir.transaksi') }}"
-                    class="px-5 py-3 rounded-xl shadow-md transition duration-200
+                    class="px-4 py-2 rounded-xl shadow-md transition duration-200
     {{ request()->routeIs('kasir.transaksi')
         ? 'bg-[#F0E7D5] text-[#212842]'
         : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
@@ -31,7 +31,7 @@
                 </a>
 
                 <a href="{{ route('kasir.stok') }}"
-                    class="px-5 py-3 rounded-xl shadow-md transition duration-200
+                    class="px-4 py-2 rounded-xl shadow-md transition duration-200
     {{ request()->routeIs('kasir.stok')
         ? 'bg-[#F0E7D5] text-[#212842]'
         : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
@@ -39,7 +39,7 @@
                 </a>
 
                 <a href="{{ route('kasir.rekapitulasi') }}"
-                    class="px-5 py-3 rounded-xl shadow-md transition duration-200
+                    class="px-4 py-2 rounded-xl shadow-md transition duration-200
     {{ request()->routeIs('kasir.rekapitulasi')
         ? 'bg-[#F0E7D5] text-[#212842]'
         : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
@@ -49,9 +49,47 @@
             </nav>
 
             <!-- PROFIL -->
-            <div class="w-48 flex justify-end items-center gap-3">
-                <img src="" class="w-10 h-10 rounded-full">
-                <span class="text-xl font-extrabold text-[#F0E7D5]">Kasir</span>
+            <div class="ml-auto w-96 flex justify-end items-center gap-4">
+
+                <!-- TANGGAL & JAM -->
+                <div class="text-right leading-none">
+                    <div class="flex items-center justify-end gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-[#F0E7D5]" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10m-11
+                    9h12a2 2 0 002-2V7a2 2 0
+                    00-2-2H6a2 2 0 00-2 2v11a2
+                    2 0 002 2z" />
+                        </svg>
+
+                        <div id="tanggal" class="text-sm text-[#F0E7D5]">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end gap-1 mt-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-[#F0E7D5]" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0
+                    11-18 0 9 9 0 0118 0z" />
+                        </svg>
+
+                        <div id="jam" class="text-sm text-[#F0E7D5]">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GARIS -->
+                <div class="h-8 w-px bg-[#F0E7D5]/40"></div>
+
+                <!-- PROFIL -->
+                <div class="flex items-center gap-3">
+                    <img src="" class="w-8 h-8 rounded-full bg-white">
+
+                    <span class="text-lg font-extrabold text-[#F0E7D5]">
+                        Kasir
+                    </span>
+                </div>
+
             </div>
 
         </header>
@@ -60,7 +98,7 @@
         <div class="flex flex-1 overflow-hidden">
 
             <!-- SIDEBAR -->
-            <aside class="w-60 bg-[#F0E7D5] flex flex-col">
+            <aside class="w-52 bg-[#F0E7D5] flex flex-col">
 
                 <!-- JUDUL -->
                 <div class="p-6 pb-3">
@@ -68,10 +106,10 @@
                 </div>
 
                 <!-- LIST ROMBEL: hanya 5 yang terlihat, sisanya scroll -->
-                <div class="px-4 space-y-3 overflow-y-auto" style="height: 300px;">
+                <div class="px-4 space-y-2 flex-1">
 
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'graha']) }}"
-                        class="block px-4 py-2 text-xl font-bold transition duration-200
+                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel', 'graha') == 'graha'
         ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
@@ -79,7 +117,7 @@
                     </a>
 
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'membatik']) }}"
-                        class="block px-4 py-2 text-xl font-bold transition duration-200
+                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'membatik'
         ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
@@ -87,7 +125,7 @@
                     </a>
 
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'perkayuan']) }}"
-                        class="block px-4 py-2 text-xl font-bold transition duration-200
+                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'perkayuan'
         ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
@@ -95,7 +133,7 @@
                     </a>
 
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'busana']) }}"
-                        class="block px-4 py-2 text-xl font-bold transition duration-200
+                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'busana'
         ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
@@ -103,7 +141,7 @@
                     </a>
 
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'tata-boga']) }}"
-                        class="block px-4 py-2 text-xl font-bold transition duration-200
+                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'tata-boga'
         ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
@@ -111,7 +149,7 @@
                     </a>
 
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'kecantikan']) }}"
-                        class="block px-4 py-2 text-xl font-bold transition duration-200
+                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'kecantikan'
         ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
@@ -119,7 +157,7 @@
                     </a>
 
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'logam']) }}"
-                        class="block px-4 py-2 text-xl font-bold transition duration-200
+                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'logam'
         ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
@@ -129,7 +167,7 @@
                 </div>
 
                 <!-- BAWAH SIDEBAR -->
-                <div class="mt-auto p-6 ">
+                {{-- <div class="mt-auto p-6 ">
 
                     <button
                         class="w-full bg-[#CA0B00] text-[#F0E7D5] text-xl font-extrabold py-2 rounded-lg hover:bg-red-700">
@@ -141,7 +179,7 @@
                         <div id="jam" class="text-2xl font-extrabold text-[#212842]"></div>
                     </div>
 
-                </div>
+                </div> --}}
 
             </aside>
 

@@ -245,12 +245,12 @@ class DashboardController extends Controller
                     [
                         'tanggal' => '2026-06-12',
                         'kode_transaksi' => 'TRX-26008',
-                        'nama_pembeli' => 'Khusus Wali Murid',
+                        'nama_pembeli' => 'Wali Murid',
                         'total' => 125000,
                     ],
                 ],
 
-                'labaBersih' => 2750000,
+                'labaBersih' => 815000,
                 'jumlahProdukTerjual' => 185,
             ],
         ];
