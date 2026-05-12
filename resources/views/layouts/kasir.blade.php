@@ -84,7 +84,8 @@
 
                 <!-- PROFIL -->
                 <div class="flex items-center gap-3">
-                    <img src="" class="w-8 h-8 rounded-full bg-white">
+                    <img src="https://ui-avatars.com/api/?name=Kasir&background=F0E7D5&color=212842&size=80"
+                        class="w-8 h-8 rounded-full bg-white">
 
                     <span class="text-lg font-extrabold text-[#F0E7D5]">
                         Kasir
@@ -112,7 +113,7 @@
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'graha']) }}"
                         class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel', 'graha') == 'graha'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+        ? 'bg-[#212842] text-[#F0E7D5] '
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
                         Graha
                     </a>
@@ -120,7 +121,7 @@
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'membatik']) }}"
                         class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'membatik'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+        ? 'bg-[#212842] text-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
                         Membatik
                     </a>
@@ -128,7 +129,7 @@
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'perkayuan']) }}"
                         class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'perkayuan'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+        ? 'bg-[#212842] text-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
                         Perkayuan
                     </a>
@@ -136,7 +137,7 @@
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'busana']) }}"
                         class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'busana'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+        ? 'bg-[#212842] text-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
                         Busana
                     </a>
@@ -144,7 +145,7 @@
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'tata-boga']) }}"
                         class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'tata-boga'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+        ? 'bg-[#212842] text-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
                         Tata Boga
                     </a>
@@ -152,7 +153,7 @@
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'kecantikan']) }}"
                         class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'kecantikan'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+        ? 'bg-[#212842] text-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
                         Kecantikan
                     </a>
@@ -160,28 +161,12 @@
                     <a href="{{ request()->fullUrlWithQuery(['rombel' => 'logam']) }}"
                         class="block px-3 py-1.5 text-lg font-bold transition duration-200
     {{ request('rombel') == 'logam'
-        ? 'bg-[#212842] text-[#F0E7D5] border-l-8 border-[#F0E7D5]'
+        ? 'bg-[#212842] text-[#F0E7D5]'
         : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
                         Logam
                     </a>
 
                 </div>
-
-                <!-- BAWAH SIDEBAR -->
-                {{-- <div class="mt-auto p-6 ">
-
-                    <button
-                        class="w-full bg-[#CA0B00] text-[#F0E7D5] text-xl font-extrabold py-2 rounded-lg hover:bg-red-700">
-                        Tutup Kasir
-                    </button>
-
-                    <div class="mt-6 pt-5">
-                        <div id="tanggal" class="text-base font-bold mb-2 text-[#212842]"></div>
-                        <div id="jam" class="text-2xl font-extrabold text-[#212842]"></div>
-                    </div>
-
-                </div> --}}
-
             </aside>
 
             <!-- CONTENT -->
