@@ -55,13 +55,12 @@
 
     {{-- FORM TAMBAH / EDIT STOK --}}
     <div id="stokForm" class="hidden">
-        <h1 class="text-3xl font-extrabold text-[#212842] mb-6">
+        <h1 id="judulForm" class="text-3xl font-extrabold text-[#212842] mb-6">
             Tambah Stok
         </h1>
 
         <div class="bg-transparent w-full max-w-6xl">
 
-            {{-- BARIS TANGGAL DAN KODE --}}
             <div class="grid grid-cols-2 gap-10 mb-8">
 
                 <div>
@@ -83,7 +82,7 @@
                         type="text"
                         id="kodeBarang"
                         readonly
-                        class="w-full max-w-md bg-white border-2 border-[#212842] rounded-md px-4 py-3 text-lg font-bold">
+                        class="w-full max-w-md bg-[#ECEDEF] text-[#9AA1A9] border border-[#BFC5CC] rounded-xl px-4 py-3 text-lg font-bold cursor-not-allowed">
                     <p class="text-sm font-bold text-[#212842] mt-2">
                         Kode dibuat otomatis saat disimpan
                     </p>
@@ -91,7 +90,6 @@
 
             </div>
 
-            {{-- NAMA BARANG --}}
             <div class="mb-8">
                 <label class="block text-lg font-bold text-[#212842] mb-2">
                     Nama Barang *
@@ -103,20 +101,22 @@
                     class="w-full bg-white border-2 border-[#212842] rounded-md px-4 py-3 text-lg font-bold">
             </div>
 
-            {{-- STOK --}}
             <div class="grid grid-cols-3 gap-10 mb-8">
 
                 <div>
                     <label class="block text-lg font-bold text-[#212842] mb-2">
                         Stok Saat Ini
                     </label>
-                    <div class="flex bg-white border-2 border-[#212842] rounded-md overflow-hidden max-w-xs">
+                    <div class="flex bg-[#ECEDEF] border border-[#BFC5CC] rounded-xl overflow-hidden max-w-xs cursor-not-allowed">
                         <input
                             type="number"
                             id="stokSaatIni"
                             readonly
-                            class="w-full px-4 py-3 text-lg font-bold outline-none">
-                        <span class="px-4 py-3 text-lg font-bold">Pcs</span>
+                            class="w-full px-4 py-3 text-lg font-bold text-[#9AA1A9] outline-none bg-[#ECEDEF] cursor-not-allowed">
+
+                        <span class="px-4 py-3 text-lg font-bold text-[#9AA1A9] bg-[#ECEDEF]">
+                            Pcs
+                        </span>
                     </div>
                 </div>
 
@@ -155,19 +155,21 @@
                     <label class="block text-lg font-bold text-[#212842] mb-2">
                         Stok Setelah Ditambah
                     </label>
-                    <div class="flex bg-white border-2 border-[#212842] rounded-md overflow-hidden max-w-xs">
+                    <div class="flex bg-[#ECEDEF] border border-[#BFC5CC] rounded-xl overflow-hidden max-w-xs cursor-not-allowed">
                         <input
                             type="number"
                             id="stokSetelah"
                             readonly
-                            class="w-full px-4 py-3 text-lg font-bold outline-none">
-                        <span class="px-4 py-3 text-lg font-bold">Pcs</span>
+                            class="w-full px-4 py-3 text-lg font-bold text-[#9AA1A9] outline-none bg-[#ECEDEF] cursor-not-allowed">
+
+                        <span class="px-4 py-3 text-lg font-bold text-[#9AA1A9] bg-[#ECEDEF]">
+                            Pcs
+                        </span>
                     </div>
                 </div>
 
             </div>
 
-            {{-- HARGA --}}
             <div class="mb-16">
                 <label class="block text-lg font-bold text-[#212842] mb-2">
                     Harga Satuan (Rp) *
@@ -177,12 +179,8 @@
                     id="hargaBarang"
                     placeholder="Masukkan harga satuan"
                     class="w-full max-w-md bg-white border-2 border-[#212842] rounded-md px-4 py-3 text-lg font-bold">
-                <p class="text-sm font-bold text-[#212842] mt-2">
-                    Harga satuan bisa diedit
-                </p>
             </div>
 
-            {{-- BUTTON --}}
             <div class="flex justify-between items-center">
                 <button
                     type="button"
@@ -222,6 +220,7 @@
         document.getElementById('stokList').classList.add('hidden');
         document.getElementById('stokForm').classList.remove('hidden');
 
+        document.getElementById('judulForm').innerText = 'Tambah Barang';
         document.getElementById('kodeBarang').value = generateKodeBarang();
         document.getElementById('namaBarang').value = '';
         document.getElementById('stokSaatIni').value = 0;
@@ -234,6 +233,7 @@
         document.getElementById('stokList').classList.add('hidden');
         document.getElementById('stokForm').classList.remove('hidden');
 
+        document.getElementById('judulForm').innerText = 'Tambah Stok';
         document.getElementById('kodeBarang').value = kode;
         document.getElementById('namaBarang').value = nama;
         document.getElementById('stokSaatIni').value = stok;
