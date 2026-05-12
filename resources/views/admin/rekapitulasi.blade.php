@@ -46,11 +46,20 @@
 
             <div>
                 <label class="block text-sm font-bold text-[#212842] mb-1">
-                    Periode
+                    Periode Awal
                 </label>
 
-                <input type="month" name="periode" value="{{ $periode }}"
-                    class="w-48 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#212842]">
+                <input type="date" name="periode_awal" id="periode_awal" value="{{ request('periode_awal') }}"
+                    class="w-44 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#212842]">
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-[#212842] mb-1">
+                    Periode Akhir
+                </label>
+
+                <input type="date" name="periode_akhir" id="periode_akhir" value="{{ request('periode_akhir') }}"
+                    class="w-44 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#212842]">
             </div>
 
             <div>
@@ -141,3 +150,24 @@
 
     </div>
 @endsection
+@push('scripts')
+    <script>
+        const awal = document.getElementById('periode_awal');
+        const akhir = document.getElementById('periode_akhir');
+
+        awal.addEventListener('change', function() {
+            if (!awal.value) return;
+
+            const tanggalAwal = new Date(awal.value);
+            const tanggalMaks = new Date(tanggalAwal);
+            tanggalMaks.setDate(tanggalMaks.getDate() + 30);
+
+            akhir.min = awal.value;
+            akhir.max = tanggalMaks.toISOString().split('T')[0];
+
+            if (akhir.value && akhir.value > akhir.max) {
+                akhir.value = akhir.max;
+            }
+        });
+    </script>
+@endpush

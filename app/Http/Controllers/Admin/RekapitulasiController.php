@@ -10,8 +10,15 @@ class RekapitulasiController extends Controller
 {
     public function index(Request $request)
     {
-        $periode = $request->periode ?? now()->format('Y-m');
+        $periodeAwal = $request->periode_awal ?? now()->startOfMonth()->format('Y-m-d');
+        $periodeAkhir = $request->periode_akhir ?? now()->format('Y-m-d');
         $rombel = $request->rombel;
+        $awal = Carbon::parse($periodeAwal);
+        $akhir = Carbon::parse($periodeAkhir);
+
+        if ($awal->diffInDays($akhir) > 30) {
+            return back()->with('error', 'Periode maksimal 30 hari.');
+        }
 
         $data = collect([
             // ===== APRIL =====
@@ -98,8 +105,9 @@ class RekapitulasiController extends Controller
     ],
         ]);
 
-        $rekapitulasi = $data->filter(function ($item) use ($periode) {
-            return Carbon::parse($item['tanggal'])->format('Y-m') === $periode;
+        $rekapitulasi = $data->filter(function ($item) use ($awal, $akhir) {
+            $tanggal = Carbon::parse($item['tanggal']);
+            return $tanggal->betweenIncluded($awal, $akhir);
         });
 
         if ($rombel) {
@@ -112,7 +120,8 @@ class RekapitulasiController extends Controller
 
         return view('admin.rekapitulasi', compact(
             'rekapitulasi',
-            'periode',
+            'periodeAwal',
+            'periodeAkhir',
             'rombel',
             'kasMasuk',
             'kasKeluar',
