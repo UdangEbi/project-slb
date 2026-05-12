@@ -225,6 +225,10 @@
         return 'Rp ' + angka.toLocaleString('id-ID');
     }
 
+    function formatRupiahMinus(angka) {
+        return '- Rp ' + Math.abs(angka).toLocaleString('id-ID');
+    }
+
     function tambahKeranjang(nama, harga) {
         let item = keranjang.find(produk => produk.nama === nama);
 
@@ -300,6 +304,8 @@
             totalHarga.innerText = 'Rp 0';
             jumlahItem.innerText = '0 item';
             totalBelanja = 0;
+
+            updateKembalian();
             return;
         }
 
@@ -348,6 +354,8 @@
         totalBelanja = total;
         totalHarga.innerText = formatRupiah(total);
         jumlahItem.innerText = totalItem + ' item';
+
+        updateKembalian();
     }
 
     function cariProduk() {
@@ -383,7 +391,7 @@
 
         document.getElementById('cashTotal').innerText = formatRupiah(totalBelanja);
         document.getElementById('tunaiDiterima').value = '';
-        document.getElementById('kembalian').innerText = 'Rp 0';
+        resetKembalian();
 
         const modal = document.getElementById('modalCash');
         modal.classList.remove('hidden');
@@ -415,27 +423,71 @@
         modal.classList.remove('flex');
     }
 
+    function resetKembalian() {
+        const kembalianEl = document.getElementById('kembalian');
+
+        kembalianEl.innerText = 'Rp 0';
+        kembalianEl.classList.remove('text-red-600');
+        kembalianEl.classList.add('text-green-700');
+    }
+
+    function updateKembalian() {
+        const inputTunai = document.getElementById('tunaiDiterima');
+        const kembalianEl = document.getElementById('kembalian');
+
+        if (!inputTunai || !kembalianEl) {
+            return;
+        }
+
+        let angka = inputTunai.value.replace(/[^0-9]/g, '');
+
+        if (angka === '') {
+            resetKembalian();
+            return;
+        }
+
+        let tunai = parseInt(angka);
+        let kembali = tunai - totalBelanja;
+
+        if (kembali < 0) {
+            kembalianEl.innerText = formatRupiahMinus(kembali);
+            kembalianEl.classList.remove('text-green-700');
+            kembalianEl.classList.add('text-red-600');
+        } else {
+            kembalianEl.innerText = formatRupiah(kembali);
+            kembalianEl.classList.remove('text-red-600');
+            kembalianEl.classList.add('text-green-700');
+        }
+    }
+
     document.addEventListener('input', function(e) {
         if (e.target.id === 'tunaiDiterima') {
             let angka = e.target.value.replace(/[^0-9]/g, '');
 
             if (angka === '') {
                 e.target.value = '';
-                document.getElementById('kembalian').innerText = 'Rp 0';
+                resetKembalian();
                 return;
             }
 
             e.target.value = Number(angka).toLocaleString('id-ID');
-
-            let tunai = parseInt(angka);
-            let kembali = tunai - totalBelanja;
-
-            document.getElementById('kembalian').innerText =
-                kembali < 0 ? 'Rp 0' : formatRupiah(kembali);
+            updateKembalian();
         }
     });
 
     function selesaiBayar() {
+        const inputTunai = document.getElementById('tunaiDiterima');
+
+        if (document.getElementById('modalCash').classList.contains('flex')) {
+            let angka = inputTunai.value.replace(/[^0-9]/g, '');
+            let tunai = angka === '' ? 0 : parseInt(angka);
+
+            if (tunai < totalBelanja) {
+                alert('Tunai diterima masih kurang.');
+                return;
+            }
+        }
+
         alert('Pembayaran berhasil');
 
         keranjang = [];
