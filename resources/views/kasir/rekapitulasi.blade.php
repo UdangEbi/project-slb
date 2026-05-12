@@ -20,40 +20,36 @@
     {{-- CARD RINGKASAN --}}
     <div class="grid grid-cols-4 gap-5 mb-6">
 
+        {{-- MODAL AWAL --}}
         <div class="bg-white rounded-xl shadow-md p-5 flex items-center gap-4">
-            <div class="w-14 h-14 flex items-center justify-center">
-                <i class="bi bi-wallet2 text-4xl text-[#212842]"></i>
-            </div>
+            <i class="bi bi-wallet2 text-3xl text-[#212842]"></i>
             <div>
                 <p class="text-sm font-bold text-gray-500">Modal Awal</p>
                 <h2 class="text-xl font-extrabold text-[#212842]">Rp250.000</h2>
             </div>
         </div>
 
+        {{-- TOTAL PENERIMAAN --}}
         <div class="bg-white rounded-xl shadow-md p-5 flex items-center gap-4">
-            <div class="w-14 h-14 flex items-center justify-center">
-                <i class="bi bi-graph-up-arrow text-4xl text-[#212842]"></i>
-            </div>
+            <i class="bi bi-graph-up-arrow text-3xl text-[#212842]"></i>
             <div>
                 <p class="text-sm font-bold text-gray-500">Total Penerimaan</p>
                 <h2 class="text-xl font-extrabold text-[#212842]">Rp245.850</h2>
             </div>
         </div>
 
+        {{-- SALDO AKHIR --}}
         <div class="bg-white rounded-xl shadow-md p-5 flex items-center gap-4">
-            <div class="w-14 h-14 flex items-center justify-center">
-                <i class="bi bi-cash-stack text-4xl text-[#212842]"></i>
-            </div>
+            <i class="bi bi-cash-stack text-3xl text-[#212842]"></i>
             <div>
                 <p class="text-sm font-bold text-gray-500">Saldo Akhir</p>
                 <h2 class="text-xl font-extrabold text-[#212842]">Rp547.850</h2>
             </div>
         </div>
 
+        {{-- TRANSAKSI --}}
         <div class="bg-white rounded-xl shadow-md p-5 flex items-center gap-4">
-            <div class="w-14 h-14 flex items-center justify-center">
-                <i class="bi bi-check-circle text-4xl text-[#212842]"></i>
-            </div>
+            <i class="bi bi-check-circle text-3xl text-[#212842]"></i>
             <div>
                 <p class="text-sm font-bold text-gray-500">Transaksi Selesai</p>
                 <h2 class="text-xl font-extrabold text-[#212842]">8</h2>
