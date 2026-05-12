@@ -85,7 +85,8 @@
 
                 <!-- PROFIL -->
                 <div class="flex items-center gap-3">
-                    <img src="" class="w-8 h-8 rounded-full bg-white">
+                    <img src="https://ui-avatars.com/api/?name=Kasir&background=F0E7D5&color=212842&size=80"
+                        class="w-8 h-8 rounded-full bg-white">
 
                     <span class="text-lg font-extrabold text-[#F0E7D5]">
                         Kasir
