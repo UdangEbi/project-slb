@@ -18,7 +18,7 @@
 
             <!-- LOGO -->
             <div class="w-48">
-                <h1 class="text-2xl font-extrabold text-[#F0E7D5]">GARUDA</h1>
+                <h1 class="text-2xl font-extrabold text-[#F0E7D5]">GAPURA</h1>
             </div>
 
             <!-- TAB MENU -->
