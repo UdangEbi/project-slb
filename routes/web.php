@@ -9,6 +9,7 @@ Route::get('/', function () {
 use App\Http\Controllers\Kasir\TransaksiController;
 use App\Http\Controllers\Kasir\StokController;
 use App\Http\Controllers\Kasir\RekapitulasiKasirController;
+use App\Http\Controllers\Admin\PiutangController;
 
 Route::get('/kasir', function () {
     return view('kasir.index');
@@ -42,4 +43,9 @@ Route::prefix('admin')->group(function () {
 Route::prefix('admin')->group(function () {
     Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])
         ->name('admin.rekapitulasi');
+});
+
+Route::prefix('admin')->group(function () {
+    Route::get('/piutang', [PiutangController::class, 'index'])
+        ->name('admin.piutang');
 });
