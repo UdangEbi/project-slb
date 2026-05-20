@@ -138,28 +138,49 @@
         </div>
 
         <!-- CARD RINGKASAN -->
-        <div class="grid grid-cols-3 gap-4 shrink-0">
-            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-[#212842]">
-                <p class="text-gray-500 font-bold text-sm mb-2">Total Penjualan</p>
-                <h3 class="text-2xl font-extrabold text-[#212842]">
-                    Rp {{ number_format($totalPenjualan, 0, ',', '.') }}
-                </h3>
-            </div>
+        <div class="grid grid-cols-5 gap-4 shrink-0">
 
+            <!-- Saldo -->
             <div class="bg-white rounded-xl shadow p-4 border-l-8 border-green-600">
-                <p class="text-gray-500 font-bold text-sm mb-2">Laba Bersih</p>
+                <p class="text-gray-500 font-bold text-sm mb-2">Saldo</p>
                 <h3 class="text-2xl font-extrabold text-green-700">
-                    Rp {{ number_format($labaBersih, 0, ',', '.') }}
+                    Rp {{ number_format($saldo, 0, ',', '.') }}
                 </h3>
             </div>
 
-            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-yellow-500">
-                <p class="text-gray-500 font-bold text-sm mb-2">Jumlah Produk Terjual</p>
-                <h3 class="text-2xl font-extrabold text-yellow-600">
-                    {{ number_format($jumlahProdukTerjual, 0, ',', '.') }}
+            <!-- Kas Masuk -->
+            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-[#212842]">
+                <p class="text-gray-500 font-bold text-sm mb-2">Kas Masuk</p>
+                <h3 class="text-2xl font-extrabold text-[#212842]">
+                    Rp {{ number_format($kasMasuk, 0, ',', '.') }}
+                </h3>
+            </div>
+
+            <!-- Kas Keluar -->
+            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-red-600">
+                <p class="text-gray-500 font-bold text-sm mb-2">Kas Keluar</p>
+                <h3 class="text-2xl font-extrabold text-red-700">
+                    Rp {{ number_format($kasKeluar, 0, ',', '.') }}
+                </h3>
+            </div>
+
+            <!-- Donasi -->
+            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-blue-600">
+                <p class="text-gray-500 font-bold text-sm mb-2">Donasi</p>
+                <h3 class="text-2xl font-extrabold text-blue-700">
+                    Rp {{ number_format($donasi, 0, ',', '.') }}
+                </h3>
+            </div>
+
+            <!-- Piutang -->
+            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-orange-500">
+                <p class="text-gray-500 font-bold text-sm mb-2">Piutang</p>
+                <h3 class="text-2xl font-extrabold text-orange-600">
+                    Rp {{ number_format($piutang, 0, ',', '.') }}
                 </h3>
             </div>
         </div>
+
 
         <!-- GRAFIK BULANAN -->
         <div class="bg-white rounded-xl shadow p-4 shrink-0">

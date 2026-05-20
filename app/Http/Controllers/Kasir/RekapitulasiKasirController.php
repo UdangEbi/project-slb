@@ -10,4 +10,5 @@ class RekapitulasiKasirController extends Controller
     {
         return view('kasir.rekapitulasi');
     }
+
 }
