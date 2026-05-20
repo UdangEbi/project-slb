@@ -36,6 +36,7 @@ Route::post('/password/reset', function () {
 use App\Http\Controllers\Kasir\TransaksiController;
 use App\Http\Controllers\Kasir\StokController;
 use App\Http\Controllers\Kasir\RekapitulasiKasirController;
+use App\Http\Controllers\Admin\PiutangController;
 
 Route::get('/kasir', function () {
     return view('kasir.index');
@@ -73,3 +74,8 @@ Route::prefix('admin')->group(function () {
 
 Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
     ->name('admin.rekapitulasi.pdf');
+
+Route::prefix('admin')->group(function () {
+    Route::get('/piutang', [PiutangController::class, 'index'])
+        ->name('admin.piutang');
+});

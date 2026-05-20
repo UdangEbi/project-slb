@@ -73,9 +73,10 @@ class DashboardController extends Controller
                     'total' => 50000,
                 ],
             ],
-
             'labaBersih' => 1650000,
             'jumlahProdukTerjual' => 126,
+            'donasi' => 150000,
+            'piutang' => 50000,
         ],
         2025 => [
             'penjualanBulanan' => [
@@ -177,8 +178,10 @@ class DashboardController extends Controller
                 'total' => 45000,
             ],
         ],
-            'labaBersih' => 2150000,
-            'jumlahProdukTerjual' => 154,
+            'labaBersih' => 1650000,
+            'jumlahProdukTerjual' => 126,
+            'donasi' => 150000,
+            'piutang' => 50000,
         ],
             2026 => [
                 'penjualanBulanan' => [
@@ -249,9 +252,10 @@ class DashboardController extends Controller
                         'total' => 125000,
                     ],
                 ],
-
                 'labaBersih' => 815000,
                 'jumlahProdukTerjual' => 185,
+                'donasi' => 250000,
+                'piutang' => 100000,
             ],
         ];
 
@@ -283,9 +287,16 @@ class DashboardController extends Controller
         $penjualanBulanan = $dataTahun['penjualanBulanan'];
         $penjualanRombel = $dataTahun['penjualanRombel'];
         $pembeli = $dataTahun['pembeli'];
+
         $labaBersih = $dataTahun['labaBersih'];
         $jumlahProdukTerjual = $dataTahun['jumlahProdukTerjual'];
         $totalPenjualan = array_sum($penjualanBulanan);
+
+        $kasMasuk = $totalPenjualan;
+        $kasKeluar = $kasMasuk - $labaBersih;
+        $donasi = $dataTahun['donasi'];
+        $piutang = $dataTahun['piutang'];
+        $saldo = $kasMasuk - $kasKeluar + $donasi;
 
         return view('admin.dashboard', compact(
             'tahun',
@@ -296,7 +307,13 @@ class DashboardController extends Controller
             'barangTerlaris',
             'labaBersih',
             'jumlahProdukTerjual',
-            'totalPenjualan'
+            'totalPenjualan',
+            'saldo',
+            'kasMasuk',
+            'kasKeluar',
+            'donasi',
+            'piutang'
+
         ));
     }
 }
