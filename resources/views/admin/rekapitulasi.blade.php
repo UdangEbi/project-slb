@@ -41,7 +41,7 @@
         </div>
 
         {{-- FILTER --}}
-        <form method="GET" action="{{ route('admin.rekapitulasi') }}"
+        <form id="filterForm" method="GET" action="{{ route('admin.rekapitulasi') }}"
             class="bg-white rounded-xl shadow p-4 flex items-end gap-4">
 
             <div>
@@ -80,10 +80,10 @@
                 </select>
             </div>
 
-            <button type="submit"
-                class="bg-[#212842] text-[#F0E7D5] px-5 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition">
-                Tampilkan
-            </button>
+            <a href="{{ route('admin.rekapitulasi.pdf', request()->query()) }}"
+                class="bg-[#CA0B00] text-[#F0E7D5] px-5 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition">
+                Download PDF
+            </a>
 
         </form>
 
@@ -152,8 +152,16 @@
 @endsection
 @push('scripts')
     <script>
+        const filterForm = document.getElementById('filterForm');
         const awal = document.getElementById('periode_awal');
         const akhir = document.getElementById('periode_akhir');
+        const rombel = document.querySelector('select[name="rombel"]');
+
+        function submitFilter() {
+            if (awal.value && akhir.value) {
+                filterForm.submit();
+            }
+        }
 
         awal.addEventListener('change', function() {
             if (!awal.value) return;
@@ -168,6 +176,11 @@
             if (akhir.value && akhir.value > akhir.max) {
                 akhir.value = akhir.max;
             }
+
+            submitFilter();
         });
+
+        akhir.addEventListener('change', submitFilter);
+        rombel.addEventListener('change', submitFilter);
     </script>
 @endpush

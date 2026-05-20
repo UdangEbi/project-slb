@@ -1,10 +1,37 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect('/login');
+})->name('logout');
+
+Route::post('/password/reset', function () {
+
+    $user = Auth::user();
+
+    if (!$user) {
+        return redirect('/login');
+    }
+
+    $user->password = Hash::make('12345678');
+    $user->save();
+
+    return back()->with('success', 'Password berhasil direset');
+
+})->name('password.reset');
 
 use App\Http\Controllers\Kasir\TransaksiController;
 use App\Http\Controllers\Kasir\StokController;
@@ -30,9 +57,9 @@ Route::prefix('kasir')->group(function () {
 });
 
 
+
 use App\Http\Controllers\Admin\RekapitulasiController;
 use App\Http\Controllers\Admin\DashboardController;
-
 
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -43,3 +70,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])
         ->name('admin.rekapitulasi');
 });
+
+Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
+    ->name('admin.rekapitulasi.pdf');
