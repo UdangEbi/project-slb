@@ -4,6 +4,67 @@
 
 @section('content')
 
+@if (!session('modal_awal'))
+<div
+    id="modalAwalPopup"
+    class="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
+
+    <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl p-10 uppercase">
+
+        <div class="text-center mb-8">
+
+            <div class="mx-auto w-28 h-28 bg-[#212842] rounded-3xl flex items-center justify-center shadow-lg mb-5">
+                <span class="text-[#F0E7D5] text-5xl font-extrabold">
+                    RP
+                </span>
+            </div>
+
+            <h2 class="text-4xl font-extrabold text-[#212842]">
+                MODAL AWAL
+            </h2>
+
+            <p class="text-lg font-bold text-gray-500 mt-2">
+                MASUKKAN MODAL AWAL UNTUK MEMULAI TRANSAKSI
+            </p>
+
+        </div>
+
+        <form action="{{ route('kasir.modal-awal.store') }}" method="POST">
+            @csrf
+
+            <label class="block text-xl font-extrabold text-[#212842] mb-3">
+                NOMINAL MODAL AWAL (RP)
+            </label>
+
+            <div class="flex border-2 border-[#212842] rounded-2xl overflow-hidden mb-5">
+
+                <span class="bg-[#ECEDEF] px-6 py-5 text-2xl font-extrabold text-[#212842]">
+                    RP
+                </span>
+
+                <input
+                    type="text"
+                    name="modal_awal"
+                    id="modalAwal"
+                    value="250.000"
+                    oninput="formatModalAwal(this)"
+                    class="w-full px-6 py-5 text-2xl font-bold outline-none">
+
+            </div>
+
+            <button
+                type="submit"
+                class="w-full bg-[#212842] text-[#F0E7D5] py-5 rounded-2xl text-2xl font-extrabold shadow-md hover:bg-[#151b33] transition">
+                SIMPAN MODAL
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+@endif
+
 <div class="xl:scale-[0.92] origin-top max-w-[1500px] mx-auto">
 
 <div class="grid grid-cols-[1fr_320px] gap-3">
@@ -503,6 +564,17 @@
     }
 
     renderKeranjang();
+        function formatModalAwal(input) {
+        let angka = input.value.replace(/\D/g, '');
+
+        if (angka === '') {
+            input.value = '';
+            return;
+        }
+
+        input.value = new Intl.NumberFormat('id-ID').format(angka);
+    }
+
 </script>
 
 @endsection
