@@ -18,7 +18,7 @@
             <button
                 type="button"
                 onclick="showFormTambah()"
-                class="bg-[#212842] rounded-3xl shadow-md p-8 min-h-[280px] border-2 border-dashed border-[#212842] hover:scale-105 transition flex flex-col justify-center items-center">
+                class="bg-[#212842] rounded-3xl shadow-md p-8 h-56 border-2 border-dashed border-[#212842] hover:scale-105 transition flex flex-col justify-center items-center">
 
                 <div class="text-5xl font-extrabold text-[#F0E7D5] leading-none">
                     +
@@ -42,7 +42,7 @@
                         '{{ number_format($item->harga_jual, 0, ',', '.') }}',
                         '{{ $item->kode_produk }}'
                     )"
-                    class="bg-white rounded-3xl shadow-md px-8 py-7 h-auto text-left hover:scale-105 transition border-2 border-transparent hover:border-[#212842] flex flex-col justify-center">
+                    class="bg-white rounded-3xl shadow-md px-8 py-7 h-56 text-left hover:scale-105 transition border-2 border-transparent hover:border-[#212842] flex flex-col justify-center">
 
                     <h2 class="text-2xl font-extrabold text-[#212842] leading-tight">
                         {{ strtoupper($item->nama_produk) }}
