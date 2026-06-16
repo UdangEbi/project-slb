@@ -3,62 +3,68 @@
 @section('title', 'STOK KASIR')
 
 @section('content')
-<div class="w-full uppercase">
+<div class="w-full uppercase pt-8">
 
     {{-- LIST STOK --}}
     <div id="stokList">
+
         <h1 class="text-4xl font-extrabold text-[#212842] mb-8">
             STOK BARANG
         </h1>
 
-        <div class="grid grid-cols-4 gap-8">
+        <div class="grid grid-cols-3 gap-6 pr-6">
 
             {{-- ADD NEW ITEM --}}
             <button
                 type="button"
                 onclick="showFormTambah()"
-                class="bg-[#212842] rounded-3xl shadow-md p-8 h-56 border-2 border-dashed border-[#212842] hover:scale-105 transition flex flex-col justify-center items-center">
+                class="bg-[#212842] rounded-3xl shadow-md px-8 py-6 h-48 border-2 border-dashed border-[#212842] hover:scale-105 transition flex flex-col justify-center items-center">
 
-                <div class="text-6xl font-extrabold text-[#F0E7D5] leading-none">
+                <div class="text-5xl font-extrabold text-[#F0E7D5] leading-none">
                     +
                 </div>
 
-                <p class="text-3xl font-extrabold text-[#F0E7D5] mt-5 text-center leading-tight">
+                <p class="text-2xl font-extrabold text-[#F0E7D5] mt-4 text-center leading-tight">
                     ADD NEW<br>ITEM
                 </p>
             </button>
 
-            @foreach ($barang as $index => $item)
-                <button
-                    type="button"
-                    onclick="showFormEdit(
-                        '{{ $item['nama'] }}',
-                        '{{ $item['stok'] }}',
-                        '{{ number_format($item['harga'], 0, ',', '.') }}',
-                        '{{ 'BRG-' . date('ymd') . '-' . str_pad($index + 1, 4, '0', STR_PAD_LEFT) }}'
-                    )"
-                    class="bg-white rounded-3xl shadow-md px-8 py-7 h-56 text-left hover:scale-105 transition border-2 border-transparent hover:border-[#212842] flex flex-col justify-center">
+            {{-- BARANG --}}
+            @if(isset($barang) && count($barang) > 0)
 
-                    <h2 class="text-3xl font-extrabold text-[#212842] leading-tight mb-6">
-                        {{ strtoupper($item['nama']) }}
-                    </h2>
+                @foreach ($barang as $index => $item)
+                    <button
+                        type="button"
+                        onclick="showFormEdit(
+                            '{{ $item['nama'] }}',
+                            '{{ $item['stok'] }}',
+                            '{{ number_format($item['harga'], 0, ',', '.') }}',
+                            '{{ 'BRG-' . date('ymd') . '-' . str_pad($index + 1, 4, '0', STR_PAD_LEFT) }}'
+                        )"
+                        class="bg-white rounded-3xl shadow-md px-8 py-6 h-48 text-left hover:scale-105 transition border-2 border-transparent hover:border-[#212842] flex flex-col justify-center">
 
-                    <p class="text-xl font-extrabold text-gray-700 mb-3">
-                        STOK: {{ $item['stok'] }} PCS
-                    </p>
+                        <h2 class="text-2xl font-extrabold text-[#212842] leading-tight mb-5">
+                            {{ strtoupper($item['nama']) }}
+                        </h2>
 
-                    <p class="text-xl font-extrabold text-gray-700">
-                        RP {{ number_format($item['harga'], 0, ',', '.') }}
-                    </p>
-                </button>
-            @endforeach
+                        <p class="text-xl font-extrabold text-gray-700 mb-3">
+                            STOK: {{ $item['stok'] }} PCS
+                        </p>
+
+                        <p class="text-xl font-extrabold text-gray-700">
+                            RP {{ number_format($item['harga'], 0, ',', '.') }}
+                        </p>
+                    </button>
+                @endforeach
+
+            @endif
 
         </div>
     </div>
-    {{-- PENUTUP stokList ADA DI SINI --}}
 
     {{-- FORM TAMBAH / EDIT STOK --}}
-    <div id="stokForm" class="hidden">
+    <div id="stokForm" class="hidden pt-8">
+
         <h1 id="judulForm" class="text-4xl font-extrabold text-[#212842] mb-8">
             TAMBAH STOK
         </h1>
