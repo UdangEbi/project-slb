@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'Kasir')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body class="bg-[#F0E7D5] text-black overflow-hidden">
@@ -14,38 +18,47 @@
     <div class="h-screen flex flex-col">
 
         <!-- HEADER -->
-        <header class="h-13 bg-[#212842] px-6 flex items-center relative">
+        <header class="h-17 bg-[#212842] px-3 flex items-center relative shadow-md">
 
-            <!-- LOGO -->
-            <div class="w-48">
-                <h1 class="text-2xl font-extrabold text-[#F0E7D5]">GAPURA</h1>
+            <div class="flex items-center gap-3 min-w-max">
+                <h1 class="text-3xl font-extrabold text-[#F0E7D5] leading-none">
+                    GAPURA
+                </h1>
+
+                <div class="w-px h-9 bg-[#F0E7D5]/50"></div>
+
+                <p class="text-sm font-semibold text-[#F0E7D5] whitespace-nowrap leading-none">
+                    Gerakan Aktif Produktif
+                </p>
             </div>
 
+
+
             <!-- TAB MENU -->
-            <nav class="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 text-lg font-extrabold">
+            <nav class="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 text-2xl font-extrabold">
 
                 <a href="{{ route('kasir.transaksi') }}"
-                    class="px-4 py-2 rounded-xl shadow-md transition duration-200
+                    class="px-4 py-2 rounded-2xl shadow-md transition duration-200
     {{ request()->routeIs('kasir.transaksi')
         ? 'bg-[#F0E7D5] text-[#212842]'
         : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
-                    Transaksi
+                    TRANSAKSI
                 </a>
 
                 <a href="{{ route('kasir.stok') }}"
-                    class="px-4 py-2 rounded-xl shadow-md transition duration-200
+                    class="px-4 py-2 rounded-2xl shadow-md transition duration-200
     {{ request()->routeIs('kasir.stok')
         ? 'bg-[#F0E7D5] text-[#212842]'
         : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
-                    Stok
+                    STOK
                 </a>
 
                 <a href="{{ route('kasir.rekapitulasi') }}"
-                    class="px-4 py-2 rounded-xl shadow-md transition duration-200
+                    class="px-4 py-2 rounded-2xl shadow-md transition duration-200
     {{ request()->routeIs('kasir.rekapitulasi')
         ? 'bg-[#F0E7D5] text-[#212842]'
         : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
-                    Rekapitulasi
+                    REKAPITULASI
                 </a>
 
             </nav>
@@ -83,120 +96,209 @@
                 <!-- GARIS -->
                 <div class="h-8 w-px bg-[#F0E7D5]/40"></div>
 
-                <!-- PROFIL -->
-                <div class="flex items-center gap-3">
-                    <img src="https://ui-avatars.com/api/?name=Kasir&background=F0E7D5&color=212842&size=80"
-                        class="w-8 h-8 rounded-full bg-white">
+                <div x-data="{ open: false }" class="relative">
 
-                    <span class="text-lg font-extrabold text-[#F0E7D5]">
-                        Kasir
-                    </span>
+                    <button type="button" @click="open = !open" class="flex items-center gap-3 focus:outline-none">
+                        <img src="https://ui-avatars.com/api/?name=Kasir&background=F0E7D5&color=212842&size=80"
+                            class="w-8 h-8 rounded-full bg-white">
+
+                        <span class="text-lg font-extrabold text-[#F0E7D5]">
+                            Kasir
+                        </span>
+
+                        <i class="bi bi-chevron-down text-[#F0E7D5] text-sm transition duration-200"
+                            :class="{ 'rotate-180': open }"></i>
+                    </button>
+
+                    <div x-cloak x-show="open" @click.outside="open = false" x-transition
+                        class="absolute right-0 mt-3 w-56 bg-[#F0E7D5] rounded-2xl shadow-xl overflow-hidden z-50">
+
+                        <button type="button" onclick="openPasswordModal()"
+                            class="w-full flex items-center gap-3 px-5 py-4 text-[#212842] font-bold hover:bg-[#212842] hover:text-[#F0E7D5] transition">
+
+                            <i class="bi bi-key-fill"></i>
+                            <span>Ganti Password</span>
+                        </button>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit"
+                                class="w-full flex items-center gap-3 px-5 py-4 text-left text-[#CA0B00] font-bold hover:bg-[#CA0B00] hover:text-[#F0E7D5] transition">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Log Out</span>
+                            </button>
+                        </form>
+
+                    </div>
                 </div>
-
-            </div>
-
         </header>
 
         <!-- BODY -->
         <div class="flex flex-1 overflow-hidden">
             @if (!request()->routeIs('kasir.rekapitulasi'))
                 <!-- SIDEBAR -->
-                <aside class="w-52 bg-[#F0E7D5] flex flex-col">
+                <aside class="w-58 bg-[#F0E7D5] flex flex-col">
 
                     <!-- JUDUL -->
-                    <div class="p-6 pb-3">
-                        <h2 class="text-2xl font-extrabold text-[#212842]">Rombel</h2>
+                    <div class="px-3 pt-2 pb-3">
+                        <h2 class="text-2xl font-extrabold text-[#212842]">ROMBEL</h2>
                     </div>
 
-                    <!-- LIST ROMBEL: hanya 5 yang terlihat, sisanya scroll -->
-                    <div class="px-4 space-y-2 flex-1">
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'graha']) }}"
-                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
-        {{ request('rombel', 'graha') == 'graha'
-            ? 'bg-[#212842] text-[#F0E7D5] '
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            Graha
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'membatik']) }}"
-                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
-        {{ request('rombel') == 'membatik'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            Membatik
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'perkayuan']) }}"
-                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
-        {{ request('rombel') == 'perkayuan'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            Perkayuan
-                        </a>
+                    <div class="px-3 space-y-2 flex-1 overflow-y-auto max-h-[500px]">
 
                         <a href="{{ request()->fullUrlWithQuery(['rombel' => 'busana']) }}"
-                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
-        {{ request('rombel') == 'busana'
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel', 'busana') == 'busana'
             ? 'bg-[#212842] text-[#F0E7D5]'
             : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            Busana
+                            BUSANA
                         </a>
 
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'tata-boga']) }}"
-                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
-        {{ request('rombel') == 'tata-boga'
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'graha']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'graha'
+            ? 'bg-[#212842] text-[#F0E7D5] '
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            GRAHA
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'holtikultura']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'holtikultura'
             ? 'bg-[#212842] text-[#F0E7D5]'
             : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            Tata Boga
+                            HOLTIKULTURAL
                         </a>
 
                         <a href="{{ request()->fullUrlWithQuery(['rombel' => 'kecantikan']) }}"
-                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
         {{ request('rombel') == 'kecantikan'
             ? 'bg-[#212842] text-[#F0E7D5]'
             : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            Kecantikan
+                            KECANTIKAN
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'keramik']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'keramik'
+            ? 'bg-[#212842] text-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            KERAMIK
                         </a>
 
                         <a href="{{ request()->fullUrlWithQuery(['rombel' => 'logam']) }}"
-                            class="block px-3 py-1.5 text-lg font-bold transition duration-200
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
         {{ request('rombel') == 'logam'
             ? 'bg-[#212842] text-[#F0E7D5]'
             : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            Logam
+                            LOGAM
                         </a>
 
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'lukis']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'lukis'
+            ? 'bg-[#212842] text-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            LUKIS
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'membatik']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'membatik'
+            ? 'bg-[#212842] text-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            MEMBATIK
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'otomotif']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'otomotif'
+            ? 'bg-[#212842] text-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            OTOMOTIF
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'perkayuan']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'perkayuan'
+            ? 'bg-[#212842] text-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            PERKAYUAN
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'souvenir']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'souvenir'
+            ? 'bg-[#212842] text-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            SOUVENIR
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'tata-boga']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'tata-boga'
+            ? 'bg-[#212842] text-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            TATA BOGA
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'tik']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'tik'
+            ? 'bg-[#212842] text-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            TIK
+                        </a>
+
+                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'titip-jual']) }}"
+                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+        {{ request('rombel') == 'titip-jual'
+            ? 'bg-[#212842] text-[#F0E7D5]'
+            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                            TITIP JUAL
+                        </a>
 
                     </div>
-
-                    <!-- BAWAH SIDEBAR -->
-                    {{-- <div class="mt-auto p-6 ">
-
-                        <button
-                            class="w-full bg-[#CA0B00] text-[#F0E7D5] text-xl font-extrabold py-2 rounded-lg hover:bg-red-700">
-                            Tutup Kasir
-                        </button>
-
-                        <div class="mt-6 pt-5">
-                            <div id="tanggal" class="text-base font-bold mb-2 text-[#212842]"></div>
-                            <div id="jam" class="text-2xl font-extrabold text-[#212842]"></div>
-                        </div>
-
-                    </div> --}}
 
                 </aside>
             @endif
             <!-- CONTENT -->
-            <main class="flex-1 p-6 overflow-y-auto">
+            <main class="flex-1 px-6 pb-6 pt-2 overflow-y-auto">
                 @yield('content')
             </main>
 
         </div>
 
     </div>
-
     <script>
+        function openPasswordModal() {
+            const modal = document.getElementById('passwordModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closePasswordModal() {
+            const modal = document.getElementById('passwordModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function openResetPasswordModal() {
+            closePasswordModal();
+
+            const modal = document.getElementById('resetPasswordModal');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeResetPasswordModal() {
+            const modal = document.getElementById('resetPasswordModal');
+
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
         function updateWaktu() {
             const now = new Date();
 
@@ -217,6 +319,84 @@
         updateWaktu();
     </script>
 
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- MODAL GANTI PASSWORD -->
+    <div id="passwordModal" class="hidden fixed inset-0 bg-black/40 z-[9999] items-center justify-center">
+
+        <div class="bg-white w-[420px] rounded-2xl p-6 shadow-2xl">
+            <h2 class="text-2xl font-extrabold text-[#212842] mb-5">
+                Ganti Password
+            </h2>
+
+            <form action="/ganti-password" method="POST" class="space-y-4">
+                @csrf
+
+                <input type="password" name="password_lama" placeholder="Password Lama"
+                    class="w-full border rounded-xl px-4 py-3" required>
+
+                <input type="password" name="password_baru" placeholder="Password Baru"
+                    class="w-full border rounded-xl px-4 py-3" required>
+
+                <input type="password" name="password_baru_confirmation" placeholder="Konfirmasi Password Baru"
+                    class="w-full border rounded-xl px-4 py-3" required>
+                <div class="text-right">
+                    <button type="button" onclick="openResetPasswordModal()"
+                        class="text-sm font-bold text-[#212842] hover:underline">
+                        Reset Password
+                    </button>
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="button" onclick="closePasswordModal()"
+                        class="flex-1 py-3 rounded-xl bg-gray-200 font-bold">
+                        Batal
+                    </button>
+
+                    <button type="submit" class="flex-1 py-3 rounded-xl bg-[#212842] text-white font-bold">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- MODAL LUPA PASSWORD -->
+    <div id="resetPasswordModal" class="hidden fixed inset-0 bg-black/40 z-[9999] items-center justify-center">
+
+        <div class="bg-white w-[420px] rounded-2xl p-6 shadow-2xl">
+
+            <h2 class="text-2xl font-extrabold text-[#212842] mb-3">
+                Lupa Password
+            </h2>
+
+            <p class="text-sm text-gray-600 mb-5">
+                Masukkan email akun kasir
+            </p>
+
+            <form action="{{ route('password.reset') }}" method="POST" class="space-y-4">
+                @csrf
+
+                <p class="text-sm text-gray-600">
+                    Password akan direset menjadi:
+                    <span class="font-bold">12345678</span>
+                </p>
+
+                <div class="flex gap-3 pt-2">
+
+                    <button type="button" onclick="closeResetPasswordModal()"
+                        class="flex-1 py-3 rounded-xl bg-gray-200 font-bold">
+
+                        Batal
+                    </button>
+
+                    <button type="submit" class="flex-1 py-3 rounded-xl bg-[#212842] text-white font-bold">
+
+                        Reset Password
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>
