@@ -1,62 +1,75 @@
 @extends('layouts.kasir')
 
-@section('title', 'Stok Kasir')
+@section('title', 'STOK KASIR')
 
 @section('content')
-<div class="w-full">
+<div class="w-full uppercase pt-8">
 
     {{-- LIST STOK --}}
     <div id="stokList">
-        <h1 class="text-3xl font-extrabold text-[#212842] mb-6">
-            Stok Barang
+
+        <h1 class="text-4xl font-extrabold text-[#212842] mb-8">
+            STOK BARANG
         </h1>
 
-        <div class="grid grid-cols-4 gap-4">
+        <div class="grid grid-cols-3 gap-6 pr-6">
 
             {{-- ADD NEW ITEM --}}
             <button
                 type="button"
                 onclick="showFormTambah()"
-                class="bg-[#212842] rounded-xl shadow-md p-4 h-28 text-left border-2 border-dashed border-[#212842] hover:scale-105 transition flex flex-col justify-center items-center">
+                class="bg-[#212842] rounded-3xl shadow-md p-8 h-56 border-2 border-dashed border-[#212842] hover:scale-105 transition flex flex-col justify-center items-center">
 
-                <div class="text-3xl font-extrabold text-[#F0E7D5]">+</div>
-                <p class="text-xl font-extrabold text-[#F0E7D5] mt-1">
-                    Add New Item
+                <div class="text-5xl font-extrabold text-[#F0E7D5] leading-none">
+                    +
+                </div>
+
+                <p class="text-2xl font-extrabold text-[#F0E7D5] mt-4 text-center leading-tight">
+                    ADD NEW<br>ITEM
                 </p>
             </button>
 
-            @foreach ($barang as $index => $item)
+            {{-- BARANG --}}
+            @if(isset($barang) && count($barang) > 0)
+
+            @foreach ($barang as $item)
+
                 <button
                     type="button"
                     onclick="showFormEdit(
-                        '{{ $item['nama'] }}',
-                        '{{ $item['stok'] }}',
-                        '{{ number_format($item['harga'], 0, ',', '.') }}',
-                        '{{ 'BRG-' . date('ymd') . '-' . str_pad($index + 1, 4, '0', STR_PAD_LEFT) }}'
+                        '{{ $item->nama_produk }}',
+                        '{{ $item->stok }}',
+                        '{{ number_format($item->harga_jual, 0, ',', '.') }}',
+                        '{{ $item->kode_produk }}'
                     )"
-                    class="bg-white rounded-xl shadow-md p-4 h-28 text-left hover:scale-105 transition border-2 border-transparent hover:border-[#212842]">
+                    class="bg-white rounded-3xl shadow-md px-8 py-7 h-56 text-left hover:scale-105 transition border-2 border-transparent hover:border-[#212842] flex flex-col justify-center">
 
-                    <h2 class="text-xl font-extrabold text-[#212842] mb-2">
-                        {{ $item['nama'] }}
+                    <h2 class="text-2xl font-extrabold text-[#212842] leading-tight">
+                        {{ strtoupper($item->nama_produk) }}
                     </h2>
 
-                    <p class="text-sm font-bold text-gray-700">
-                        Stok: {{ $item['stok'] }} pcs
+                    <p class="text-xl font-extrabold text-gray-700 mb-3">
+                        STOK: {{ $item->stok }} {{ strtoupper($item->satuan) }}
                     </p>
 
-                    <p class="text-sm font-bold text-gray-700">
-                        Rp {{ number_format($item['harga'], 0, ',', '.') }}
+                    <p class="text-xl font-extrabold text-gray-700">
+                        RP {{ number_format($item->harga_jual, 0, ',', '.') }}
                     </p>
+
                 </button>
+
             @endforeach
+
+            @endif
 
         </div>
     </div>
 
     {{-- FORM TAMBAH / EDIT STOK --}}
-    <div id="stokForm" class="hidden">
-        <h1 id="judulForm" class="text-3xl font-extrabold text-[#212842] mb-6">
-            Tambah Stok
+    <div id="stokForm" class="hidden pt-8">
+
+        <h1 id="judulForm" class="text-4xl font-extrabold text-[#212842] mb-8">
+            TAMBAH STOK
         </h1>
 
         <div class="bg-transparent w-full max-w-6xl">
@@ -64,71 +77,77 @@
             <div class="grid grid-cols-2 gap-10 mb-8">
 
                 <div>
-                    <label class="block text-lg font-bold text-[#212842] mb-2">
-                        Tanggal
+                    <label class="block text-xl font-bold text-[#212842] mb-3">
+                        TANGGAL
                     </label>
+
                     <input
                         type="date"
                         id="tanggal"
-                        class="w-full max-w-sm bg-white border-2 border-[#212842] rounded-md px-4 py-3 text-lg font-bold"
+                        class="w-full max-w-sm bg-white border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold"
                         value="{{ date('Y-m-d') }}">
                 </div>
 
                 <div>
-                    <label class="block text-lg font-bold text-[#212842] mb-2">
-                        Kode Barang
+                    <label class="block text-xl font-bold text-[#212842] mb-3">
+                        KODE BARANG
                     </label>
+
                     <input
                         type="text"
                         id="kodeBarang"
                         readonly
-                        class="w-full max-w-md bg-[#ECEDEF] text-[#9AA1A9] border border-[#BFC5CC] rounded-xl px-4 py-3 text-lg font-bold cursor-not-allowed">
-                    <p class="text-sm font-bold text-[#212842] mt-2">
-                        Kode dibuat otomatis saat disimpan
+                        class="w-full max-w-md bg-[#ECEDEF] text-[#9AA1A9] border border-[#BFC5CC] rounded-xl px-5 py-4 text-xl font-bold cursor-not-allowed">
+
+                    <p class="text-base font-bold text-[#212842] mt-2">
+                        KODE DIBUAT OTOMATIS SAAT DISIMPAN
                     </p>
                 </div>
 
             </div>
 
             <div class="mb-8">
-                <label class="block text-lg font-bold text-[#212842] mb-2">
-                    Nama Barang *
+                <label class="block text-xl font-bold text-[#212842] mb-3">
+                    NAMA BARANG *
                 </label>
+
                 <input
                     type="text"
                     id="namaBarang"
-                    placeholder="Masukkan nama barang"
-                    class="w-full bg-white border-2 border-[#212842] rounded-md px-4 py-3 text-lg font-bold">
+                    placeholder="MASUKKAN NAMA BARANG"
+                    class="w-full bg-white border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold uppercase">
             </div>
 
             <div class="grid grid-cols-3 gap-10 mb-8">
 
                 <div>
-                    <label class="block text-lg font-bold text-[#212842] mb-2">
-                        Stok Saat Ini
+                    <label class="block text-xl font-bold text-[#212842] mb-3">
+                        STOK SAAT INI
                     </label>
+
                     <div class="flex bg-[#ECEDEF] border border-[#BFC5CC] rounded-xl overflow-hidden max-w-xs cursor-not-allowed">
                         <input
                             type="number"
                             id="stokSaatIni"
                             readonly
-                            class="w-full px-4 py-3 text-lg font-bold text-[#9AA1A9] outline-none bg-[#ECEDEF] cursor-not-allowed">
+                            class="w-full px-5 py-4 text-xl font-bold text-[#9AA1A9] outline-none bg-[#ECEDEF] cursor-not-allowed">
 
-                        <span class="px-4 py-3 text-lg font-bold text-[#9AA1A9] bg-[#ECEDEF]">
-                            Pcs
+                        <span class="px-5 py-4 text-xl font-bold text-[#9AA1A9] bg-[#ECEDEF]">
+                            PCS
                         </span>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-lg font-bold text-[#212842] mb-2">
-                        Tambah Stok *
+                    <label class="block text-xl font-bold text-[#212842] mb-3">
+                        TAMBAH STOK *
                     </label>
-                    <div class="flex bg-white border-2 border-[#212842] rounded-md overflow-hidden max-w-xs">
+
+                    <div class="flex bg-white border-2 border-[#212842] rounded-xl overflow-hidden max-w-xs">
                         <button
                             type="button"
                             onclick="kurangTambahStok()"
-                            class="px-5 py-3 text-2xl font-bold border-r-2 border-[#212842]">
+                            class="px-6 py-4 text-3xl font-bold border-r-2 border-[#212842]">
                             −
                         </button>
 
@@ -138,32 +157,35 @@
                             value="0"
                             min="0"
                             oninput="hitungStokSetelah()"
-                            class="w-full text-center px-4 py-3 text-lg font-bold outline-none">
+                            class="w-full text-center px-5 py-4 text-xl font-bold outline-none">
 
                         <button
                             type="button"
                             onclick="tambahTambahStok()"
-                            class="px-5 py-3 text-2xl font-bold border-l-2 border-r-2 border-[#212842]">
+                            class="px-6 py-4 text-3xl font-bold border-l-2 border-r-2 border-[#212842]">
                             +
                         </button>
 
-                        <span class="px-4 py-3 text-lg font-bold">Pcs</span>
+                        <span class="px-5 py-4 text-xl font-bold">
+                            PCS
+                        </span>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-lg font-bold text-[#212842] mb-2">
-                        Stok Setelah Ditambah
+                    <label class="block text-xl font-bold text-[#212842] mb-3">
+                        STOK SETELAH DITAMBAH
                     </label>
+
                     <div class="flex bg-[#ECEDEF] border border-[#BFC5CC] rounded-xl overflow-hidden max-w-xs cursor-not-allowed">
                         <input
                             type="number"
                             id="stokSetelah"
                             readonly
-                            class="w-full px-4 py-3 text-lg font-bold text-[#9AA1A9] outline-none bg-[#ECEDEF] cursor-not-allowed">
+                            class="w-full px-5 py-4 text-xl font-bold text-[#9AA1A9] outline-none bg-[#ECEDEF] cursor-not-allowed">
 
-                        <span class="px-4 py-3 text-lg font-bold text-[#9AA1A9] bg-[#ECEDEF]">
-                            Pcs
+                        <span class="px-5 py-4 text-xl font-bold text-[#9AA1A9] bg-[#ECEDEF]">
+                            PCS
                         </span>
                     </div>
                 </div>
@@ -171,29 +193,30 @@
             </div>
 
             <div class="mb-16">
-                <label class="block text-lg font-bold text-[#212842] mb-2">
-                    Harga Satuan (Rp) *
+                <label class="block text-xl font-bold text-[#212842] mb-3">
+                    HARGA SATUAN (RP) *
                 </label>
+
                 <input
                     type="text"
                     id="hargaBarang"
-                    placeholder="Masukkan harga satuan"
-                    class="w-full max-w-md bg-white border-2 border-[#212842] rounded-md px-4 py-3 text-lg font-bold">
+                    placeholder="MASUKKAN HARGA SATUAN"
+                    class="w-full max-w-md bg-white border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold uppercase">
             </div>
 
             <div class="flex justify-between items-center">
                 <button
                     type="button"
                     onclick="kembaliKeList()"
-                    class="bg-white border-2 border-[#212842] text-[#212842] px-8 py-3 rounded-md font-extrabold">
-                    Batal
+                    class="bg-white border-2 border-[#212842] text-[#212842] px-9 py-4 rounded-xl text-xl font-extrabold">
+                    BATAL
                 </button>
 
                 <button
                     type="button"
                     onclick="kembaliKeList()"
-                    class="bg-white border-2 border-[#212842] text-[#212842] px-8 py-3 rounded-md font-extrabold">
-                    Simpan
+                    class="bg-white border-2 border-[#212842] text-[#212842] px-9 py-4 rounded-xl text-xl font-extrabold">
+                    SIMPAN
                 </button>
             </div>
 
@@ -220,7 +243,7 @@
         document.getElementById('stokList').classList.add('hidden');
         document.getElementById('stokForm').classList.remove('hidden');
 
-        document.getElementById('judulForm').innerText = 'Tambah Barang';
+        document.getElementById('judulForm').innerText = 'TAMBAH BARANG';
         document.getElementById('kodeBarang').value = generateKodeBarang();
         document.getElementById('namaBarang').value = '';
         document.getElementById('stokSaatIni').value = 0;
@@ -233,9 +256,9 @@
         document.getElementById('stokList').classList.add('hidden');
         document.getElementById('stokForm').classList.remove('hidden');
 
-        document.getElementById('judulForm').innerText = 'Tambah Stok';
+        document.getElementById('judulForm').innerText = 'TAMBAH STOK';
         document.getElementById('kodeBarang').value = kode;
-        document.getElementById('namaBarang').value = nama;
+        document.getElementById('namaBarang').value = nama.toUpperCase();
         document.getElementById('stokSaatIni').value = stok;
         document.getElementById('tambahStok').value = 1;
         document.getElementById('hargaBarang').value = harga;
@@ -281,6 +304,13 @@
             e.preventDefault();
             kembaliKeList();
         }
+    });
+
+    const hargaInput = document.getElementById('hargaBarang');
+
+    hargaInput.addEventListener('input', function () {
+        let value = this.value.replace(/\D/g, '');
+        this.value = new Intl.NumberFormat('id-ID').format(value);
     });
 </script>
 @endsection

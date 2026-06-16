@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,12 +23,13 @@ Route::post('/password/reset', function () {
 
     $user = Auth::user();
 
-    if (!$user) {
+    if (!($user instanceof User)) {
         return redirect('/login');
     }
 
     $user->password = Hash::make('12345678');
     $user->save();
+
 
     return back()->with('success', 'Password berhasil direset');
 
@@ -37,24 +39,42 @@ use App\Http\Controllers\Kasir\TransaksiController;
 use App\Http\Controllers\Kasir\StokController;
 use App\Http\Controllers\Kasir\RekapitulasiKasirController;
 use App\Http\Controllers\Admin\PiutangController;
+use App\Http\Controllers\Kasir\AuthKasirController;
+
 
 Route::get('/kasir', function () {
-    return view('kasir.index');
+    return redirect()->route('kasir.login');
 });
 
+Route::get('/login', [AuthKasirController::class, 'login'])
+    ->name('login');
+
+Route::post('/login', [AuthKasirController::class, 'processLogin'])
+    ->name('login.process');
+
+Route::get('/logout', [AuthKasirController::class, 'logout'])
+    ->name('logout');
+
+Route::post('/kasir/modal-awal', [AuthKasirController::class, 'storeModalAwal'])
+    ->name('kasir.modal-awal.store');
+
 Route::prefix('kasir')->group(function () {
+
     Route::get('/transaksi', [TransaksiController::class, 'index'])
         ->name('kasir.transaksi');
-});
 
-Route::prefix('kasir')->group(function () {
+    Route::get('/stok', [StokController::class, 'index'])
+        ->name('kasir.stok');
+
     Route::get('/rekapitulasikasir', [RekapitulasiKasirController::class, 'index'])
         ->name('kasir.rekapitulasi');
 });
 
-Route::prefix('kasir')->group(function () {
-    Route::get('/stok', [StokController::class, 'index'])
-        ->name('kasir.stok');
+Route::prefix('kasir/stok')->name('kasir.stok.')->group(function () {
+    Route::post('/', [StokController::class, 'store'])->name('store');
+    Route::post('/tambah', [StokController::class, 'tambahStok'])->name('tambah');
+    Route::post('/penyesuaian', [StokController::class, 'penyesuaian'])->name('penyesuaian');
+    Route::get('/riwayat', [StokController::class, 'riwayat'])->name('riwayat');
 });
 
 
@@ -63,11 +83,10 @@ use App\Http\Controllers\Admin\RekapitulasiController;
 use App\Http\Controllers\Admin\DashboardController;
 
 Route::prefix('admin')->group(function () {
+
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('admin.dashboard');
-});
 
-Route::prefix('admin')->group(function () {
     Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])
         ->name('admin.rekapitulasi');
 });
