@@ -18,7 +18,7 @@
             <button
                 type="button"
                 onclick="showFormTambah()"
-                class="bg-[#212842] rounded-3xl shadow-md px-8 py-6 h-48 border-2 border-dashed border-[#212842] hover:scale-105 transition flex flex-col justify-center items-center">
+                class="bg-[#212842] rounded-3xl shadow-md p-8 min-h-[280px] border-2 border-dashed border-[#212842] hover:scale-105 transition flex flex-col justify-center items-center">
 
                 <div class="text-5xl font-extrabold text-[#F0E7D5] leading-none">
                     +
@@ -32,30 +32,33 @@
             {{-- BARANG --}}
             @if(isset($barang) && count($barang) > 0)
 
-                @foreach ($barang as $index => $item)
-                    <button
-                        type="button"
-                        onclick="showFormEdit(
-                            '{{ $item['nama'] }}',
-                            '{{ $item['stok'] }}',
-                            '{{ number_format($item['harga'], 0, ',', '.') }}',
-                            '{{ 'BRG-' . date('ymd') . '-' . str_pad($index + 1, 4, '0', STR_PAD_LEFT) }}'
-                        )"
-                        class="bg-white rounded-3xl shadow-md px-8 py-6 h-48 text-left hover:scale-105 transition border-2 border-transparent hover:border-[#212842] flex flex-col justify-center">
+            @foreach ($barang as $item)
 
-                        <h2 class="text-2xl font-extrabold text-[#212842] leading-tight mb-5">
-                            {{ strtoupper($item['nama']) }}
-                        </h2>
+                <button
+                    type="button"
+                    onclick="showFormEdit(
+                        '{{ $item->nama_produk }}',
+                        '{{ $item->stok }}',
+                        '{{ number_format($item->harga_jual, 0, ',', '.') }}',
+                        '{{ $item->kode_produk }}'
+                    )"
+                    class="bg-white rounded-3xl shadow-md px-8 py-7 h-auto text-left hover:scale-105 transition border-2 border-transparent hover:border-[#212842] flex flex-col justify-center">
 
-                        <p class="text-xl font-extrabold text-gray-700 mb-3">
-                            STOK: {{ $item['stok'] }} PCS
-                        </p>
+                    <h2 class="text-2xl font-extrabold text-[#212842] leading-tight">
+                        {{ strtoupper($item->nama_produk) }}
+                    </h2>
 
-                        <p class="text-xl font-extrabold text-gray-700">
-                            RP {{ number_format($item['harga'], 0, ',', '.') }}
-                        </p>
-                    </button>
-                @endforeach
+                    <p class="text-xl font-extrabold text-gray-700 mb-3">
+                        STOK: {{ $item->stok }} {{ strtoupper($item->satuan) }}
+                    </p>
+
+                    <p class="text-xl font-extrabold text-gray-700">
+                        RP {{ number_format($item->harga_jual, 0, ',', '.') }}
+                    </p>
+
+                </button>
+
+            @endforeach
 
             @endif
 

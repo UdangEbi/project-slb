@@ -70,9 +70,11 @@ Route::prefix('kasir')->group(function () {
         ->name('kasir.rekapitulasi');
 });
 
-Route::prefix('kasir')->group(function () {
-    Route::get('/stok', [StokController::class, 'index'])
-        ->name('kasir.stok');
+Route::prefix('kasir/stok')->name('kasir.stok.')->group(function () {
+    Route::post('/', [StokController::class, 'store'])->name('store');
+    Route::post('/tambah', [StokController::class, 'tambahStok'])->name('tambah');
+    Route::post('/penyesuaian', [StokController::class, 'penyesuaian'])->name('penyesuaian');
+    Route::get('/riwayat', [StokController::class, 'riwayat'])->name('riwayat');
 });
 
 

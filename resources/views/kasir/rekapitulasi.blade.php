@@ -4,47 +4,6 @@
 
 @section('content')
 
-@php
-
-    $modalAwal = 250000;
-
-    $tunai = 90800;
-    $qris = 155050;
-
-    $kasMasuk = 100000;
-    $kasKeluar = 48000;
-
-    $donasi = 2000;
-
-    // DATA PIUTANG / HUTANG PEMBELI
-    $dataPiutang = [
-        [
-            'nama' => 'BUDI',
-            'nominal' => 2000,
-        ],
-        [
-            'nama' => 'SITI',
-            'nominal' => 1500,
-        ],
-        [
-            'nama' => 'ANDI',
-            'nominal' => 1500,
-        ],
-    ];
-
-    $hutang = collect($dataPiutang)->sum('nominal');
-
-    $totalPenerimaan = $tunai + $qris;
-
-    $saldoAkhir =
-        $modalAwal +
-        $totalPenerimaan +
-        $kasMasuk +
-        $donasi -
-        $kasKeluar -
-        $hutang;
-
-@endphp
 
 <div class="w-full p-6 uppercase">
 
@@ -101,7 +60,7 @@
             <div>
                 <p class="text-xl font-bold text-gray-500">TRANSAKSI</p>
                 <h2 class="text-3xl font-extrabold text-[#212842]">
-                    8
+                    {{ $totalTransaksi }}
                 </h2>
             </div>
         </div>
@@ -156,6 +115,7 @@
 
                 <div class="flex justify-between border-b py-5">
                     <span class="text-2xl">MODAL AWAL</span>
+
                     <span class="text-3xl">
                         RP{{ number_format($modalAwal, 0, ',', '.') }}
                     </span>
@@ -163,109 +123,15 @@
 
                 <div class="flex justify-between border-b py-5">
                     <span class="text-2xl">TOTAL PENERIMAAN</span>
+
                     <span class="text-3xl">
                         RP{{ number_format($totalPenerimaan, 0, ',', '.') }}
                     </span>
                 </div>
 
-                <div class="flex justify-between border-b py-5">
-                    <span class="text-2xl">KAS MASUK</span>
-                    <span class="text-3xl text-green-600">
-                        RP{{ number_format($kasMasuk, 0, ',', '.') }}
-                    </span>
-                </div>
-
-                <div class="flex justify-between border-b py-5">
-                    <span class="text-2xl">KAS KELUAR</span>
-                    <span class="text-3xl text-red-600">
-                        RP{{ number_format($kasKeluar, 0, ',', '.') }}
-                    </span>
-                </div>
-
-                {{-- PIUTANG DROPDOWN --}}
-                <div class="border-b py-5">
-
-                    <button
-                        type="button"
-                        onclick="togglePiutang()"
-                        class="w-full flex justify-between items-center text-left">
-
-                        <div class="flex items-center gap-3">
-                            <span class="text-2xl">
-                                PIUTANG
-                            </span>
-
-                            <span class="text-base bg-red-100 text-red-700 px-3 py-1 rounded-full font-extrabold">
-                                {{ count($dataPiutang) }} PEMBELI
-                            </span>
-                        </div>
-
-                        <div class="flex items-center gap-4">
-
-                            <span class="text-3xl font-extrabold text-red-600">
-                                RP{{ number_format($hutang, 0, ',', '.') }}
-                            </span>
-
-                            <i
-                                id="iconPiutang"
-                                class="bi bi-chevron-down text-3xl text-[#212842] transition">
-                            </i>
-
-                        </div>
-
-                    </button>
-
-                    {{-- ISI DROPDOWN PIUTANG --}}
-                    <div
-                        id="dropdownPiutang"
-                        class="hidden mt-5 bg-red-50 border border-red-200 rounded-xl overflow-hidden">
-
-                        <div class="grid grid-cols-2 bg-red-100 px-6 py-4 font-extrabold text-red-800">
-                            <span class="text-xl">NAMA PEMBELI</span>
-                            <span class="text-xl text-right">NOMINAL PIUTANG</span>
-                        </div>
-
-                        @forelse ($dataPiutang as $piutang)
-                            <div class="grid grid-cols-2 px-6 py-4 border-t border-red-200">
-                                <span class="text-xl font-extrabold text-[#212842]">
-                                    {{ strtoupper($piutang['nama']) }}
-                                </span>
-
-                                <span class="text-2xl font-extrabold text-red-600 text-right">
-                                    RP{{ number_format($piutang['nominal'], 0, ',', '.') }}
-                                </span>
-                            </div>
-                        @empty
-                            <div class="px-6 py-5 text-xl font-extrabold text-gray-500 text-center">
-                                TIDAK ADA DATA PIUTANG
-                            </div>
-                        @endforelse
-
-                        <div class="grid grid-cols-2 px-6 py-5 bg-red-100 border-t border-red-200">
-                            <span class="text-2xl font-extrabold text-red-800">
-                                TOTAL PIUTANG
-                            </span>
-
-                            <span class="text-3xl font-extrabold text-red-700 text-right">
-                                RP{{ number_format($hutang, 0, ',', '.') }}
-                            </span>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                {{-- DONASI --}}
-                <div class="flex justify-between border-b py-5">
-                    <span class="text-2xl">DONASI</span>
-                    <span class="text-3xl font-extrabold text-green-600">
-                        RP{{ number_format($donasi, 0, ',', '.') }}
-                    </span>
-                </div>
-
-                {{-- SALDO --}}
                 <div class="flex justify-between bg-yellow-50 rounded-xl px-6 py-6 font-extrabold mt-5">
                     <span class="text-3xl">SALDO AKHIR</span>
+
                     <span class="text-4xl text-yellow-700">
                         RP{{ number_format($saldoAkhir, 0, ',', '.') }}
                     </span>
@@ -287,7 +153,7 @@
                 <div class="flex justify-between bg-green-50 rounded-xl px-6 py-6 font-extrabold mt-5">
                     <span class="text-3xl">TOTAL PEMASUKAN</span>
                     <span class="text-3xl text-green-700">
-                        RP{{ number_format($tunai + $modalAwal + $kasMasuk, 0, ',', '.') }}
+                        RP{{ number_format($totalPenerimaan, 0, ',', '.') }}
                     </span>
                 </div>
 

@@ -44,8 +44,9 @@ class AuthKasirController extends Controller
 
             session([
                 'login' => true,
-                'role' => 'admin',
-                'username' => $request->username,
+                'user_id' => $user->id,
+                'role' => $user->role,
+                'username' => $user->name,
             ]);
 
             return redirect()->route('admin.dashboard');
