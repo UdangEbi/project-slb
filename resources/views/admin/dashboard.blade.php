@@ -138,7 +138,7 @@
         </div>
 
         <!-- CARD RINGKASAN -->
-        <div class="grid grid-cols-5 gap-4 shrink-0">
+        <div class="grid grid-cols-4 gap-4 shrink-0">
 
             <!-- Saldo -->
             <div class="bg-white rounded-xl shadow p-4 border-l-8 border-green-600">
@@ -169,14 +169,6 @@
                 <p class="text-gray-500 font-bold text-sm mb-2">Donasi</p>
                 <h3 class="text-2xl font-extrabold text-blue-700">
                     Rp {{ number_format($donasi, 0, ',', '.') }}
-                </h3>
-            </div>
-
-            <!-- Piutang -->
-            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-orange-500">
-                <p class="text-gray-500 font-bold text-sm mb-2">Piutang</p>
-                <h3 class="text-2xl font-extrabold text-orange-600">
-                    Rp {{ number_format($piutang, 0, ',', '.') }}
                 </h3>
             </div>
         </div>

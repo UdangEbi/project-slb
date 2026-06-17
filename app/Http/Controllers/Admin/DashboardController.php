@@ -76,7 +76,6 @@ class DashboardController extends Controller
             'labaBersih' => 1650000,
             'jumlahProdukTerjual' => 126,
             'donasi' => 150000,
-            'piutang' => 50000,
         ],
         2025 => [
             'penjualanBulanan' => [
@@ -181,7 +180,6 @@ class DashboardController extends Controller
             'labaBersih' => 1650000,
             'jumlahProdukTerjual' => 126,
             'donasi' => 150000,
-            'piutang' => 50000,
         ],
             2026 => [
                 'penjualanBulanan' => [
@@ -255,7 +253,6 @@ class DashboardController extends Controller
                 'labaBersih' => 815000,
                 'jumlahProdukTerjual' => 185,
                 'donasi' => 250000,
-                'piutang' => 100000,
             ],
         ];
 
@@ -295,7 +292,6 @@ class DashboardController extends Controller
         $kasMasuk = $totalPenjualan;
         $kasKeluar = $kasMasuk - $labaBersih;
         $donasi = $dataTahun['donasi'];
-        $piutang = $dataTahun['piutang'];
         $saldo = $kasMasuk - $kasKeluar + $donasi;
 
         return view('admin.dashboard', compact(
@@ -311,8 +307,7 @@ class DashboardController extends Controller
             'saldo',
             'kasMasuk',
             'kasKeluar',
-            'donasi',
-            'piutang'
+            'donasi'
 
         ));
     }
