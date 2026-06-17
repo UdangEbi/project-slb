@@ -146,120 +146,25 @@
 
                     <div class="px-3 space-y-2 flex-1 overflow-y-auto max-h-[500px]">
 
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'busana']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel', 'busana') == 'busana'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            BUSANA
-                        </a>
+                        @foreach ($kategori as $item)
 
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'graha']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'graha'
-            ? 'bg-[#212842] text-[#F0E7D5] '
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            GRAHA
-                        </a>
+                            <a
+                                href="{{ route('kasir.stok', ['kategori' => $item->id_kategori]) }}"
+                                class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+                                {{
+                                    $kategoriId == $item->id_kategori
+                                    ? 'bg-[#212842] text-[#F0E7D5]'
+                                    : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]'
+                                }}"
+                            >
 
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'holtikultura']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'holtikultura'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            HOLTIKULTURAL
-                        </a>
+                                {{ strtoupper($item->nama_kategori) }}
 
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'kecantikan']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'kecantikan'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            KECANTIKAN
-                        </a>
+                            </a>
 
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'keramik']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'keramik'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            KERAMIK
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'logam']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'logam'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            LOGAM
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'lukis']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'lukis'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            LUKIS
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'membatik']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'membatik'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            MEMBATIK
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'otomotif']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'otomotif'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            OTOMOTIF
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'perkayuan']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'perkayuan'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            PERKAYUAN
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'souvenir']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'souvenir'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            SOUVENIR
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'tata-boga']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'tata-boga'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            TATA BOGA
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'tik']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'tik'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            TIK
-                        </a>
-
-                        <a href="{{ request()->fullUrlWithQuery(['rombel' => 'titip-jual']) }}"
-                            class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-        {{ request('rombel') == 'titip-jual'
-            ? 'bg-[#212842] text-[#F0E7D5]'
-            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                            TITIP JUAL
-                        </a>
+                        @endforeach
 
                     </div>
-
                 </aside>
             @endif
             <!-- CONTENT -->
