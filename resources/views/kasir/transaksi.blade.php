@@ -12,19 +12,19 @@
 
     <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl p-10 uppercase">
 
-        <div class="text-center mb-8">
+        <div class="text-center mb-6">
 
-            <div class="mx-auto w-28 h-28 bg-[#212842] rounded-3xl flex items-center justify-center shadow-lg mb-5">
+            <div class="mx-auto w-28 h-28 bg-[#212842] rounded-3xl flex items-center justify-center shadow-lg mb-4">
                 <span class="text-[#F0E7D5] text-5xl font-extrabold">
                     RP
                 </span>
             </div>
 
-            <h2 class="text-4xl font-extrabold text-[#212842]">
+            <h2 class="text-5xl font-extrabold text-[#212842]">
                 MODAL AWAL
             </h2>
 
-            <p class="text-lg font-bold text-gray-500 mt-2">
+            <p class="text-2xl font-bold text-gray-500 mt-2">
                 MASUKKAN MODAL AWAL UNTUK MEMULAI TRANSAKSI
             </p>
 
@@ -33,13 +33,13 @@
         <form action="{{ route('kasir.modal-awal.store') }}" method="POST">
             @csrf
 
-            <label class="block text-xl font-extrabold text-[#212842] mb-3">
+            <label class="block text-2xl font-extrabold text-[#212842] mb-3">
                 NOMINAL MODAL AWAL (RP)
             </label>
 
-            <div class="flex border-2 border-[#212842] rounded-2xl overflow-hidden mb-5">
+            <div class="flex border-2 border-[#212842] rounded-2xl overflow-hidden mb-4">
 
-                <span class="bg-[#ECEDEF] px-6 py-5 text-2xl font-extrabold text-[#212842]">
+                <span class="bg-[#ECEDEF] px-6 py-5 text-3xl font-extrabold text-[#212842]">
                     RP
                 </span>
 
@@ -49,13 +49,13 @@
                     id="modalAwal"
                     value="250.000"
                     oninput="formatModalAwal(this)"
-                    class="w-full px-6 py-5 text-2xl font-bold outline-none">
+                    class="w-full px-6 py-5 text-3xl font-bold outline-none">
 
             </div>
 
             <button
                 type="submit"
-                class="w-full bg-[#212842] text-[#F0E7D5] py-5 rounded-2xl text-2xl font-extrabold shadow-md hover:bg-[#151b33] transition">
+                class="w-full bg-[#212842] text-[#F0E7D5] py-5 rounded-2xl text-3xl font-extrabold shadow-md hover:bg-[#151b33] transition">
                 SIMPAN MODAL
             </button>
 
@@ -66,51 +66,51 @@
 </div>
 @endif
 
-<div class="xl:scale-[0.92] origin-top max-w-[1500px] mx-auto">
+<div class="w-full">
 
-<div class="grid grid-cols-[1fr_360px] gap-4">
+<div class="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-3 items-start">
 
     {{-- KIRI --}}
-    <div class="space-y-4">
+    <div class="space-y-2 min-w-0 self-start">
 
         {{-- DATA PELANGGAN --}}
-        <section class="bg-white rounded-xl shadow-sm border border-[#D8CDB7] p-4">
-            <h2 class="text-lg font-extrabold text-[#212842] mb-3">
+        <section class="bg-white rounded-xl shadow-sm border border-[#D8CDB7] p-3">
+            <h2 class="text-2xl font-extrabold text-[#212842] mb-2">
                 Data Pelanggan
             </h2>
 
-            <div class="grid grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <input type="text" id="inputNama" placeholder="NAMA CUSTOMER"
-                    class="border border-[#D8CDB7] rounded-lg px-3 py-2.5 text-base font-extrabold uppercase placeholder:font-extrabold placeholder:uppercase">
+                    class="border border-[#D8CDB7] rounded-lg px-3 py-3 text-lg font-extrabold uppercase placeholder:font-extrabold placeholder:uppercase">
 
                 <input type="text" id="inputTlp" placeholder="NO. TLP / HP"
                     inputmode="numeric"
                     oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                    class="border border-[#D8CDB7] rounded-lg px-3 py-2.5 text-base font-extrabold uppercase">
+                    class="border border-[#D8CDB7] rounded-lg px-3 py-3 text-lg font-extrabold uppercase">
 
                 <input type="text" id="inputInstansi" placeholder="INSTANSI / ASAL"
-                    class="border border-[#D8CDB7] rounded-lg px-3 py-2.5 text-base font-extrabold uppercase">
+                    class="border border-[#D8CDB7] rounded-lg px-3 py-3 text-lg font-extrabold uppercase">
             </div>
         </section>
 
         {{-- PRODUK --}}
-        <section class="bg-white/80 rounded-xl shadow-sm border border-[#D8CDB7] p-4">
+        <section class="bg-white/80 rounded-xl shadow-sm border border-[#D8CDB7] p-3">
 
-            <div class="flex justify-between items-center mb-3">
+            <div class="flex flex-wrap justify-between items-center gap-3 mb-2">
                 <div>
-                    <h2 class="text-lg font-extrabold text-[#212842]">Barang Dijual</h2>
-                    <p class="text-sm font-semibold text-gray-500">Produk sesuai rombel yang dipilih</p>
+                    <h2 class="text-2xl font-extrabold text-[#212842]">Barang Dijual</h2>
+                    <p class="text-lg font-semibold text-gray-500">Produk sesuai rombel yang dipilih</p>
                 </div>
 
                 <div class="flex gap-2">
                     <input type="text" id="searchProduk" placeholder="Cari barang..."
                         oninput="cariProduk()"
-                        class="w-56 border border-[#D8CDB7] rounded-lg px-3 py-2.5 text-base font-extrabold uppercase">
+                        class="w-56 border border-[#D8CDB7] rounded-lg px-3 py-3 text-lg font-extrabold uppercase">
 
                     {{-- TOMBOL CETAK BARCODE --}}
                     <button onclick="bukaCetakBarcode()"
-                        class="bg-[#212842] text-[#F0E7D5] px-4 py-2.5 rounded-lg text-sm font-extrabold hover:bg-[#11172d] flex items-center gap-2 whitespace-nowrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        class="bg-[#212842] text-[#F0E7D5] px-5 py-3 rounded-lg text-lg font-extrabold hover:bg-[#11172d] flex items-center gap-2 whitespace-nowrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                         </svg>
                         Cetak Barcode
@@ -118,7 +118,7 @@
                 </div>
             </div>
 
-            <div id="produkGrid" class="grid grid-cols-3 gap-3">
+            <div id="produkGrid" class="grid gap-3" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
 
                 @forelse ($produk as $item)
                    <div class="produk-card bg-white rounded-lg border border-gray-200 shadow-sm p-3 hover:shadow-md transition"
@@ -134,34 +134,34 @@
                             </svg>
                         </div>
 
-                        <p class="text-xs font-bold text-center text-gray-400 mb-1 tracking-widest">
+                        <p class="text-base font-bold text-center text-gray-400 mb-1 tracking-widest">
                             {{ $item['kode'] ?? '' }}
                         </p>
 
-                        <h3 class="text-sm font-extrabold text-[#212842] leading-snug min-h-[36px]">
+                        <h3 class="text-lg font-extrabold text-[#212842] leading-snug min-h-[40px]">
                             {{ $item['nama'] }}
                         </h3>
 
-                        <p class="text-xl font-black text-[#CA0B00] mt-1">
+                        <p class="text-2xl font-black text-[#CA0B00] mt-1">
                             Rp {{ number_format($item['harga'], 0, ',', '.') }}
                         </p>
 
                         <button
-                            onclick="tambahKeranjang('{{ $item['nama'] }}', {{ $item['harga'] }}, '{{ $item['kode'] ?? '' }}')"
-                            class="mt-2 w-full bg-[#212842] text-[#F0E7D5] py-2.5 rounded-md text-sm font-extrabold hover:bg-[#11172d] transition">
+                            onclick="tambahKeranjang({{ $item['id'] }}, '{{ $item['nama'] }}', {{ $item['harga'] }}, '{{ $item['kode'] ?? '' }}')"
+                            class="mt-2 w-full bg-[#212842] text-[#F0E7D5] py-3 rounded-md text-lg font-extrabold hover:bg-[#11172d] transition">
                             + TAMBAH
                         </button>
 
                     </div>
                 @empty
-                    <div class="col-span-3 text-center py-8 text-gray-500 font-bold text-base">
+                    <div class="col-span-full text-center py-8 text-gray-500 font-bold text-xl">
                         Tidak ada produk untuk rombel ini
                     </div>
                 @endforelse
 
             </div>
 
-            <p id="produkTidakDitemukan" class="hidden text-center py-5 text-gray-500 font-bold text-base">
+            <p id="produkTidakDitemukan" class="hidden text-center py-5 text-gray-500 font-bold text-xl">
                 Barang tidak ditemukan.
             </p>
 
@@ -170,44 +170,44 @@
     </div>
 
     {{-- KANAN: KERANJANG --}}
-    <aside class="bg-white rounded-xl shadow-sm border border-[#D8CDB7] p-4 flex flex-col">
+    <aside class="bg-white rounded-xl shadow-sm border border-[#D8CDB7] p-3 flex flex-col xl:sticky xl:top-0 xl:self-start xl:max-h-screen">
 
-        <h2 class="text-lg font-extrabold text-[#212842] mb-3">
+        <h2 class="text-2xl font-extrabold text-[#212842] mb-2">
             Keranjang Belanja
         </h2>
 
         <div id="keranjangList" class="flex-1 space-y-2 overflow-y-auto">
-            <p class="text-gray-400 font-semibold text-sm">Belum ada barang.</p>
+            <p class="text-gray-400 font-semibold text-lg">Belum ada barang.</p>
         </div>
 
-        <div class="border-t mt-3 pt-3 space-y-1.5">
-            <div class="flex justify-between text-sm font-extrabold text-[#212842]">
+        <div class="border-t mt-2 pt-2 space-y-1.5">
+            <div class="flex justify-between text-lg font-extrabold text-[#212842]">
                 <span>Jumlah Item</span>
                 <span id="jumlahItem">0 item</span>
             </div>
 
-            <div class="flex justify-between text-lg font-extrabold">
+            <div class="flex justify-between text-2xl font-extrabold">
                 <span>Total</span>
                 <span id="totalHarga" class="text-[#CA0B00]">Rp 0</span>
             </div>
         </div>
 
         <button onclick="kosongkanKeranjang()"
-            class="mt-3 w-full bg-red-600 text-white py-2.5 rounded-lg text-sm font-extrabold hover:bg-red-700">
+            class="mt-2 w-full bg-red-600 text-white py-3 rounded-lg text-lg font-extrabold hover:bg-red-700">
             Kosongkan Keranjang
         </button>
 
-        <div class="mt-4">
-            <h3 class="text-sm font-extrabold text-[#212842] mb-2">Pembayaran</h3>
+        <div class="mt-3">
+            <h3 class="text-lg font-extrabold text-[#212842] mb-2">Pembayaran</h3>
 
             <div class="grid grid-cols-2 gap-2">
                 <button onclick="bukaCash()"
-                    class="bg-green-600 text-white py-3 rounded-lg text-sm font-extrabold hover:bg-green-700">
+                    class="bg-green-600 text-white py-4 rounded-lg text-xl font-extrabold hover:bg-green-700">
                     Cash
                 </button>
 
                 <button onclick="bukaQris()"
-                    class="bg-blue-600 text-white py-3 rounded-lg text-sm font-extrabold hover:bg-blue-700">
+                    class="bg-blue-600 text-white py-4 rounded-lg text-xl font-extrabold hover:bg-blue-700">
                     QRIS
                 </button>
             </div>
@@ -221,70 +221,70 @@
 
 {{-- MODAL CASH --}}
 <div id="modalCash" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center">
-    <div class="bg-white rounded-xl w-[420px] p-5 shadow-xl">
-        <h2 class="text-lg font-extrabold text-[#212842] mb-4">Pembayaran Cash</h2>
+    <div class="bg-white rounded-xl w-[460px] p-6 shadow-xl">
+        <h2 class="text-2xl font-extrabold text-[#212842] mb-4">Pembayaran Cash</h2>
 
         <div class="space-y-3">
-            <div class="flex justify-between text-base font-bold">
+            <div class="flex justify-between text-xl font-bold">
                 <span>Total Bayar</span>
                 <span id="cashTotal" class="text-[#CA0B00]">Rp 0</span>
             </div>
 
             <div>
-                <label class="block font-extrabold text-[#212842] mb-1.5 text-sm">Tunai Diterima</label>
+                <label class="block font-extrabold text-[#212842] mb-1.5 text-lg">Tunai Diterima</label>
                 <div class="flex border border-[#D8CDB7] rounded-lg overflow-hidden">
-                    <span class="bg-[#F7F3EA] px-3 py-2.5 font-extrabold text-[#212842] text-base">Rp</span>
+                    <span class="bg-[#F7F3EA] px-4 py-3 font-extrabold text-[#212842] text-xl">Rp</span>
                     <input type="text" id="tunaiDiterima"
                         inputmode="numeric"
                         placeholder="0"
-                        class="w-full px-3 py-2.5 text-base font-bold outline-none">
+                        class="w-full px-4 py-3 text-xl font-bold outline-none">
                 </div>
             </div>
 
-            <div class="flex justify-between text-base font-extrabold">
+            <div class="flex justify-between text-xl font-extrabold">
                 <span>Kembalian</span>
                 <span id="kembalian" class="text-green-700">Rp 0</span>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3 mt-5">
-            <button onclick="tutupCash()" class="bg-gray-200 py-3 rounded-lg text-sm font-extrabold">Batal</button>
-            <button onclick="selesaiBayar('cash')" class="bg-green-600 text-white py-3 rounded-lg text-sm font-extrabold">Selesai</button>
+            <button onclick="tutupCash()" class="bg-gray-200 py-4 rounded-lg text-lg font-extrabold">Batal</button>
+            <button id="btnSelesaiCash" onclick="selesaiBayar('cash')" class="bg-green-600 text-white py-4 rounded-lg text-lg font-extrabold">Selesai</button>
         </div>
     </div>
 </div>
 
 {{-- MODAL QRIS --}}
 <div id="modalQris" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center">
-    <div class="bg-white rounded-xl w-[380px] p-5 shadow-xl text-center">
-        <h2 class="text-lg font-extrabold text-[#212842] mb-3">Pembayaran QRIS</h2>
-        <p class="text-sm font-semibold text-gray-500">Total yang harus dibayar</p>
-        <p id="qrisTotal" class="text-2xl font-black text-[#CA0B00] mt-2">Rp 0</p>
+    <div class="bg-white rounded-xl w-[400px] p-6 shadow-xl text-center">
+        <h2 class="text-2xl font-extrabold text-[#212842] mb-3">Pembayaran QRIS</h2>
+        <p class="text-lg font-semibold text-gray-500">Total yang harus dibayar</p>
+        <p id="qrisTotal" class="text-3xl font-black text-[#CA0B00] mt-2">Rp 0</p>
 
-        <button onclick="selesaiBayar('qris')"
-            class="mt-5 w-full bg-blue-600 text-white py-3 rounded-lg text-sm font-extrabold hover:bg-blue-700">
+        <button id="btnSelesaiQris" onclick="selesaiBayar('qris')"
+            class="mt-5 w-full bg-blue-600 text-white py-4 rounded-lg text-lg font-extrabold hover:bg-blue-700">
             OK, Sudah Dibayar
         </button>
-        <button onclick="tutupQris()" class="mt-2 w-full bg-gray-200 py-3 rounded-lg font-extrabold text-sm">Batal</button>
+        <button onclick="tutupQris()" class="mt-2 w-full bg-gray-200 py-4 rounded-lg font-extrabold text-lg">Batal</button>
     </div>
 </div>
 
 {{-- MODAL SUKSES --}}
 <div id="modalSukses" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center">
-    <div class="bg-white rounded-xl w-[400px] p-6 shadow-xl text-center">
+    <div class="bg-white rounded-xl w-[420px] p-6 shadow-xl text-center">
         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
             </svg>
         </div>
-        <h2 class="text-lg font-extrabold text-[#212842] mb-1">Pembayaran Berhasil!</h2>
-        <p class="text-sm text-gray-500 font-semibold mb-5">Transaksi telah selesai.</p>
+        <h2 class="text-2xl font-extrabold text-[#212842] mb-1">Pembayaran Berhasil!</h2>
+        <p class="text-lg text-gray-500 font-semibold mb-5">Transaksi telah selesai.</p>
 
         <div class="grid grid-cols-2 gap-3">
-            <button onclick="tutupSukses()" class="bg-gray-200 py-3 rounded-lg text-sm font-extrabold">Tutup</button>
+            <button onclick="tutupSukses()" class="bg-gray-200 py-4 rounded-lg text-lg font-extrabold">Tutup</button>
             <button onclick="cetakStruk()"
-                class="bg-[#212842] text-[#F0E7D5] py-3 rounded-lg text-sm font-extrabold hover:bg-[#11172d] flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                class="bg-[#212842] text-[#F0E7D5] py-4 rounded-lg text-lg font-extrabold hover:bg-[#11172d] flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                 </svg>
                 Cetak Struk
@@ -297,27 +297,27 @@
 <div id="modalBarcode" class="hidden fixed inset-0 bg-black/50 z-50 items-center justify-center">
     <div class="bg-white rounded-xl w-[680px] max-h-[80vh] p-5 shadow-xl flex flex-col">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-extrabold text-[#212842]">Cetak Label Barcode Produk</h2>
+            <h2 class="text-xl font-extrabold text-[#212842]">Cetak Label Barcode Produk</h2>
             <button onclick="tutupCetakBarcode()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">×</button>
         </div>
 
         {{-- PENGATURAN --}}
         <div class="grid grid-cols-3 gap-3 mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
             <div>
-                <label class="block text-xs font-extrabold text-gray-600 mb-1">Jumlah label/produk</label>
+                <label class="block text-sm font-extrabold text-gray-600 mb-1">Jumlah label/produk</label>
                 <input type="number" id="jumlahLabel" value="1" min="1" max="100"
-                    class="w-full border border-[#D8CDB7] rounded-lg px-3 py-2 text-sm font-bold">
+                    class="w-full border border-[#D8CDB7] rounded-lg px-3 py-2 text-base font-bold">
             </div>
             <div>
-                <label class="block text-xs font-extrabold text-gray-600 mb-1">Tampilkan harga</label>
-                <select id="tampilHarga" class="w-full border border-[#D8CDB7] rounded-lg px-3 py-2 text-sm font-bold">
+                <label class="block text-sm font-extrabold text-gray-600 mb-1">Tampilkan harga</label>
+                <select id="tampilHarga" class="w-full border border-[#D8CDB7] rounded-lg px-3 py-2 text-base font-bold">
                     <option value="ya">Ya</option>
                     <option value="tidak">Tidak</option>
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-extrabold text-gray-600 mb-1">Tampilkan nama produk</label>
-                <select id="tampilNama" class="w-full border border-[#D8CDB7] rounded-lg px-3 py-2 text-sm font-bold">
+                <label class="block text-sm font-extrabold text-gray-600 mb-1">Tampilkan nama produk</label>
+                <select id="tampilNama" class="w-full border border-[#D8CDB7] rounded-lg px-3 py-2 text-base font-bold">
                     <option value="ya">Ya</option>
                     <option value="tidak">Tidak</option>
                 </select>
@@ -326,17 +326,17 @@
 
         {{-- PILIH PRODUK --}}
         <div class="flex-1 overflow-y-auto">
-            <p class="text-xs font-extrabold text-gray-500 mb-2">Pilih produk yang akan dicetak barcodenya:</p>
+            <p class="text-sm font-extrabold text-gray-500 mb-2">Pilih produk yang akan dicetak barcodenya:</p>
             <div id="listPilihBarcode" class="space-y-1.5">
                 @foreach ($produk as $item)
                 <label class="flex items-center gap-3 p-2.5 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                    <input type="checkbox" class="cb-barcode w-4 h-4"
+                    <input type="checkbox" class="cb-barcode w-5 h-5"
                         data-nama="{{ $item['nama'] }}"
                         data-kode="{{ $item['kode'] ?? '' }}"
                         data-harga="{{ $item['harga'] }}">
                     <div class="flex-1">
-                        <p class="text-sm font-extrabold text-[#212842]">{{ $item['nama'] }}</p>
-                        <p class="text-xs text-gray-500">{{ $item['kode'] ?? '-' }} · Rp {{ number_format($item['harga'], 0, ',', '.') }}</p>
+                        <p class="text-base font-extrabold text-[#212842]">{{ $item['nama'] }}</p>
+                        <p class="text-sm text-gray-500">{{ $item['kode'] ?? '-' }} · Rp {{ number_format($item['harga'], 0, ',', '.') }}</p>
                     </div>
                 </label>
                 @endforeach
@@ -344,10 +344,10 @@
         </div>
 
         <div class="flex gap-3 mt-4 pt-4 border-t">
-            <button onclick="pilihSemuaBarcode()" class="bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg text-sm font-extrabold hover:bg-gray-200">Pilih Semua</button>
-            <button onclick="batalPilihBarcode()" class="bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg text-sm font-extrabold hover:bg-gray-200">Batal Pilih</button>
+            <button onclick="pilihSemuaBarcode()" class="bg-gray-100 text-gray-700 px-4 py-3 rounded-lg text-base font-extrabold hover:bg-gray-200">Pilih Semua</button>
+            <button onclick="batalPilihBarcode()" class="bg-gray-100 text-gray-700 px-4 py-3 rounded-lg text-base font-extrabold hover:bg-gray-200">Batal Pilih</button>
             <button onclick="cetakBarcodeLabel()"
-                class="flex-1 bg-[#212842] text-[#F0E7D5] py-2.5 rounded-lg text-sm font-extrabold hover:bg-[#11172d] flex items-center justify-center gap-2">
+                class="flex-1 bg-[#212842] text-[#F0E7D5] py-3 rounded-lg text-base font-extrabold hover:bg-[#11172d] flex items-center justify-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                 </svg>
@@ -357,34 +357,40 @@
     </div>
 </div>
 
-{{-- STRUK PRINT (hidden) --}}
-<div id="strukPrint" class="hidden">
+{{-- STRUK PRINT (hidden di mode normal, dikontrol JS saat print) --}}
+<div id="strukPrint" style="display:none;">
     <div id="strukKonten"></div>
 </div>
 
-{{-- BARCODE PRINT (hidden) --}}
-<div id="barcodePrint" class="hidden">
+{{-- BARCODE PRINT (hidden di mode normal, dikontrol JS saat print) --}}
+<div id="barcodePrint" style="display:none;">
     <div id="barcodeKonten"></div>
 </div>
 
 {{-- PRINT STYLE --}}
 <style>
 @media print {
-    body > * { display: none !important; }
+    @page {
+        size: 80mm auto;
+        margin: 0;
+    }
+
+    body > *:not(#strukPrint):not(#barcodePrint) { display: none !important; }
 
     /* STRUK */
-    #strukPrint:not(.hidden-print) {
+    #strukPrint.tampil-print {
         display: block !important;
         font-family: 'Courier New', monospace;
-        width: 280px;
+        width: 100%;
         margin: 0 auto;
-        padding: 8px;
+        padding: 4mm;
         font-size: 12px;
         color: #000;
+        box-sizing: border-box;
     }
 
     /* BARCODE LABEL */
-    #barcodePrint:not(.hidden-print) {
+    #barcodePrint.tampil-print {
         display: block !important;
     }
     #barcodePrint {
@@ -450,36 +456,37 @@
         return '- Rp ' + Math.abs(angka).toLocaleString('id-ID');
     }
 
-    function tambahKeranjang(nama, harga, kode) {
-        let item = keranjang.find(p => p.nama === nama);
+    // ===================== KERANJANG (pakai id sebagai kunci unik) =====================
+    function tambahKeranjang(id, nama, harga, kode) {
+        let item = keranjang.find(p => p.id === id);
         if (item) {
             item.qty++;
         } else {
-            keranjang.push({ nama, harga, kode: kode || '', qty: 1 });
+            keranjang.push({ id, nama, harga, kode: kode || '', qty: 1 });
         }
         simpanKeranjang();
         renderKeranjang();
     }
 
-    function kurangiQty(nama) {
-        let item = keranjang.find(p => p.nama === nama);
+    function kurangiQty(id) {
+        let item = keranjang.find(p => p.id === id);
         if (item) {
             item.qty--;
-            if (item.qty <= 0) keranjang = keranjang.filter(p => p.nama !== nama);
+            if (item.qty <= 0) keranjang = keranjang.filter(p => p.id !== id);
         }
         simpanKeranjang();
         renderKeranjang();
     }
 
-    function tambahQty(nama) {
-        let item = keranjang.find(p => p.nama === nama);
+    function tambahQty(id) {
+        let item = keranjang.find(p => p.id === id);
         if (item) item.qty++;
         simpanKeranjang();
         renderKeranjang();
     }
 
-    function hapusItem(nama) {
-        keranjang = keranjang.filter(p => p.nama !== nama);
+    function hapusItem(id) {
+        keranjang = keranjang.filter(p => p.id !== id);
         simpanKeranjang();
         renderKeranjang();
     }
@@ -499,7 +506,7 @@
         let total = 0, totalItem = 0;
 
         if (keranjang.length === 0) {
-            list.innerHTML = `<p class="text-gray-400 font-semibold text-sm">Belum ada barang.</p>`;
+            list.innerHTML = `<p class="text-gray-400 font-semibold text-lg">Belum ada barang.</p>`;
             totalHarga.innerText = 'Rp 0';
             jumlahItem.innerText = '0 item';
             totalBelanja = 0;
@@ -513,22 +520,22 @@
             totalItem += item.qty;
 
             list.innerHTML += `
-                <div class="border rounded-lg p-2.5">
+                <div class="border rounded-lg p-3">
                     <div class="flex justify-between items-start gap-2">
                         <div class="flex-1 min-w-0">
-                            <p class="text-sm font-extrabold text-[#212842] leading-tight truncate">${item.nama}</p>
-                            <p class="text-xs text-gray-500">${item.qty} × ${formatRupiah(item.harga)}</p>
+                            <p class="text-lg font-extrabold text-[#212842] leading-tight truncate">${item.nama}</p>
+                            <p class="text-base text-gray-500">${item.qty} × ${formatRupiah(item.harga)}</p>
                         </div>
-                        <button onclick="hapusItem('${item.nama}')"
-                            class="w-6 h-6 flex-shrink-0 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-sm leading-none">×</button>
+                        <button onclick="hapusItem(${item.id})"
+                            class="w-8 h-8 flex-shrink-0 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-lg leading-none">×</button>
                     </div>
                     <div class="flex justify-between items-center mt-2">
                         <div class="flex items-center gap-1">
-                            <button onclick="kurangiQty('${item.nama}')" class="w-7 h-7 bg-gray-200 rounded text-sm font-bold">-</button>
-                            <span class="text-sm font-extrabold px-1">${item.qty}</span>
-                            <button onclick="tambahQty('${item.nama}')" class="w-7 h-7 bg-[#212842] text-[#F0E7D5] rounded text-sm font-bold">+</button>
+                            <button onclick="kurangiQty(${item.id})" class="w-9 h-9 bg-gray-200 rounded text-lg font-bold">-</button>
+                            <span class="text-lg font-extrabold px-2">${item.qty}</span>
+                            <button onclick="tambahQty(${item.id})" class="w-9 h-9 bg-[#212842] text-[#F0E7D5] rounded text-lg font-bold">+</button>
                         </div>
-                        <p class="text-sm font-extrabold">${formatRupiah(subtotal)}</p>
+                        <p class="text-lg font-extrabold">${formatRupiah(subtotal)}</p>
                     </div>
                 </div>
             `;
@@ -627,32 +634,88 @@
         }
     });
 
-    function selesaiBayar(metode) {
+    // ===================== CHECKOUT: KIRIM KE BACKEND =====================
+    function setLoadingTombolBayar(loading) {
+        const btnCash = document.getElementById('btnSelesaiCash');
+        const btnQris = document.getElementById('btnSelesaiQris');
+        [btnCash, btnQris].forEach(btn => {
+            if (!btn) return;
+            btn.disabled = loading;
+            btn.classList.toggle('opacity-50', loading);
+        });
+    }
+
+    async function selesaiBayar(metode) {
+        if (keranjang.length === 0) {
+            alert('Keranjang masih kosong.');
+            return;
+        }
+
         const inputTunai = document.getElementById('tunaiDiterima');
+        let tunai;
 
         if (metode === 'cash') {
             let angka = inputTunai.value.replace(/[^0-9]/g, '');
-            let tunai = angka === '' ? 0 : parseInt(angka);
-            if (tunai < totalBelanja) { alert('Tunai diterima masih kurang.'); return; }
-            tunaiTerakhir = tunai;
+            tunai = angka === '' ? 0 : parseInt(angka);
+            if (tunai < totalBelanja) {
+                alert('Tunai diterima masih kurang.');
+                return;
+            }
         } else {
-            tunaiTerakhir = totalBelanja;
+            tunai = totalBelanja;
         }
 
-        metodeBayarTerakhir = metode;
-        snapshotKeranjang = [...keranjang];
-        snapshotPelanggan = {
-            nama: document.getElementById('inputNama')?.value || '',
-            tlp: document.getElementById('inputTlp')?.value || '',
-            instansi: document.getElementById('inputInstansi')?.value || ''
+        const payload = {
+            keranjang: keranjang.map(item => ({ id: item.id, qty: item.qty })),
+            total: totalBelanja,
+            metode: metode, // 'cash' atau 'qris'
+            bayar: tunai,
         };
 
-        tutupCash();
-        tutupQris();
+        setLoadingTombolBayar(true);
 
-        const modalSukses = document.getElementById('modalSukses');
-        modalSukses.classList.remove('hidden');
-        modalSukses.classList.add('flex');
+        try {
+            const response = await fetch("{{ route('kasir.transaksi.store') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.sukses) {
+                alert(data.pesan || 'Transaksi gagal disimpan.');
+                setLoadingTombolBayar(false);
+                return;
+            }
+
+            // Sukses — simpan snapshot untuk struk, lalu tampilkan modal sukses
+            metodeBayarTerakhir = metode;
+            tunaiTerakhir = tunai;
+            snapshotKeranjang = [...keranjang];
+            snapshotPelanggan = {
+                nama: document.getElementById('inputNama')?.value || '',
+                tlp: document.getElementById('inputTlp')?.value || '',
+                instansi: document.getElementById('inputInstansi')?.value || ''
+            };
+
+            tutupCash();
+            tutupQris();
+
+            const modalSukses = document.getElementById('modalSukses');
+            modalSukses.classList.remove('hidden');
+            modalSukses.classList.add('flex');
+
+        } catch (err) {
+            alert('Terjadi kesalahan koneksi. Coba lagi.');
+            console.error(err);
+        } finally {
+            setLoadingTombolBayar(false);
+        }
     }
 
     function tutupSukses() {
@@ -663,6 +726,9 @@
         keranjang = [];
         localStorage.removeItem('keranjangKasir');
         renderKeranjang();
+
+        // Reload halaman supaya stok produk yang ditampilkan ter-update
+        window.location.reload();
     }
 
     // ===================== CETAK STRUK =====================
@@ -719,15 +785,11 @@
             <div class="struk-footer">★ ★ ★</div>
         `;
 
-        // Sembunyikan barcodePrint saat cetak struk
-        document.getElementById('barcodePrint').classList.add('hidden-print');
-        document.getElementById('strukPrint').classList.remove('hidden-print');
+        // Tampilkan strukPrint, sembunyikan barcodePrint saat cetak struk
+        document.getElementById('barcodePrint').classList.remove('tampil-print');
+        document.getElementById('strukPrint').classList.add('tampil-print');
 
         window.print();
-
-        setTimeout(() => {
-            tutupSukses();
-        }, 500);
     }
 
     // ===================== MODAL BARCODE =====================
@@ -801,9 +863,9 @@
 
         tutupCetakBarcode();
 
-        // Set mode print barcode
-        document.getElementById('strukPrint').classList.add('hidden-print');
-        document.getElementById('barcodePrint').classList.remove('hidden-print');
+        // Tampilkan barcodePrint, sembunyikan strukPrint
+        document.getElementById('strukPrint').classList.remove('tampil-print');
+        document.getElementById('barcodePrint').classList.add('tampil-print');
 
         setTimeout(() => {
             window.print();
@@ -829,7 +891,9 @@
     }
 
     renderKeranjang();
-        function formatModalAwal(input) {
+    initBarcode();
+
+    function formatModalAwal(input) {
         let angka = input.value.replace(/\D/g, '');
 
         if (angka === '') {

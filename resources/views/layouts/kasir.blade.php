@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Kasir')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -149,7 +150,9 @@
                         @foreach ($kategori as $item)
 
                             <a
-                                href="{{ route('kasir.stok', ['kategori' => $item->id_kategori]) }}"
+                                href="{{ request()->routeIs('kasir.transaksi')
+                                    ? route('kasir.transaksi', ['kategori' => $item->id_kategori])
+                                    : route('kasir.stok', ['kategori' => $item->id_kategori]) }}"
                                 class="block px-2 py-1.5 text-2xl font-bold transition duration-200
                                 {{
                                     $kategoriId == $item->id_kategori

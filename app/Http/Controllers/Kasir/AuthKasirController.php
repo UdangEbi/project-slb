@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Kasir;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AuthKasirController extends Controller
@@ -41,11 +42,12 @@ class AuthKasirController extends Controller
             $request->username === 'admin' &&
             $request->password === 'admin'
         ) {
+            $user = User::where('email', 'admin@slb.local')->first();
 
             session([
-                'login' => true,
-                'user_id' => $user->id,
-                'role' => $user->role,
+                'login'    => true,
+                'user_id'  => $user->id,
+                'role'     => $user->role,
                 'username' => $user->name,
             ]);
 
@@ -62,11 +64,13 @@ class AuthKasirController extends Controller
             $request->username === 'kasir' &&
             $request->password === 'kasir'
         ) {
+            $user = User::where('email', 'kasir@slb.local')->first();
 
             session([
-                'login' => true,
-                'role' => 'kasir',
-                'username' => $request->username,
+                'login'      => true,
+                'user_id'    => $user->id,
+                'role'       => 'kasir',
+                'username'   => $user->name,
 
                 // MODAL AWAL AKAN MUNCUL POPUP
                 'modal_awal' => null,
