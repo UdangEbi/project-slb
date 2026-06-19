@@ -30,7 +30,7 @@
 
         </div>
 
-        <form action="{{ route('kasir.modal-awal.store') }}" method="POST">
+        <form action="{{ route('kasir.modal-awal.store') }}" method="POST" onsubmit="localStorage.removeItem('keranjangKasir')">
             @csrf
 
             <label class="block text-2xl font-extrabold text-[#212842] mb-3">
@@ -138,11 +138,11 @@
                             {{ $item['kode'] ?? '' }}
                         </p>
 
-                        <h3 class="text-lg font-extrabold text-[#212842] leading-snug min-h-[40px]">
+                        <h3 class="text-lg font-extrabold text-[#212842] leading-snug min-h-[40px] text-center">
                             {{ $item['nama'] }}
                         </h3>
 
-                        <p class="text-2xl font-black text-[#CA0B00] mt-1">
+                        <p class="text-2xl font-black text-[#CA0B00] mt-1 text-center">
                             Rp {{ number_format($item['harga'], 0, ',', '.') }}
                         </p>
 
@@ -431,15 +431,15 @@
     let totalBelanja = 0;
     let metodeBayarTerakhir = '';
     let tunaiTerakhir = 0;
-    let snapshotKeranjang = [];
+    let dataStruk = null; // data struk dari backend
     let snapshotPelanggan = {};
 
-    // ===== CONFIG TOKO (sesuaikan dengan data toko Anda) =====
+    // ===== CONFIG TOKO =====
     const TOKO = {
         nama: 'GAPURA',
         tagline: 'Gerakan Aktif Produktif',
-        alamat: 'Jl. Contoh No. 1, Kota',
-        telp: '(0274) 000-0000',
+        alamat: 'Jl. Imogiri Tim. No.224, Giwangan, Umbulharjo, Yogyakarta 55163',
+        telp: '(0274) 371243',
         ucapanTerima: 'Terima kasih atas kepercayaan Anda!',
         pesanBawah: 'Barang yang sudah dibeli tidak dapat dikembalikan.'
     };
@@ -566,8 +566,19 @@
         kosong.classList.toggle('hidden', ditemukan > 0);
     }
 
+    function validasiPelanggan() {
+        const nama = document.getElementById('inputNama').value.trim();
+        const tlp = document.getElementById('inputTlp').value.trim();
+        const instansi = document.getElementById('inputInstansi').value.trim();
+        if (!nama) { alert('Nama customer wajib diisi.'); document.getElementById('inputNama').focus(); return false; }
+        if (!tlp) { alert('No. Tlp / HP wajib diisi.'); document.getElementById('inputTlp').focus(); return false; }
+        if (!instansi) { alert('Instansi / Asal wajib diisi.'); document.getElementById('inputInstansi').focus(); return false; }
+        return true;
+    }
+
     function bukaCash() {
         if (totalBelanja <= 0) { alert('Keranjang masih kosong'); return; }
+        if (!validasiPelanggan()) return;
         document.getElementById('cashTotal').innerText = formatRupiah(totalBelanja);
         document.getElementById('tunaiDiterima').value = '';
         resetKembalian();
@@ -584,6 +595,7 @@
 
     function bukaQris() {
         if (totalBelanja <= 0) { alert('Keranjang masih kosong'); return; }
+        if (!validasiPelanggan()) return;
         document.getElementById('qrisTotal').innerText = formatRupiah(totalBelanja);
         const modal = document.getElementById('modalQris');
         modal.classList.remove('hidden');
@@ -693,10 +705,10 @@
                 return;
             }
 
-            // Sukses — simpan snapshot untuk struk, lalu tampilkan modal sukses
+            // Sukses — simpan data struk dari backend, lalu tampilkan modal sukses
+            dataStruk = data.struk;
             metodeBayarTerakhir = metode;
             tunaiTerakhir = tunai;
-            snapshotKeranjang = [...keranjang];
             snapshotPelanggan = {
                 nama: document.getElementById('inputNama')?.value || '',
                 tlp: document.getElementById('inputTlp')?.value || '',
@@ -733,63 +745,106 @@
 
     // ===================== CETAK STRUK =====================
     function cetakStruk() {
-        const sekarang = new Date();
-        const tgl = sekarang.toLocaleDateString('id-ID', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
-        const jam = sekarang.toLocaleTimeString('id-ID');
-        const noStruk = 'TRX-' + sekarang.getFullYear() +
-            String(sekarang.getMonth()+1).padStart(2,'0') +
-            String(sekarang.getDate()).padStart(2,'0') + '-' +
-            String(Math.floor(Math.random()*9000)+1000);
+        if (!dataStruk) {
+            alert('Data struk tidak tersedia.');
+            return;
+        }
+
+        const pelanggan = snapshotPelanggan;
+        const metodeTampil = dataStruk.metode === 'tunai' ? 'TUNAI' : 'QRIS';
 
         let barisItems = '';
-        snapshotKeranjang.forEach(item => {
-            const subtotal = item.harga * item.qty;
+        dataStruk.items.forEach(item => {
             barisItems += `
-                <div class="struk-row-item">
-                    <div style="font-weight:bold;">${item.nama}</div>
-                    <div class="struk-row">
-                        <span>${item.qty} × ${formatRupiah(item.harga)}</span>
-                        <span>${formatRupiah(subtotal)}</span>
-                    </div>
-                </div>
+                <tr>
+                    <td colspan="2" style="font-weight:bold; padding-top:4px;">${item.nama}</td>
+                </tr>
+                <tr>
+                    <td>${item.qty} &times; Rp ${Number(item.harga).toLocaleString('id-ID')}</td>
+                    <td style="text-align:right;">Rp ${Number(item.subtotal).toLocaleString('id-ID')}</td>
+                </tr>
             `;
         });
 
-        const kembalian = metodeBayarTerakhir === 'cash' ? (tunaiTerakhir - totalBelanja) : 0;
-        const metodeTampil = metodeBayarTerakhir === 'cash' ? 'TUNAI' : 'QRIS';
-
-        document.getElementById('strukKonten').innerHTML = `
-            <div class="struk-logo">${TOKO.nama}</div>
-            <div class="struk-sub">${TOKO.tagline}</div>
-            <div class="struk-alamat">${TOKO.alamat}</div>
-            <div class="struk-alamat">Telp: ${TOKO.telp}</div>
-            <div class="struk-divider"></div>
-            <div class="struk-row"><span>No. Struk</span><span>${noStruk}</span></div>
-            <div class="struk-row"><span>Tanggal</span><span>${tgl}</span></div>
-            <div class="struk-row"><span>Jam</span><span>${jam}</span></div>
-            ${snapshotPelanggan.nama ? `<div class="struk-row"><span>Pelanggan</span><span>${snapshotPelanggan.nama}</span></div>` : ''}
-            ${snapshotPelanggan.tlp ? `<div class="struk-row"><span>No. HP</span><span>${snapshotPelanggan.tlp}</span></div>` : ''}
-            ${snapshotPelanggan.instansi ? `<div class="struk-row"><span>Instansi</span><span>${snapshotPelanggan.instansi}</span></div>` : ''}
-            <div class="struk-divider"></div>
-            ${barisItems}
-            <div class="struk-divider"></div>
-            <div class="struk-row struk-total"><span>TOTAL</span><span>${formatRupiah(totalBelanja)}</span></div>
-            <div class="struk-row"><span>Metode</span><span>${metodeTampil}</span></div>
-            ${metodeBayarTerakhir === 'cash' ? `
-            <div class="struk-row"><span>Tunai</span><span>${formatRupiah(tunaiTerakhir)}</span></div>
-            <div class="struk-row"><span>Kembalian</span><span>${formatRupiah(kembalian)}</span></div>
-            ` : ''}
-            <div class="struk-divider"></div>
-            <div class="struk-footer">${TOKO.pesanBawah}</div>
-            <div class="struk-footer-tagline">${TOKO.ucapanTerima}</div>
-            <div class="struk-footer">★ ★ ★</div>
+        const htmlStruk = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Struk - ${dataStruk.no_nota}</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body {
+                        font-family: 'Courier New', monospace;
+                        font-size: 12px;
+                        width: 280px;
+                        margin: 0 auto;
+                        padding: 8px;
+                        color: #000;
+                        background: #fff;
+                    }
+                    @page { size: 80mm auto; margin: 0; }
+                    @media print {
+                        body { width: 100%; padding: 4mm; }
+                    }
+                    .center { text-align: center; }
+                    .bold { font-weight: bold; }
+                    .logo { font-size: 18px; font-weight: 900; letter-spacing: 2px; text-align: center; }
+                    .sub { font-size: 10px; text-align: center; margin-bottom: 4px; }
+                    .divider { border-top: 1px dashed #000; margin: 6px 0; }
+                    table { width: 100%; border-collapse: collapse; }
+                    td { font-size: 12px; padding: 1px 0; vertical-align: top; }
+                    td:last-child { text-align: right; }
+                    .total-row td { font-weight: 900; font-size: 14px; border-top: 1px dashed #000; padding-top: 4px; }
+                    .footer { text-align: center; font-size: 10px; margin-top: 8px; }
+                    .footer-tagline { text-align: center; font-size: 11px; font-weight: 900; margin-top: 4px; }
+                </style>
+            </head>
+            <body>
+                <div class="logo">${TOKO.nama}</div>
+                <div class="sub">${TOKO.tagline}</div>
+                <div class="sub">${TOKO.alamat}</div>
+                <div class="sub">Telp: ${TOKO.telp}</div>
+                <div class="divider"></div>
+                <table>
+                    <tr><td>No. Struk</td><td>${dataStruk.no_nota}</td></tr>
+                    <tr><td>Tanggal</td><td>${dataStruk.tanggal}</td></tr>
+                    <tr><td>Jam</td><td>${dataStruk.jam}</td></tr>
+                    <tr><td>Kasir</td><td>${dataStruk.kasir}</td></tr>
+                    ${pelanggan.nama ? `<tr><td>Pelanggan</td><td>${pelanggan.nama}</td></tr>` : ''}
+                    ${pelanggan.tlp ? `<tr><td>No. HP</td><td>${pelanggan.tlp}</td></tr>` : ''}
+                    ${pelanggan.instansi ? `<tr><td>Instansi</td><td>${pelanggan.instansi}</td></tr>` : ''}
+                </table>
+                <div class="divider"></div>
+                <table>${barisItems}</table>
+                <div class="divider"></div>
+                <table>
+                    <tr class="total-row"><td>TOTAL</td><td>Rp ${Number(dataStruk.total).toLocaleString('id-ID')}</td></tr>
+                    <tr><td>Metode</td><td>${metodeTampil}</td></tr>
+                    ${dataStruk.metode === 'tunai' ? `
+                    <tr><td>Tunai</td><td>Rp ${Number(dataStruk.bayar).toLocaleString('id-ID')}</td></tr>
+                    <tr><td>Kembalian</td><td>Rp ${Number(dataStruk.kembalian).toLocaleString('id-ID')}</td></tr>
+                    ` : ''}
+                </table>
+                <div class="divider"></div>
+                <div class="footer">${TOKO.pesanBawah}</div>
+                <div class="footer-tagline">${TOKO.ucapanTerima}</div>
+                <div class="footer">&#9733; &#9733; &#9733;</div>
+                <script>
+                    window.onload = function() { window.print(); }
+                <\/script>
+            </body>
+            </html>
         `;
 
-        // Tampilkan strukPrint, sembunyikan barcodePrint saat cetak struk
-        document.getElementById('barcodePrint').classList.remove('tampil-print');
-        document.getElementById('strukPrint').classList.add('tampil-print');
+        const win = window.open('', '_blank', 'width=350,height=600');
+        win.document.write(htmlStruk);
+        win.document.close();
 
-        window.print();
+        // Tutup modal sukses dan kosongkan keranjang setelah cetak struk
+        setTimeout(() => {
+            tutupSukses();
+        }, 800);
     }
 
     // ===================== MODAL BARCODE =====================
@@ -821,55 +876,93 @@
         const showHarga = document.getElementById('tampilHarga').value === 'ya';
         const showNama = document.getElementById('tampilNama').value === 'ya';
 
-        let labelHTML = '';
+        let labelItems = [];
 
         dipilih.forEach(cb => {
             const nama = cb.getAttribute('data-nama');
             const kode = cb.getAttribute('data-kode');
             const harga = parseInt(cb.getAttribute('data-harga'));
-
             for (let i = 0; i < jumlah; i++) {
-                const svgId = 'bc-print-' + kode.replace(/[^a-zA-Z0-9]/g, '') + '-' + i;
-                labelHTML += `
-                    <div class="barcode-label-item">
-                        <div class="label-toko" style="border:none; margin-bottom:1mm;">${TOKO.nama}</div>
-                        ${showNama ? `<div class="label-nama">${nama}</div>` : ''}
-                        <svg id="${svgId}" data-kode="${kode}"></svg>
-                        <div class="label-kode">${kode}</div>
-                        ${showHarga ? `<div class="label-harga">Rp ${harga.toLocaleString('id-ID')}</div>` : ''}
-                    </div>
-                `;
+                labelItems.push({ nama, kode, harga });
             }
         });
 
-        const barcodeKonten = document.getElementById('barcodeKonten');
-        barcodeKonten.innerHTML = labelHTML;
-
-        // Generate semua barcode SVG
-        barcodeKonten.querySelectorAll('svg[data-kode]').forEach(el => {
-            const k = el.getAttribute('data-kode');
-            if (k) {
-                try {
-                    JsBarcode(el, k, {
-                        format: 'CODE128',
-                        width: 1.5,
-                        height: 40,
-                        displayValue: false,
-                        margin: 2
-                    });
-                } catch(e) {}
-            }
+        // Buat HTML barcode di window baru
+        let labelHTML = '';
+        labelItems.forEach((item, idx) => {
+            const svgId = 'bc-' + idx;
+            labelHTML += `
+                <div class="label-item">
+                    <div class="label-toko">${TOKO.nama}</div>
+                    ${showNama ? `<div class="label-nama">${item.nama}</div>` : ''}
+                    <svg id="${svgId}" data-kode="${item.kode}"></svg>
+                    <div class="label-kode">${item.kode}</div>
+                    ${showHarga ? `<div class="label-harga">Rp ${item.harga.toLocaleString('id-ID')}</div>` : ''}
+                </div>
+            `;
         });
+
+        const htmlBarcode = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Label Barcode</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { font-family: Arial, sans-serif; background: #fff; }
+                    .label-item {
+                        display: inline-block;
+                        width: 85mm;
+                        padding: 3mm;
+                        border: 0.5px solid #ccc;
+                        text-align: center;
+                        margin: 1mm;
+                        vertical-align: top;
+                        page-break-inside: avoid;
+                    }
+                    .label-toko { font-size: 7pt; color: #888; margin-bottom: 1mm; }
+                    .label-nama { font-size: 9pt; font-weight: 900; color: #000; margin-bottom: 1mm; }
+                    .label-kode { font-size: 8pt; color: #666; letter-spacing: 1px; margin-top: 1mm; }
+                    .label-harga { font-size: 11pt; font-weight: 900; color: #CA0B00; margin-top: 1mm; }
+                    svg { display: block; margin: 0 auto; }
+                    @media print {
+                        @page { margin: 5mm; }
+                        body { background: #fff; }
+                    }
+                </style>
+            </head>
+            <body>
+                ${labelHTML}
+                <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"><\/script>
+                <script>
+                    window.onload = function() {
+                        document.querySelectorAll('svg[data-kode]').forEach(function(el) {
+                            var k = el.getAttribute('data-kode');
+                            if (k) {
+                                try {
+                                    JsBarcode(el, k, {
+                                        format: 'CODE128',
+                                        width: 1.5,
+                                        height: 40,
+                                        displayValue: false,
+                                        margin: 2
+                                    });
+                                } catch(e) {}
+                            }
+                        });
+                        setTimeout(function() { window.print(); }, 500);
+                    };
+                <\/script>
+            </body>
+            </html>
+        `;
 
         tutupCetakBarcode();
 
-        // Tampilkan barcodePrint, sembunyikan strukPrint
-        document.getElementById('strukPrint').classList.remove('tampil-print');
-        document.getElementById('barcodePrint').classList.add('tampil-print');
-
-        setTimeout(() => {
-            window.print();
-        }, 300);
+        const win = window.open('', '_blank', 'width=700,height=500');
+        win.document.write(htmlBarcode);
+        win.document.close();
     }
 
     // ===================== INIT =====================

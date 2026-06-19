@@ -137,10 +137,36 @@ class TransaksiController extends Controller
 
             DB::commit();
 
+            // Ambil detail transaksi lengkap untuk data struk
+            $detailStruk = DetailTransaksi::with('produk')
+                ->where('transaksi_id', $transaksi->id_transaksi)
+                ->get()
+                ->map(function ($d) {
+                    return [
+                        'nama'     => $d->produk->nama_produk,
+                        'qty'      => $d->qty,
+                        'harga'    => $d->harga,
+                        'subtotal' => $d->subtotal,
+                    ];
+                });
+
+            Carbon::setLocale('id');
+
             return response()->json([
-                'sukses'  => true,
-                'no_nota' => $noNota,
-                'pesan'   => 'Transaksi berhasil disimpan'
+                'sukses'   => true,
+                'no_nota'  => $noNota,
+                'pesan'    => 'Transaksi berhasil disimpan',
+                'struk'    => [
+                    'no_nota'  => $noNota,
+                    'tanggal'  => Carbon::now()->translatedFormat('l, d F Y'),
+                    'jam'      => Carbon::now()->format('H:i:s'),
+                    'kasir'    => session('username'),
+                    'metode'   => $metode,
+                    'items'    => $detailStruk,
+                    'total'    => $total,
+                    'bayar'    => $bayar,
+                    'kembalian'=> $kembalian,
+                ],
             ]);
 
         } catch (\Exception $e) {
