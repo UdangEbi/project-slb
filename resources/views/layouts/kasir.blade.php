@@ -155,7 +155,7 @@
                                     $kategoriId == $item->id_kategori
                                     ? 'bg-[#212842] text-[#F0E7D5]'
                                     : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]'
-                                }}"
+                                 }}"
                             >
 
                                 {{ strtoupper($item->nama_kategori) }}
