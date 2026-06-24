@@ -62,12 +62,16 @@ Route::prefix('kasir')->group(function () {
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])
         ->name('kasir.transaksi');
+        
+    Route::post('/transaksi/simpan', [TransaksiController::class, 'simpanTransaksi'])
+        ->name('kasir.transaksi.store');
 
     Route::get('/stok', [StokController::class, 'index'])
         ->name('kasir.stok');
 
     Route::get('/rekapitulasikasir', [RekapitulasiKasirController::class, 'index'])
         ->name('kasir.rekapitulasi');
+
 });
 
 Route::prefix('kasir/stok')->name('kasir.stok.')->group(function () {
