@@ -16,6 +16,7 @@ class RekapKasir extends Model
     protected $fillable = [
         'user_id',
         'tanggal',
+        'modal_awal',
         'total_transaksi',
         'total_penjualan',
         'uang_fisik',
