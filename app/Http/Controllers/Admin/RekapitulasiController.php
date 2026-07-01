@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\DetailTransaksi;
+use App\Models\KasKeluar;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -13,242 +16,144 @@ class RekapitulasiController extends Controller
     {
         $periodeAwal = $request->periode_awal ?? now()->startOfMonth()->format('Y-m-d');
         $periodeAkhir = $request->periode_akhir ?? now()->format('Y-m-d');
-        $rombel = $request->rombel;
         $awal = Carbon::parse($periodeAwal);
         $akhir = Carbon::parse($periodeAkhir);
 
         if ($awal->diffInDays($akhir) > 30) {
             return back()->with('error', 'Periode maksimal 30 hari.');
         }
+        $data = $this->getRekapitulasi($periodeAwal, $periodeAkhir);
 
-        $data = collect([
-            // ===== APRIL =====
-    [
-        'tanggal' => '2026-04-01',
-        'rombel' => 'graha',
-        'keterangan' => 'Penjualan produk Graha',
-        'kas_masuk' => 150000,
-        'kas_keluar' => 0,
-    ],
-    [
-        'tanggal' => '2026-04-05',
-        'rombel' => 'graha',
-        'keterangan' => 'Pembelian bahan',
-        'kas_masuk' => 0,
-        'kas_keluar' => 50000,
-    ],
-    [
-        'tanggal' => '2026-04-10',
-        'rombel' => 'membatik',
-        'keterangan' => 'Penjualan batik',
-        'kas_masuk' => 200000,
-        'kas_keluar' => 0,
-    ],
-    [
-        'tanggal' => '2026-04-20',
-        'rombel' => 'busana',
-        'keterangan' => 'Pembelian kain',
-        'kas_masuk' => 0,
-        'kas_keluar' => 75000,
-    ],
-
-    // ===== MEI =====
-    [
-        'tanggal' => '2026-05-01',
-        'rombel' => 'graha',
-        'keterangan' => 'Penjualan produk Graha',
-        'kas_masuk' => 180000,
-        'kas_keluar' => 0,
-    ],
-    [
-        'tanggal' => '2026-05-03',
-        'rombel' => 'graha',
-        'keterangan' => 'Pembelian alat',
-        'kas_masuk' => 0,
-        'kas_keluar' => 40000,
-    ],
-    [
-        'tanggal' => '2026-05-10',
-        'rombel' => 'membatik',
-        'keterangan' => 'Penjualan batik',
-        'kas_masuk' => 220000,
-        'kas_keluar' => 0,
-    ],
-    [
-        'tanggal' => '2026-05-15',
-        'rombel' => 'busana',
-        'keterangan' => 'Penjualan busana',
-        'kas_masuk' => 250000,
-        'kas_keluar' => 0,
-    ],
-
-    // ===== JUNI =====
-    [
-        'tanggal' => '2026-06-02',
-        'rombel' => 'graha',
-        'keterangan' => 'Penjualan produk Graha',
-        'kas_masuk' => 200000,
-        'kas_keluar' => 0,
-    ],
-    [
-        'tanggal' => '2026-06-08',
-        'rombel' => 'graha',
-        'keterangan' => 'Pembelian bahan',
-        'kas_masuk' => 0,
-        'kas_keluar' => 60000,
-    ],
-    [
-        'tanggal' => '2026-06-12',
-        'rombel' => 'membatik',
-        'keterangan' => 'Penjualan batik',
-        'kas_masuk' => 300000,
-        'kas_keluar' => 0,
-    ],
+        return view('admin.rekapitulasi', [
+            'rekapitulasi' => $data['rekapitulasi'],
+            'periodeAwal' => $periodeAwal,
+            'periodeAkhir' => $periodeAkhir,
+            'totalKasMasuk' => $data['totalKasMasuk'],
+            'totalKasKeluar' => $data['totalKasKeluar'],
+            'saldo' => $data['saldo'],
         ]);
-
-        $rekapitulasi = $data->filter(function ($item) use ($awal, $akhir) {
-            $tanggal = Carbon::parse($item['tanggal']);
-            return $tanggal->betweenIncluded($awal, $akhir);
-        });
-
-        if ($rombel) {
-            $rekapitulasi = $rekapitulasi->where('rombel', $rombel);
-        }
-
-        $kasMasuk = $rekapitulasi->sum('kas_masuk');
-        $kasKeluar = $rekapitulasi->sum('kas_keluar');
-        $saldo = $kasMasuk - $kasKeluar;
-
-        return view('admin.rekapitulasi', compact(
-            'rekapitulasi',
-            'periodeAwal',
-            'periodeAkhir',
-            'rombel',
-            'kasMasuk',
-            'kasKeluar',
-            'saldo'
-        ));
     }
 
     public function downloadRekapitulasiPdf(Request $request)
     {
         $periodeAwal = $request->periode_awal ?? now()->startOfMonth()->format('Y-m-d');
         $periodeAkhir = $request->periode_akhir ?? now()->format('Y-m-d');
-        $rombel = $request->rombel;
+        $data = $this->getRekapitulasi($periodeAwal, $periodeAkhir);
 
-        $awal = Carbon::parse($periodeAwal);
-        $akhir = Carbon::parse($periodeAkhir);
-
-        $data = collect([
-            [
-                'tanggal' => '2026-04-01',
-                'rombel' => 'graha',
-                'keterangan' => 'Penjualan produk Graha',
-                'kas_masuk' => 150000,
-                'kas_keluar' => 0,
-            ],
-            [
-                'tanggal' => '2026-04-05',
-                'rombel' => 'graha',
-                'keterangan' => 'Pembelian bahan',
-                'kas_masuk' => 0,
-                'kas_keluar' => 50000,
-            ],
-            [
-                'tanggal' => '2026-04-10',
-                'rombel' => 'membatik',
-                'keterangan' => 'Penjualan batik',
-                'kas_masuk' => 200000,
-                'kas_keluar' => 0,
-            ],
-            [
-                'tanggal' => '2026-04-20',
-                'rombel' => 'busana',
-                'keterangan' => 'Pembelian kain',
-                'kas_masuk' => 0,
-                'kas_keluar' => 75000,
-            ],
-            [
-                'tanggal' => '2026-05-01',
-                'rombel' => 'graha',
-                'keterangan' => 'Penjualan produk Graha',
-                'kas_masuk' => 180000,
-                'kas_keluar' => 0,
-            ],
-            [
-                'tanggal' => '2026-05-03',
-                'rombel' => 'graha',
-                'keterangan' => 'Pembelian alat',
-                'kas_masuk' => 0,
-                'kas_keluar' => 40000,
-            ],
-            [
-                'tanggal' => '2026-05-10',
-                'rombel' => 'membatik',
-                'keterangan' => 'Penjualan batik',
-                'kas_masuk' => 220000,
-                'kas_keluar' => 0,
-            ],
-            [
-                'tanggal' => '2026-05-15',
-                'rombel' => 'busana',
-                'keterangan' => 'Penjualan busana',
-                'kas_masuk' => 250000,
-                'kas_keluar' => 0,
-            ],
-            [
-                'tanggal' => '2026-06-02',
-                'rombel' => 'graha',
-                'keterangan' => 'Penjualan produk Graha',
-                'kas_masuk' => 200000,
-                'kas_keluar' => 0,
-            ],
-            [
-                'tanggal' => '2026-06-08',
-                'rombel' => 'graha',
-                'keterangan' => 'Pembelian bahan',
-                'kas_masuk' => 0,
-                'kas_keluar' => 60000,
-            ],
-            [
-                'tanggal' => '2026-06-12',
-                'rombel' => 'membatik',
-                'keterangan' => 'Penjualan batik',
-                'kas_masuk' => 300000,
-                'kas_keluar' => 0,
-            ],
-        ]);
-
-        $rekapitulasi = $data->filter(function ($item) use ($awal, $akhir) {
-            $tanggal = Carbon::parse($item['tanggal']);
-            return $tanggal->betweenIncluded($awal, $akhir);
-        });
-
-        if ($rombel) {
-            $rekapitulasi = $rekapitulasi->where('rombel', $rombel);
-        }
-
-        $kasMasuk = $rekapitulasi->sum('kas_masuk');
-        $kasKeluar = $rekapitulasi->sum('kas_keluar');
-        $saldo = $kasMasuk - $kasKeluar;
-
-        $pdf = Pdf::loadView('admin.rekapitulasi-pdf', compact(
-            'rekapitulasi',
-            'kasMasuk',
-            'kasKeluar',
-            'saldo',
-            'periodeAwal',
-            'periodeAkhir',
-            'rombel'
-        ))->setPaper('a4', 'landscape');
-
-        $namaRombel = $rombel ? str_replace('-', '_', $rombel) : 'semua_rombel';
+        $pdf = Pdf::loadView('admin.rekapitulasi-pdf', [
+            'rekapitulasi' => $data['rekapitulasi'],
+            'totalKasMasuk' => $data['totalKasMasuk'],
+            'totalKasKeluar' => $data['totalKasKeluar'],
+            'saldo' => $data['saldo'],
+            'periodeAwal' => $periodeAwal,
+            'periodeAkhir' => $periodeAkhir,
+        ])->setPaper('a4', 'landscape');
 
         $namaFile = 'rekapitulasi_' .
             $periodeAwal . '_sampai_' .
-            $periodeAkhir . '_' .
-            $namaRombel . '.pdf';
+            $periodeAkhir . '.pdf';
 
         return $pdf->download($namaFile);
+    }
+
+    private function getRekapitulasi($periodeAwal, $periodeAkhir)
+    {
+        $awal = Carbon::parse($periodeAwal);
+        $akhir = Carbon::parse($periodeAkhir);
+
+        $transaksiMasuk = DetailTransaksi::join(
+            'transaksi',
+            'detail_transaksi.transaksi_id',
+            '=',
+            'transaksi.id_transaksi'
+        )
+            ->join(
+                'produk',
+                'detail_transaksi.produk_id',
+                '=',
+                'produk.id_produk'
+            )
+            ->join(
+                'kategori_produk',
+                'produk.kategori_id',
+                '=',
+                'kategori_produk.id_kategori'
+            )
+            ->whereBetween(
+                DB::raw('DATE(transaksi.tanggal)'),
+                [$periodeAwal, $periodeAkhir]
+            )
+            ->where('transaksi.status', 'selesai')
+            ->selectRaw("
+                transaksi.id_transaksi,
+                transaksi.tanggal,
+                transaksi.no_nota,
+                transaksi.grand_total AS kas_masuk,
+                0 AS kas_keluar,
+                GROUP_CONCAT(
+                    DISTINCT kategori_produk.nama_kategori
+                    ORDER BY kategori_produk.nama_kategori
+                    SEPARATOR ', '
+                ) AS rombel
+            ")
+            ->groupBy(
+                'transaksi.id_transaksi',
+                'transaksi.tanggal',
+                'transaksi.no_nota',
+                'transaksi.grand_total'
+            )
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'tanggal' => $item->tanggal,
+                    'rombel' => $item->rombel,
+                    'keterangan' => 'Penjualan - ' . $item->no_nota,
+                    'kas_masuk' => $item->kas_masuk,
+                    'kas_keluar' => 0,
+                ];
+            });
+
+        $kasKeluar = KasKeluar::join(
+            'kategori_pengeluaran',
+            'kas_keluar.kategori_pengeluaran_id',
+            '=',
+            'kategori_pengeluaran.id_kategori_pengeluaran'
+        )
+        ->whereBetween(
+            DB::raw('DATE(kas_keluar.tanggal)'),
+            [$periodeAwal, $periodeAkhir]
+        )
+        ->select(
+            'kas_keluar.tanggal',
+            'kategori_pengeluaran.nama_kategori',
+            'kas_keluar.keterangan',
+            'kas_keluar.nominal'
+        )
+        ->get()
+        ->map(function ($item) {
+            return [
+                'tanggal' => $item->tanggal,
+                'rombel' => strtoupper($item->nama_kategori),
+                'keterangan' => $item->keterangan,
+                'kas_masuk' => 0,
+                'kas_keluar' => $item->nominal,
+            ];
+        });
+        // dd($kasKeluar);
+        $rekapitulasi = $transaksiMasuk
+            ->merge($kasKeluar)
+            ->sortBy('tanggal')
+            ->values();
+
+        $totalKasMasuk = $rekapitulasi->sum('kas_masuk');
+        $totalKasKeluar = $rekapitulasi->sum('kas_keluar');
+        $saldo = $totalKasMasuk - $totalKasKeluar;
+
+        return [
+            'rekapitulasi' => $rekapitulasi,
+            'totalKasMasuk' => $totalKasMasuk,
+            'totalKasKeluar' => $totalKasKeluar,
+            'saldo' => $saldo,
+        ];
     }
 }
