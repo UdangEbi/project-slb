@@ -52,12 +52,55 @@
                     STOK
                 </a>
 
+<<<<<<< HEAD
                 <a href="{{ route('kasir.rekapitulasi') }}" class="px-4 py-2 rounded-2xl shadow-md transition duration-200
     {{ request()->routeIs('kasir.rekapitulasi')
     ? 'bg-[#F0E7D5] text-[#212842]'
     : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
                     REKAPITULASI
                 </a>
+=======
+                <div x-data="{ open: false }" class="relative">
+
+                    <button type="button" @click="open = !open"
+                        class="px-4 py-2 rounded-2xl shadow-md transition duration-200 flex items-center gap-2
+        {{ request()->routeIs('kasir.rekapitulasi') || request()->routeIs('kasir.kas-keluar.*')
+            ? 'bg-[#F0E7D5] text-[#212842]'
+            : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
+
+                        REKAPITULASI
+
+                        <i class="bi bi-chevron-down transition duration-200" :class="{ 'rotate-180': open }"></i>
+
+                    </button>
+
+                    <div x-cloak x-show="open" @click.outside="open = false" x-transition
+                        class="absolute left-1/2 -translate-x-1/2 mt-3 w-60 bg-[#F0E7D5] rounded-2xl shadow-xl overflow-hidden z-[9999]">
+
+                        <a href="{{ route('kasir.rekapitulasi') }}"
+                            class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
+                   hover:bg-[#212842] hover:text-[#F0E7D5] transition">
+
+                            <i class="bi bi-bar-chart-fill"></i>
+
+                            <span>Rekapitulasi</span>
+
+                        </a>
+
+                        <a href="{{ route('kasir.kas-keluar') }}"
+                            class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
+                   hover:bg-[#212842] hover:text-[#F0E7D5] transition">
+
+                            <i class="bi bi-cash-stack"></i>
+
+                            <span>Pengeluaran Kas</span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+>>>>>>> da75e076a7e3b1b117ca7b2fffdb9c6d9de5c875
 
             </nav>
 
@@ -133,7 +176,7 @@
 
         <!-- BODY -->
         <div class="flex flex-1 overflow-hidden">
-            @if (!request()->routeIs('kasir.rekapitulasi'))
+            @if (!request()->routeIs(['kasir.rekapitulasi', 'kasir.kas-keluar']))
                 <!-- SIDEBAR -->
                 <aside class="w-58 bg-[#F0E7D5] flex flex-col">
 
@@ -145,6 +188,7 @@
                     <div class="px-3 space-y-2 flex-1 overflow-y-auto max-h-[500px]">
 
                         @foreach ($kategori as $item)
+<<<<<<< HEAD
 
                                     <a href="{{ request()->routeIs('kasir.transaksi')
                             ? route('kasir.transaksi', ['kategori' => $item->id_kategori])
@@ -154,11 +198,24 @@
                             ? 'bg-[#212842] text-[#F0E7D5]'
                             : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]'
                                                 }}">
+=======
+                            <a href="{{ request()->routeIs('kasir.transaksi')
+                                ? route('kasir.transaksi', ['kategori' => $item->id_kategori])
+                                : route('kasir.stok', ['kategori' => $item->id_kategori]) }}"
+                                class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+                                {{ $kategoriId == $item->id_kategori
+                                    ? 'bg-[#212842] text-[#F0E7D5]'
+                                    : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+>>>>>>> da75e076a7e3b1b117ca7b2fffdb9c6d9de5c875
 
                                         {{ strtoupper($item->nama_kategori) }}
 
+<<<<<<< HEAD
                                     </a>
 
+=======
+                            </a>
+>>>>>>> da75e076a7e3b1b117ca7b2fffdb9c6d9de5c875
                         @endforeach
 
                     </div>
@@ -222,6 +279,7 @@
     </script>
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <!-- MODAL GANTI PASSWORD -->
     <div id="passwordModal" class="hidden fixed inset-0 bg-black/40 z-[9999] items-center justify-center">
 
@@ -300,5 +358,6 @@
         </div>
     </div>
 </body>
+@stack('scripts')
 
 </html>

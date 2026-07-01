@@ -66,18 +66,12 @@
         {{ \Carbon\Carbon::parse($periodeAwal)->format('d-m-Y') }}
         sampai
         {{ \Carbon\Carbon::parse($periodeAkhir)->format('d-m-Y') }}
-
-        @if ($rombel)
-            | Rombel: {{ ucwords(str_replace('-', ' ', $rombel)) }}
-        @else
-            | Semua Rombel
-        @endif
     </div>
 
     <table class="summary">
         <tr>
-            <td>Kas Masuk: Rp {{ number_format($kasMasuk, 0, ',', '.') }}</td>
-            <td>Kas Keluar: Rp {{ number_format($kasKeluar, 0, ',', '.') }}</td>
+            <td>Kas Masuk: Rp {{ number_format($totalKasMasuk, 0, ',', '.') }}</td>
+            <td>Kas Keluar: Rp {{ number_format($totalKasKeluar, 0, ',', '.') }}</td>
             <td>Saldo: Rp {{ number_format($saldo, 0, ',', '.') }}</td>
         </tr>
     </table>

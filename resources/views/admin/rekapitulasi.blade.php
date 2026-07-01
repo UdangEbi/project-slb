@@ -16,7 +16,7 @@
                     Kas Masuk
                 </p>
                 <h2 class="text-xl font-extrabold text-[#212842] mt-1">
-                    Rp {{ number_format($kasMasuk, 0, ',', '.') }}
+                    Rp {{ number_format($totalKasMasuk, 0, ',', '.') }}
                 </h2>
             </div>
 
@@ -25,7 +25,7 @@
                     Kas Keluar
                 </p>
                 <h2 class="text-xl font-extrabold text-[#CA0B00] mt-1">
-                    Rp {{ number_format($kasKeluar, 0, ',', '.') }}
+                    Rp {{ number_format($totalKasKeluar, 0, ',', '.') }}
                 </h2>
             </div>
 
@@ -62,7 +62,7 @@
                     class="w-44 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#212842]">
             </div>
 
-            <div>
+            {{-- <div>
                 <label class="block text-sm font-bold text-[#212842] mb-1">
                     Rombel
                 </label>
@@ -78,7 +78,7 @@
                     <option value="kecantikan" {{ $rombel == 'kecantikan' ? 'selected' : '' }}>Kecantikan</option>
                     <option value="logam" {{ $rombel == 'logam' ? 'selected' : '' }}>Logam</option>
                 </select>
-            </div>
+            </div> --}}
 
             <a href="{{ route('admin.rekapitulasi.pdf', request()->query()) }}"
                 class="bg-[#CA0B00] text-[#F0E7D5] px-5 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition">
@@ -95,7 +95,7 @@
                     Detail Rekapitulasi
                 </h2>
                 <p class="text-sm text-gray-500">
-                    Data berdasarkan periode dan rombel yang dipilih.
+                    Data transaksi penjualan dan kas keluar berdasarkan periode yang dipilih.
                 </p>
             </div>
 

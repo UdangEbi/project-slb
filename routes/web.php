@@ -37,9 +37,9 @@ Route::post('/password/reset', function () {
 use App\Http\Controllers\Kasir\TransaksiController;
 use App\Http\Controllers\Kasir\StokController;
 use App\Http\Controllers\Kasir\RekapitulasiKasirController;
+use App\Http\Controllers\Kasir\KasKeluarController;
 use App\Http\Controllers\Admin\PiutangController;
 use App\Http\Controllers\Kasir\AuthKasirController;
-
 
 Route::get('/kasir', function () {
     return redirect()->route('kasir.login');
@@ -62,11 +62,22 @@ Route::prefix('kasir')->group(function () {
     Route::get('/transaksi', [TransaksiController::class, 'index'])
         ->name('kasir.transaksi');
 
+
     Route::post('/transaksi/simpan', [TransaksiController::class, 'simpanTransaksi'])
         ->name('kasir.transaksi.store');
 
     Route::get('/rekapitulasikasir', [RekapitulasiKasirController::class, 'index'])
         ->name('kasir.rekapitulasi');
+
+    Route::get('/kas-keluar', [KasKeluarController::class, 'index'])
+        ->name('kasir.kas-keluar');
+
+    Route::post('/kas-keluar', [KasKeluarController::class, 'store'])
+        ->name('kasir.kas-keluar.store');
+
+    Route::put('/kas-keluar/{kasKeluar}', [KasKeluarController::class, 'update'])
+        ->name('kasir.kas-keluar.update');
+
 });
 
 // Route::prefix('kasir/stok')->name('kasir.stok.')->group(function () {
