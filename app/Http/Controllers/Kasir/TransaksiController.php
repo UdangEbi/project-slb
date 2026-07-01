@@ -44,17 +44,12 @@ class TransaksiController extends Controller
     }
 
     // ── MODAL AWAL ───────────────────────────────────────────
-    // Catatan: route aktif untuk modal awal saat ini mengarah ke
-    // AuthKasirController::storeModalAwal, bukan ke sini.
-    // Method ini disesuaikan agar memakai nama route yang valid
-    // (kasir.transaksi), seandainya suatu saat dipakai.
     public function storeModalAwal(Request $request)
     {
         $request->validate([
             'modal_awal' => 'required'
         ]);
 
-        // Bersihkan format ribuan → angka murni
         $nominal = (int) str_replace(['.', ','], ['', ''], $request->modal_awal);
 
         session(['modal_awal' => $nominal]);
@@ -66,12 +61,15 @@ class TransaksiController extends Controller
     public function simpanTransaksi(Request $request)
     {
         $request->validate([
-            'keranjang'       => 'required|array|min:1',
-            'keranjang.*.id'  => 'required|integer',
-            'keranjang.*.qty' => 'required|integer|min:1',
-            'total'           => 'required|numeric',
-            'metode'          => 'required|in:cash,qris',
-            'bayar'           => 'required|numeric',
+            'keranjang'        => 'required|array|min:1',
+            'keranjang.*.id'   => 'required|integer',
+            'keranjang.*.qty'  => 'required|integer|min:1',
+            'total'            => 'required|numeric',
+            'metode'           => 'required|in:cash,qris',
+            'bayar'            => 'required|numeric',
+            'nama_pembeli'     => 'required|string|max:255',
+            'no_tlp'           => 'required|string|max:20',
+            'instansi'         => 'required|string|max:255',
         ]);
 
         DB::beginTransaction();
@@ -88,6 +86,9 @@ class TransaksiController extends Controller
                 'no_nota'           => $noNota,
                 'tanggal'           => Carbon::now(),
                 'user_id'           => session('user_id'),
+                'nama_pembeli'      => $request->nama_pembeli,
+                'no_tlp'            => $request->no_tlp,
+                'instansi'          => $request->instansi,
                 'total'             => $total,
                 'diskon'            => 0,
                 'grand_total'       => $total,
@@ -119,7 +120,7 @@ class TransaksiController extends Controller
                     'subtotal'     => $produk->harga_jual * $item['qty'],
                 ]);
 
-                // Kurangi stok + catat riwayat (sama persis pola StokController)
+                // Kurangi stok + catat riwayat
                 $stokSebelum = $produk->stok;
                 $produk->decrement('stok', $item['qty']);
 
@@ -153,19 +154,22 @@ class TransaksiController extends Controller
             Carbon::setLocale('id');
 
             return response()->json([
-                'sukses'   => true,
-                'no_nota'  => $noNota,
-                'pesan'    => 'Transaksi berhasil disimpan',
-                'struk'    => [
-                    'no_nota'  => $noNota,
-                    'tanggal'  => Carbon::now()->translatedFormat('l, d F Y'),
-                    'jam'      => Carbon::now()->format('H:i:s'),
-                    'kasir'    => session('username'),
-                    'metode'   => $metode,
-                    'items'    => $detailStruk,
-                    'total'    => $total,
-                    'bayar'    => $bayar,
-                    'kembalian'=> $kembalian,
+                'sukses'  => true,
+                'no_nota' => $noNota,
+                'pesan'   => 'Transaksi berhasil disimpan',
+                'struk'   => [
+                    'no_nota'      => $noNota,
+                    'tanggal'      => Carbon::now()->translatedFormat('l, d F Y'),
+                    'jam'          => Carbon::now()->format('H:i:s'),
+                    'kasir'        => session('username'),
+                    'nama_pembeli' => $request->nama_pembeli,
+                    'no_tlp'       => $request->no_tlp,
+                    'instansi'     => $request->instansi,
+                    'metode'       => $metode,
+                    'items'        => $detailStruk,
+                    'total'        => $total,
+                    'bayar'        => $bayar,
+                    'kembalian'    => $kembalian,
                 ],
             ]);
 

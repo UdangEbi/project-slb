@@ -4,298 +4,102 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Transaksi;
+use App\Models\DetailTransaksi;
+use App\Models\Produk;
+use App\Models\RekapKasir;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $tahun = $request->tahun ?? 2026;
+        // 1. Tahun Dinamis
+        $tahunTersedia = Transaksi::selectRaw('YEAR(tanggal) as tahun')
+            ->distinct()
+            ->orderByDesc('tahun')
+            ->pluck('tahun')
+            ->toArray();
+        
+        $daftarTahun = !empty($tahunTersedia) ? $tahunTersedia : [date('Y')];
+        
+        // Memilih tahun terpilih (default tahun terbaru)
+        $reqTahun = $request->tahun;
+        if ($reqTahun && (!is_numeric($reqTahun) || strlen($reqTahun) != 4 || !in_array((int)$reqTahun, $daftarTahun))) {
+            $reqTahun = null; // Fallback jika tidak valid
+        }
+        $tahun = $reqTahun ?? (in_array(date('Y'), $daftarTahun) ? date('Y') : $daftarTahun[0]);
 
-        $daftarTahun = [2024, 2025, 2026];
+        // 2. Agregasi Penjualan (Kas Masuk & Omzet Bulanan)
+        $kasMasuk = Transaksi::whereYear('tanggal', $tahun)
+            ->where('status', 'lunas')
+            ->sum('grand_total');
+            
+        $penjualanBulananDB = Transaksi::whereYear('tanggal', $tahun)
+            ->where('status', 'lunas')
+            ->selectRaw('MONTH(tanggal) as bulan, SUM(grand_total) as total')
+            ->groupBy('bulan')
+            ->pluck('total', 'bulan')
+            ->toArray();
+            
+        // Pemetaan data bulan agar konsisten array 12 bulan
+        $namaBulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        $penjualanBulanan = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $penjualanBulanan[$namaBulan[$i-1]] = $penjualanBulananDB[$i] ?? 0;
+        }
 
-        // Dummy data per tahun
-        $dummyData = [
-        2024 => [
-            'penjualanBulanan' => [
-                'Jan' => 120000,
-                'Feb' => 165000,
-                'Mar' => 145000,
-                'Apr' => 190000,
-                'Mei' => 210000,
-                'Jun' => 175000,
-                'Jul' => 235000,
-                'Agu' => 260000,
-                'Sep' => 225000,
-                'Okt' => 300000,
-                'Nov' => 280000,
-                'Des' => 350000,
-            ],
+        // 3. Omzet Penjualan per Rombel
+        $penjualanRombel = DetailTransaksi::join('transaksi', 'detail_transaksi.transaksi_id', '=', 'transaksi.id_transaksi')
+            ->join('produk', 'detail_transaksi.produk_id', '=', 'produk.id_produk')
+            ->join('kategori_produk', 'produk.kategori_id', '=', 'kategori_produk.id_kategori')
+            ->whereYear('transaksi.tanggal', $tahun)
+            ->where('transaksi.status', 'lunas')
+            ->selectRaw('kategori_produk.nama_kategori, SUM(detail_transaksi.subtotal) as total_omzet')
+            ->groupBy('kategori_produk.nama_kategori')
+            ->pluck('total_omzet', 'nama_kategori')
+            ->toArray();
 
-            'penjualanRombel' => [
-                'Graha' => 320000,
-                'Membatik' => 430000,
-                'Perkayuan' => 280000,
-                'Busana' => 390000,
-                'Tataboga' => 360000,
-                'Kecantikan' => 240000,
-                'Logam' => 210000,
-            ],
+        // 4. Barang Paling Laris
+        $barangTerlaris = DetailTransaksi::join('transaksi', 'detail_transaksi.transaksi_id', '=', 'transaksi.id_transaksi')
+            ->leftJoin('produk', 'detail_transaksi.produk_id', '=', 'produk.id_produk')
+            ->whereYear('transaksi.tanggal', $tahun)
+            ->where('transaksi.status', 'lunas')
+            ->selectRaw('COALESCE(produk.nama_produk, "Produk Dihapus") as nama_barang, SUM(detail_transaksi.qty) as jumlah_terjual')
+            ->groupBy('detail_transaksi.produk_id', 'produk.nama_produk')
+            ->orderByDesc('jumlah_terjual')
+            ->limit(5)
+            ->get();
 
-            'pembeli' => [
-                [
-                    'tanggal' => '2024-02-01',
-                    'kode_transaksi' => 'TRX-24001',
-                    'nama_pembeli' => 'Mbak Cahyani',
-                    'total' => 30000,
-                ],
-                [
-                    'tanggal' => '2024-02-01',
-                    'kode_transaksi' => 'TRX-24002',
-                    'nama_pembeli' => 'Bu Boniyati',
-                    'total' => 30000,
-                ],
-                [
-                    'tanggal' => '2024-07-11',
-                    'kode_transaksi' => 'TRX-24003',
-                    'nama_pembeli' => 'Wali Murid',
-                    'total' => 16000,
-                ],
-                [
-                    'tanggal' => '2024-09-11',
-                    'kode_transaksi' => 'TRX-24004',
-                    'nama_pembeli' => 'Ibu Lisa',
-                    'total' => 5000,
-                ],
-                [
-                    'tanggal' => '2024-10-03',
-                    'kode_transaksi' => 'TRX-24005',
-                    'nama_pembeli' => 'B. Nurvita',
-                    'total' => 50000,
-                ],
-            ],
-            'labaBersih' => 1650000,
-            'jumlahProdukTerjual' => 126,
-            'donasi' => 150000,
-            'piutang' => 50000,
-        ],
-        2025 => [
-            'penjualanBulanan' => [
-                'Jan' => 150000,
-                'Feb' => 210000,
-                'Mar' => 180000,
-                'Apr' => 260000,
-                'Mei' => 230000,
-                'Jun' => 315000,
-                'Jul' => 290000,
-                'Agu' => 340000,
-                'Sep' => 310000,
-                'Okt' => 420000,
-                'Nov' => 390000,
-                'Des' => 480000,
-            ],
+        // 5. Laba Bersih
+        $labaBersih = (float) DetailTransaksi::join('transaksi', 'detail_transaksi.transaksi_id', '=', 'transaksi.id_transaksi')
+            ->join('produk', 'detail_transaksi.produk_id', '=', 'produk.id_produk')
+            ->whereYear('transaksi.tanggal', $tahun)
+            ->where('transaksi.status', 'lunas')
+            ->sum(DB::raw('(detail_transaksi.qty * detail_transaksi.harga) - (detail_transaksi.qty * produk.harga_beli)'));
 
-            'penjualanRombel' => [
-                'Graha' => 410000,
-                'Membatik' => 590000,
-                'Perkayuan' => 330000,
-                'Busana' => 510000,
-                'Tataboga' => 460000,
-                'Kecantikan' => 290000,
-                'Logam' => 230000,
-            ],
+        // 5. Data Pembeli
+        $pembeli = Transaksi::whereYear('tanggal', $tahun)
+            ->where('status', 'lunas')
+            ->orderByDesc('tanggal')
+            ->limit(10)
+            ->get()
+            ->map(function ($trx) {
+                return [
+                    'tanggal' => $trx->tanggal->format('Y-m-d'),
+                    'kode_transaksi' => $trx->no_nota,
+                    'nama_pembeli' => 'Belum tersedia',
+                    'total' => $trx->grand_total,
+                ];
+            });
 
-        'pembeli' => [
-            [
-                'tanggal' => '2025-01-10',
-                'kode_transaksi' => 'TRX-25001',
-                'nama_pembeli' => 'Ibu Guru',
-                'total' => 20000,
-            ],
-            [
-                'tanggal' => '2025-02-18',
-                'kode_transaksi' => 'TRX-25002',
-                'nama_pembeli' => 'Wali Murid',
-                'total' => 35000,
-            ],
-            [
-                'tanggal' => '2025-03-07',
-                'kode_transaksi' => 'TRX-25003',
-                'nama_pembeli' => 'Bu Lisa',
-                'total' => 15000,
-            ],
-            [
-                'tanggal' => '2025-04-02',
-                'kode_transaksi' => 'TRX-25004',
-                'nama_pembeli' => 'Dinas Sosial',
-                'total' => 150000,
-            ],
-            [
-                'tanggal' => '2025-05-11',
-                'kode_transaksi' => 'TRX-25005',
-                'nama_pembeli' => 'Mbak Cahyani',
-                'total' => 30000,
-            ],
-            [
-                'tanggal' => '2025-06-20',
-                'kode_transaksi' => 'TRX-25006',
-                'nama_pembeli' => 'Ibu Yuni',
-                'total' => 25000,
-            ],
-            [
-                'tanggal' => '2025-07-14',
-                'kode_transaksi' => 'TRX-25007',
-                'nama_pembeli' => 'Bu Boniyati',
-                'total' => 30000,
-            ],
-            [
-                'tanggal' => '2025-08-09',
-                'kode_transaksi' => 'TRX-25008',
-                'nama_pembeli' => 'Khusus Wali Murid',
-                'total' => 125000,
-            ],
-            [
-                'tanggal' => '2025-09-22',
-                'kode_transaksi' => 'TRX-25009',
-                'nama_pembeli' => 'Kecamatan Lowokwaru',
-                'total' => 125000,
-            ],
-            [
-                'tanggal' => '2025-10-30',
-                'kode_transaksi' => 'TRX-25010',
-                'nama_pembeli' => 'B. Nurvita',
-                'total' => 50000,
-            ],
-            [
-                'tanggal' => '2025-11-13',
-                'kode_transaksi' => 'TRX-25011',
-                'nama_pembeli' => 'Dinas Pendidikan',
-                'total' => 175000,
-            ],
-            [
-                'tanggal' => '2025-12-04',
-                'kode_transaksi' => 'TRX-25012',
-                'nama_pembeli' => 'Ibu Kepala Sekolah',
-                'total' => 45000,
-            ],
-        ],
-            'labaBersih' => 1650000,
-            'jumlahProdukTerjual' => 126,
-            'donasi' => 150000,
-            'piutang' => 50000,
-        ],
-            2026 => [
-                'penjualanBulanan' => [
-                    'Jan' => 185000,
-                    'Feb' => 245000,
-                    'Mar' => 210000,
-                    'Apr' => 325000,
-                    'Mei' => 280000,
-                ],
-
-                'penjualanRombel' => [
-                    'Graha' => 520000,
-                    'Membatik' => 760000,
-                    'Perkayuan' => 410000,
-                    'Busana' => 650000,
-                    'Tataboga' => 580000,
-                    'Kecantikan' => 340000,
-                    'Logam' => 245000,
-                ],
-
-                'pembeli' => [
-                    [
-                        'tanggal' => '2026-01-08',
-                        'kode_transaksi' => 'TRX-26001',
-                        'nama_pembeli' => 'Ibu Lisa',
-                        'total' => 5000,
-                    ],
-                    [
-                        'tanggal' => '2026-01-15',
-                        'kode_transaksi' => 'TRX-26002',
-                        'nama_pembeli' => 'Wali Murid',
-                        'total' => 16000,
-                    ],
-                    [
-                        'tanggal' => '2026-02-01',
-                        'kode_transaksi' => 'TRX-26003',
-                        'nama_pembeli' => 'Bu Boniyati',
-                        'total' => 30000,
-                    ],
-                    [
-                        'tanggal' => '2026-02-19',
-                        'kode_transaksi' => 'TRX-26004',
-                        'nama_pembeli' => 'Mbak Cahyani',
-                        'total' => 30000,
-                    ],
-                    [
-                        'tanggal' => '2026-03-05',
-                        'kode_transaksi' => 'TRX-26005',
-                        'nama_pembeli' => 'Ibu Yuni',
-                        'total' => 25000,
-                    ],
-                    [
-                        'tanggal' => '2026-04-11',
-                        'kode_transaksi' => 'TRX-26006',
-                        'nama_pembeli' => 'B. Nurvita',
-                        'total' => 50000,
-                    ],
-                    [
-                        'tanggal' => '2026-05-20',
-                        'kode_transaksi' => 'TRX-26007',
-                        'nama_pembeli' => 'Dinas Pendidikan',
-                        'total' => 150000,
-                    ],
-                    [
-                        'tanggal' => '2026-06-12',
-                        'kode_transaksi' => 'TRX-26008',
-                        'nama_pembeli' => 'Wali Murid',
-                        'total' => 125000,
-                    ],
-                ],
-                'labaBersih' => 815000,
-                'jumlahProdukTerjual' => 185,
-                'donasi' => 250000,
-                'piutang' => 100000,
-            ],
-        ];
-
-        $barangTerlaris = [
-            [
-                'nama_barang' => 'Pouch Batik',
-                'jumlah_terjual' => 21,
-            ],
-            [
-                'nama_barang' => 'Bando',
-                'jumlah_terjual' => 13,
-            ],
-            [
-                'nama_barang' => 'Dompet Batik',
-                'jumlah_terjual' => 10,
-            ],
-            [
-                'nama_barang' => 'Sabun Cuci Piring',
-                'jumlah_terjual' => 8,
-            ],
-            [
-                'nama_barang' => 'Taplak Meja Batik',
-                'jumlah_terjual' => 6,
-            ],
-        ];
-
-        $dataTahun = $dummyData[$tahun] ?? $dummyData[2026];
-
-        $penjualanBulanan = $dataTahun['penjualanBulanan'];
-        $penjualanRombel = $dataTahun['penjualanRombel'];
-        $pembeli = $dataTahun['pembeli'];
-
-        $labaBersih = $dataTahun['labaBersih'];
-        $jumlahProdukTerjual = $dataTahun['jumlahProdukTerjual'];
-        $totalPenjualan = array_sum($penjualanBulanan);
-
-        $kasMasuk = $totalPenjualan;
-        $kasKeluar = $kasMasuk - $labaBersih;
-        $donasi = $dataTahun['donasi'];
-        $piutang = $dataTahun['piutang'];
+        // 6. Kalkulasi & Default Values
+        $kasKeluar = 0; // Default: belum didukung DB
+        $donasi = RekapKasir::whereYear('tanggal', $tahun)
+            ->where('selisih', '>', 0)
+            ->sum('selisih');
+            
         $saldo = $kasMasuk - $kasKeluar + $donasi;
 
         return view('admin.dashboard', compact(
@@ -306,14 +110,10 @@ class DashboardController extends Controller
             'pembeli',
             'barangTerlaris',
             'labaBersih',
-            'jumlahProdukTerjual',
-            'totalPenjualan',
             'saldo',
             'kasMasuk',
             'kasKeluar',
-            'donasi',
-            'piutang'
-
+            'donasi'
         ));
     }
 }
