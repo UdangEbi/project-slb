@@ -32,7 +32,6 @@ Route::post('/password/reset', function () {
 
 
     return back()->with('success', 'Password berhasil direset');
-
 })->name('password.reset');
 
 use App\Http\Controllers\Kasir\TransaksiController;
@@ -62,26 +61,47 @@ Route::prefix('kasir')->group(function () {
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])
         ->name('kasir.transaksi');
-        
+
     Route::post('/transaksi/simpan', [TransaksiController::class, 'simpanTransaksi'])
         ->name('kasir.transaksi.store');
 
-    Route::get('/stok', [StokController::class, 'index'])
-        ->name('kasir.stok');
-
     Route::get('/rekapitulasikasir', [RekapitulasiKasirController::class, 'index'])
         ->name('kasir.rekapitulasi');
-
 });
 
-Route::prefix('kasir/stok')->name('kasir.stok.')->group(function () {
-    Route::post('/', [StokController::class, 'store'])->name('store');
-    Route::post('/tambah', [StokController::class, 'tambahStok'])->name('tambah');
-    Route::post('/penyesuaian', [StokController::class, 'penyesuaian'])->name('penyesuaian');
-    Route::get('/riwayat', [StokController::class, 'riwayat'])->name('riwayat');
+// Route::prefix('kasir/stok')->name('kasir.stok.')->group(function () {
+//     Route::post('/', [StokController::class, 'store'])->name('store');
+//     Route::post('/tambah', [StokController::class, 'tambahStok'])->name('tambah');
+//     Route::post('/penyesuaian', [StokController::class, 'penyesuaian'])->name('penyesuaian');
+//     Route::get('/riwayat', [StokController::class, 'riwayat'])->name('riwayat');
+// });
+
+Route::prefix('kasir/stok')->group(function () {
+
+    Route::get('/', [StokController::class, 'index'])
+        ->name('kasir.stok');
+
+    Route::get('/tambah', [StokController::class, 'create'])
+        ->name('kasir.stok.create');
+
+    Route::post('/tambah', [StokController::class, 'store'])
+        ->name('kasir.stok.store');
+
+    Route::get('/{produk}/edit', [StokController::class, 'edit'])
+        ->name('kasir.stok.edit');
+
+    Route::post('/tambah-stok', [StokController::class, 'tambahStok'])
+        ->name('kasir.stok.tambah');
+
+    Route::get('/riwayat', [StokController::class, 'riwayat'])
+        ->name('kasir.stok.riwayat');
+
+    Route::get('/kode-produk/{kategori}', [StokController::class, 'getKodeProduk'])
+        ->name('kasir.stok.kode');
+
+    Route::delete('/{produk}', [StokController::class, 'destroy'])
+        ->name('kasir.stok.destroy');
 });
-
-
 
 use App\Http\Controllers\Admin\RekapitulasiController;
 use App\Http\Controllers\Admin\DashboardController;

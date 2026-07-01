@@ -38,27 +38,24 @@
             <!-- TAB MENU -->
             <nav class="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 text-2xl font-extrabold">
 
-                <a href="{{ route('kasir.transaksi') }}"
-                    class="px-4 py-2 rounded-2xl shadow-md transition duration-200
+                <a href="{{ route('kasir.transaksi') }}" class="px-4 py-2 rounded-2xl shadow-md transition duration-200
     {{ request()->routeIs('kasir.transaksi')
-        ? 'bg-[#F0E7D5] text-[#212842]'
-        : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
+    ? 'bg-[#F0E7D5] text-[#212842]'
+    : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
                     TRANSAKSI
                 </a>
 
-                <a href="{{ route('kasir.stok') }}"
-                    class="px-4 py-2 rounded-2xl shadow-md transition duration-200
-    {{ request()->routeIs('kasir.stok')
-        ? 'bg-[#F0E7D5] text-[#212842]'
-        : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
+                <a href="{{ route('kasir.stok') }}" class="px-4 py-2 rounded-2xl shadow-md transition duration-200
+    {{ request()->routeIs('kasir.stok*')
+    ? 'bg-[#F0E7D5] text-[#212842]'
+    : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
                     STOK
                 </a>
 
-                <a href="{{ route('kasir.rekapitulasi') }}"
-                    class="px-4 py-2 rounded-2xl shadow-md transition duration-200
+                <a href="{{ route('kasir.rekapitulasi') }}" class="px-4 py-2 rounded-2xl shadow-md transition duration-200
     {{ request()->routeIs('kasir.rekapitulasi')
-        ? 'bg-[#F0E7D5] text-[#212842]'
-        : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
+    ? 'bg-[#F0E7D5] text-[#212842]'
+    : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
                     REKAPITULASI
                 </a>
 
@@ -149,21 +146,18 @@
 
                         @foreach ($kategori as $item)
 
-                            <a
-                                href="{{ request()->routeIs('kasir.transaksi')
-                                    ? route('kasir.transaksi', ['kategori' => $item->id_kategori])
-                                    : route('kasir.stok', ['kategori' => $item->id_kategori]) }}"
-                                class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-                                {{
-                                    $kategoriId == $item->id_kategori
-                                    ? 'bg-[#212842] text-[#F0E7D5]'
-                                    : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]'
-                                 }}"
-                            >
+                                    <a href="{{ request()->routeIs('kasir.transaksi')
+                            ? route('kasir.transaksi', ['kategori' => $item->id_kategori])
+                            : route('kasir.stok', ['kategori' => $item->id_kategori]) }}" class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+                                                {{
+                            $kategoriId == $item->id_kategori
+                            ? 'bg-[#212842] text-[#F0E7D5]'
+                            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]'
+                                                }}">
 
-                                {{ strtoupper($item->nama_kategori) }}
+                                        {{ strtoupper($item->nama_kategori) }}
 
-                            </a>
+                                    </a>
 
                         @endforeach
 
