@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use App\Models\Produk;
+use App\Models\RekapKasir;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -95,7 +96,10 @@ class DashboardController extends Controller
 
         // 6. Kalkulasi & Default Values
         $kasKeluar = 0; // Default: belum didukung DB
-        $donasi = 0;    // Default: belum didukung DB
+        $donasi = RekapKasir::whereYear('tanggal', $tahun)
+            ->where('selisih', '>', 0)
+            ->sum('selisih');
+            
         $saldo = $kasMasuk - $kasKeluar + $donasi;
 
         return view('admin.dashboard', compact(
