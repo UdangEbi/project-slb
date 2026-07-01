@@ -156,6 +156,14 @@
                 </h3>
             </div>
 
+            <!-- Laba Bersih -->
+            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-yellow-500">
+                <p class="text-gray-500 font-bold text-sm mb-2">Laba Bersih</p>
+                <h3 class="text-2xl font-extrabold text-yellow-600">
+                    Rp {{ number_format($labaBersih, 0, ',', '.') }}
+                </h3>
+            </div>
+
             <!-- Kas Keluar -->
             <div class="bg-white rounded-xl shadow p-4 border-l-8 border-red-600">
                 <p class="text-gray-500 font-bold text-sm mb-2">Kas Keluar</p>
@@ -169,14 +177,6 @@
                 <p class="text-gray-500 font-bold text-sm mb-2">Donasi</p>
                 <h3 class="text-2xl font-extrabold text-blue-700">
                     Rp {{ number_format($donasi, 0, ',', '.') }}
-                </h3>
-            </div>
-
-            <!-- Piutang -->
-            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-orange-500">
-                <p class="text-gray-500 font-bold text-sm mb-2">Piutang</p>
-                <h3 class="text-2xl font-extrabold text-orange-600">
-                    Rp {{ number_format($piutang, 0, ',', '.') }}
                 </h3>
             </div>
         </div>
