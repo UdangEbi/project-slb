@@ -68,7 +68,7 @@
 
 <div class="w-full">
 
-<div class="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-3 items-start">
+<div class="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-3 items-start">
 
     {{-- KIRI --}}
     <div class="space-y-2 min-w-0 self-start">
@@ -170,7 +170,7 @@
     </div>
 
     {{-- KANAN: KERANJANG --}}
-    <aside class="bg-white rounded-xl shadow-sm border border-[#D8CDB7] p-3 flex flex-col xl:sticky xl:top-0 xl:self-start xl:max-h-screen">
+    <aside class="bg-white rounded-xl shadow-sm border border-[#D8CDB7] p-3 flex flex-col lg:sticky lg:top-0 lg:self-start lg:max-h-screen">
 
         <h2 class="text-2xl font-extrabold text-[#212842] mb-2">
             Keranjang Belanja

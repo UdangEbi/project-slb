@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Kasir;
 use App\Http\Controllers\Controller;
 use App\Models\RekapKasir;
 use App\Models\Transaksi;
+use App\Models\KasKeluar;
 use Illuminate\Http\Request;
 
 class RekapitulasiKasirController extends Controller
@@ -30,8 +31,10 @@ class RekapitulasiKasirController extends Controller
             ->count();
 
         $totalPenerimaan = $tunai + $qris;
+        $kasKeluar = KasKeluar::whereDate('tanggal', $tanggal)
+            ->sum('nominal');
 
-        $saldoAkhir = $modalAwal + $totalPenerimaan;
+        $saldoAkhir = $modalAwal + $totalPenerimaan - $kasKeluar;
 
         return view('kasir.rekapitulasi', compact(
             'modalAwal',
@@ -39,6 +42,7 @@ class RekapitulasiKasirController extends Controller
             'qris',
             'totalTransaksi',
             'totalPenerimaan',
+            'kasKeluar',
             'saldoAkhir'
         ));
     }
