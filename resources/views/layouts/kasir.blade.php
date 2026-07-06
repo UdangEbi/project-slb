@@ -19,7 +19,7 @@
     <div class="h-screen flex flex-col">
 
         <!-- HEADER -->
-        <header class="h-17 bg-[#212842] px-3 flex items-center relative shadow-md">
+        <header class="h-17 bg-[#212842] px-3 flex items-center relative shadow-md overflow-visible z-50">
 
             <div class="flex items-center gap-3 min-w-max">
                 <h1 class="text-3xl font-extrabold text-[#F0E7D5] leading-none">
@@ -51,22 +51,12 @@
     : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
                     STOK
                 </a>
-
-<<<<<<< HEAD
-                <a href="{{ route('kasir.rekapitulasi') }}" class="px-4 py-2 rounded-2xl shadow-md transition duration-200
-    {{ request()->routeIs('kasir.rekapitulasi')
-    ? 'bg-[#F0E7D5] text-[#212842]'
-    : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
-                    REKAPITULASI
-                </a>
-=======
                 <div x-data="{ open: false }" class="relative">
 
-                    <button type="button" @click="open = !open"
-                        class="px-4 py-2 rounded-2xl shadow-md transition duration-200 flex items-center gap-2
+                    <button type="button" @click="open = !open" class="px-4 py-2 rounded-2xl shadow-md transition duration-200 flex items-center gap-2
         {{ request()->routeIs('kasir.rekapitulasi') || request()->routeIs('kasir.kas-keluar.*')
-            ? 'bg-[#F0E7D5] text-[#212842]'
-            : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
+    ? 'bg-[#F0E7D5] text-[#212842]'
+    : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
 
                         REKAPITULASI
 
@@ -77,9 +67,8 @@
                     <div x-cloak x-show="open" @click.outside="open = false" x-transition
                         class="absolute left-1/2 -translate-x-1/2 mt-3 w-60 bg-[#F0E7D5] rounded-2xl shadow-xl overflow-hidden z-[9999]">
 
-                        <a href="{{ route('kasir.rekapitulasi') }}"
-                            class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
-                   hover:bg-[#212842] hover:text-[#F0E7D5] transition">
+                        <a href="{{ route('kasir.rekapitulasi') }}" class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
+                    hover:bg-[#212842] hover:text-[#F0E7D5] transition">
 
                             <i class="bi bi-bar-chart-fill"></i>
 
@@ -87,9 +76,8 @@
 
                         </a>
 
-                        <a href="{{ route('kasir.kas-keluar') }}"
-                            class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
-                   hover:bg-[#212842] hover:text-[#F0E7D5] transition">
+                        <a href="{{ route('kasir.kas-keluar') }}" class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
+                    hover:bg-[#212842] hover:text-[#F0E7D5] transition">
 
                             <i class="bi bi-cash-stack"></i>
 
@@ -100,7 +88,6 @@
                     </div>
 
                 </div>
->>>>>>> da75e076a7e3b1b117ca7b2fffdb9c6d9de5c875
 
             </nav>
 
@@ -188,34 +175,16 @@
                     <div class="px-3 space-y-2 flex-1 overflow-y-auto max-h-[500px]">
 
                         @foreach ($kategori as $item)
-<<<<<<< HEAD
-
                                     <a href="{{ request()->routeIs('kasir.transaksi')
                             ? route('kasir.transaksi', ['kategori' => $item->id_kategori])
                             : route('kasir.stok', ['kategori' => $item->id_kategori]) }}" class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-                                                {{
-                            $kategoriId == $item->id_kategori
+                                                                                {{ $kategoriId == $item->id_kategori
                             ? 'bg-[#212842] text-[#F0E7D5]'
-                            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]'
-                                                }}">
-=======
-                            <a href="{{ request()->routeIs('kasir.transaksi')
-                                ? route('kasir.transaksi', ['kategori' => $item->id_kategori])
-                                : route('kasir.stok', ['kategori' => $item->id_kategori]) }}"
-                                class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-                                {{ $kategoriId == $item->id_kategori
-                                    ? 'bg-[#212842] text-[#F0E7D5]'
-                                    : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
->>>>>>> da75e076a7e3b1b117ca7b2fffdb9c6d9de5c875
+                            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
 
                                         {{ strtoupper($item->nama_kategori) }}
 
-<<<<<<< HEAD
                                     </a>
-
-=======
-                            </a>
->>>>>>> da75e076a7e3b1b117ca7b2fffdb9c6d9de5c875
                         @endforeach
 
                     </div>

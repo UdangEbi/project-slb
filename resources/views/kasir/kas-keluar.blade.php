@@ -179,7 +179,7 @@
     <!-- MODAL TAMBAH PENGELUARAN -->
     <div id="kasKeluarModal" class="hidden fixed inset-0 z-[9999] bg-black/50 items-center justify-center p-6">
 
-        <div class="bg-white w-full max-w-5xl rounded-3xl shadow-2xl">
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl">
 
             {{-- Header --}}
             <div class="flex justify-between items-center border-b px-8 py-6">
@@ -206,7 +206,7 @@
                 <input type="hidden" name="_method" id="formMethod" value="POST">
                 <input type="hidden" id="kas_keluar_id" name="kas_keluar_id">
 
-                <div class="grid grid-cols-2 gap-8 p-8">
+                <div class="grid grid-cols-2 gap-6 p-6">
 
                     {{-- Tanggal --}}
                     <div>
@@ -216,7 +216,7 @@
                         </label>
 
                         <input id="tanggal" type="date" name="tanggal" value="{{ date('Y-m-d') }}"
-                            class="w-full rounded-2xl border-2 border-gray-300 px-5 py-4 text-2xl uppercase tracking-wide font-bold focus:border-[#212842] focus:outline-none">
+                            class="w-full rounded-2xl border-2 border-gray-300 px-5 py-4 text-lg uppercase tracking-wide font-bold focus:border-[#212842] focus:outline-none">
 
                     </div>
 
@@ -230,7 +230,7 @@
                         <select id="kategori_pengeluaran_id" name="kategori_pengeluaran_id" required
                             class="w-full rounded-2xl border-2 border-gray-300
                                 px-5 py-4
-                                text-2xl font-black uppercase tracking-wide
+                                text-lg font-black uppercase tracking-wide
                                 focus:border-[#212842] focus:outline-none">
 
                             <option value="" selected disabled hidden>
@@ -255,7 +255,7 @@
                         </label>
 
                         <input id="nominal" type="number" name="nominal" placeholder="Masukkan nominal"
-                            class="w-full rounded-2xl border-2 border-gray-300 px-5 py-4 text-2xl font-bold uppercase tracking-wide placeholder:text-gray-400 focus:border-[#212842] focus:outline-none">
+                            class="w-full rounded-2xl border-2 border-gray-300 px-5 py-4 text-lg font-bold uppercase tracking-wide placeholder:text-gray-400 focus:border-[#212842] focus:outline-none">
 
                     </div>
 
@@ -267,7 +267,7 @@
                         </label>
 
                         <textarea id="keterangan" name="keterangan" rows="4" placeholder="Masukkan keterangan"
-                            class="w-full rounded-2xl border-2 border-gray-300 px-5 py-4 text-2xl font-bold uppercase tracking-wide placeholder:text-gray-400 resize-none focus:border-[#212842] focus:outline-none"></textarea>
+                            class="w-full rounded-2xl border-2 border-gray-300 px-5 py-4 text-lg font-bold uppercase tracking-wide placeholder:text-gray-400 resize-none focus:border-[#212842] focus:outline-none"></textarea>
 
                     </div>
 
