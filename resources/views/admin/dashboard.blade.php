@@ -279,13 +279,15 @@
             </div>
 
             <div class="px-4 pb-3">
-                <table id="tabelPembeli" class="display stripe hover">
+                <table id="transaksi" class="display stripe hover">
                     <thead>
                         <tr>
                             <th>No</th>
                             <th>Tanggal</th>
                             <th>Kode Transaksi</th>
                             <th>Nama Pembeli</th>
+                            <th>No. Telepon</th>
+                            <th>Instansi</th>
                             <th>Total Beli</th>
                         </tr>
                     </thead>
@@ -307,13 +309,21 @@
                                     {{ $item['nama_pembeli'] }}
                                 </td>
 
+                                <td>
+                                    {{ $item['no_tlp'] }}
+                                </td>
+
+                                <td>
+                                    {{ $item['instansi'] }}
+                                </td>
+
                                 <td class="font-bold text-[#212842]" data-order="{{ $item['total'] }}">
                                     Rp {{ number_format($item['total'], 0, ',', '.') }}
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center text-gray-500">
+                                <td colspan="7" class="text-center text-gray-500">
                                     Belum ada data pembeli.
                                 </td>
                             </tr>
@@ -337,7 +347,7 @@
 
         // DATATABLE PEMBELI COMPACT
         $(document).ready(function () {
-            $('#tabelPembeli').DataTable({
+            $('#transaksi').DataTable({
                 pageLength: 5,
                 lengthChange: true,
                 lengthMenu: [
@@ -369,7 +379,7 @@
                         className: "text-center"
                     },
                     {
-                        targets: 4,
+                        targets: 6,
                         className: "text-right"
                     }
                 ]
