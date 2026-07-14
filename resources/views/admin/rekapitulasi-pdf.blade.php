@@ -54,6 +54,13 @@
         .right {
             text-align: right;
         }
+
+        .dicetak {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 11px;
+            color: #666;
+        }
     </style>
 </head>
 
@@ -105,7 +112,9 @@
             @endforelse
         </tbody>
     </table>
-
+    <div class="dicetak">
+        <div>Dicetak pada : {{ $tanggalCetak->locale('id')->translatedFormat('d F Y, H:i') }} WIB</div>
+    </div>
 </body>
 
 </html>

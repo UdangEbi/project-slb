@@ -47,6 +47,7 @@ class RekapitulasiController extends Controller
             'saldo' => $data['saldo'],
             'periodeAwal' => $periodeAwal,
             'periodeAkhir' => $periodeAkhir,
+            'tanggalCetak' => now(),
         ])->setPaper('a4', 'landscape');
 
         $namaFile = 'rekapitulasi_' .
