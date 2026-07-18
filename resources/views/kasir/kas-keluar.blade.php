@@ -106,19 +106,12 @@
                                     </td>
 
                                     <td class="px-6 py-5">
-
                                         <span
                                             class="inline-flex items-center justify-center
-                                                bg-red-100 text-red-700
-                                                rounded-full
-                                                px-6 py-3
-                                                text-2xl font-extrabold
-                                                whitespace-nowrap">
-
-                                            RP {{ number_format($item->nominal, 0, ',', '.') }}
-
+                                            bg-red-100 text-red-700 rounded-full
+                                            px-6 py-3 text-2xl font-extrabold whitespace-nowrap">
+                                            {{ 'Rp ' . number_format((int) $item->nominal, 0, ',', '.') }}
                                         </span>
-
                                     </td>
 
                                     <td
@@ -254,7 +247,8 @@
                             Nominal
                         </label>
 
-                        <input id="nominal" type="number" name="nominal" placeholder="Masukkan nominal"
+                        <input id="nominal" type="text" name="nominal" inputmode="numeric"
+                            placeholder="Masukkan nominal"
                             class="w-full rounded-2xl border-2 border-gray-300 px-5 py-4 text-lg font-bold uppercase tracking-wide placeholder:text-gray-400 focus:border-[#212842] focus:outline-none">
 
                     </div>
@@ -352,7 +346,8 @@
             // isi form
             document.getElementById('tanggal').value = tanggal;
             document.getElementById('kategori_pengeluaran_id').value = kategori;
-            document.getElementById('nominal').value = nominal;
+            document.getElementById('nominal').value =
+                new Intl.NumberFormat('id-ID').format(nominal);
             document.getElementById('keterangan').value = keterangan;
 
             // ubah action form ke UPDATE
@@ -372,5 +367,19 @@
             document.getElementById('submitButton').innerHTML =
                 "UPDATE";
         }
+
+        const nominal = document.getElementById('nominal');
+
+        nominal.addEventListener('input', function() {
+            let angka = this.value.replace(/\D/g, '');
+
+            this.value = angka ?
+                new Intl.NumberFormat('id-ID').format(angka) :
+                '';
+        });
+
+        document.getElementById('kasKeluarForm').addEventListener('submit', function() {
+            nominal.value = nominal.value.replace(/\./g, '');
+        });
     </script>
 @endpush

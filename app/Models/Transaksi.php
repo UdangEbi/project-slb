@@ -26,6 +26,7 @@ class Transaksi extends Model
         'bayar',
         'kembalian',
         'status',
+        'id_rekap',
     ];
 
     protected $casts = [
@@ -40,5 +41,14 @@ class Transaksi extends Model
     public function detailTransaksi()
     {
         return $this->hasMany(DetailTransaksi::class, 'transaksi_id', 'id_transaksi');
+    }
+
+    public function rekapKasir()
+    {
+        return $this->belongsTo(
+            RekapKasir::class,
+            'id_rekap',
+            'id_rekap'
+        );
     }
 }

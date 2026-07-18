@@ -69,6 +69,9 @@ Route::prefix('kasir')->group(function () {
     Route::get('/rekapitulasikasir', [RekapitulasiKasirController::class, 'index'])
         ->name('kasir.rekapitulasi');
 
+    Route::post('/kasir/tutup-kas', [RekapitulasiKasirController::class, 'tutupKas'])
+        ->name('kasir.tutup-kas');
+
     Route::get('/kas-keluar', [KasKeluarController::class, 'index'])
         ->name('kasir.kas-keluar');
 

@@ -15,6 +15,7 @@ class KasKeluarController extends Controller
         $kategori = KategoriPengeluaran::orderBy('nama_kategori')->get();
 
         $kasKeluar = KasKeluar::with(['kategori', 'user'])
+            ->whereNull('id_rekap')
             ->orderByDesc('tanggal')
             ->get();
 

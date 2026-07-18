@@ -18,6 +18,7 @@ class KasKeluar extends Model
         'kategori_pengeluaran_id',
         'nominal',
         'keterangan',
+        'id_rekap',
     ];
 
     protected $casts = [
@@ -41,6 +42,15 @@ class KasKeluar extends Model
             KategoriPengeluaran::class,
             'kategori_pengeluaran_id',
             'id_kategori_pengeluaran'
+        );
+    }
+
+    public function rekapKasir()
+    {
+        return $this->belongsTo(
+            RekapKasir::class,
+            'id_rekap',
+            'id_rekap'
         );
     }
 }
