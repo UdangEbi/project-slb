@@ -9,6 +9,7 @@ use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use App\Models\Produk;
 use App\Models\RekapKasir;
+use App\Models\KasKeluar;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -33,11 +34,11 @@ class DashboardController extends Controller
 
         // 2. Agregasi Penjualan (Kas Masuk & Omzet Bulanan)
         $kasMasuk = Transaksi::whereYear('tanggal', $tahun)
-            ->where('status', 'lunas')
+            ->where('status', 'selesai')
             ->sum('grand_total');
             
         $penjualanBulananDB = Transaksi::whereYear('tanggal', $tahun)
-            ->where('status', 'lunas')
+            ->where('status', 'selesai')
             ->selectRaw('MONTH(tanggal) as bulan, SUM(grand_total) as total')
             ->groupBy('bulan')
             ->pluck('total', 'bulan')
@@ -55,7 +56,7 @@ class DashboardController extends Controller
             ->join('produk', 'detail_transaksi.produk_id', '=', 'produk.id_produk')
             ->join('kategori_produk', 'produk.kategori_id', '=', 'kategori_produk.id_kategori')
             ->whereYear('transaksi.tanggal', $tahun)
-            ->where('transaksi.status', 'lunas')
+            ->where('transaksi.status', 'selesai')
             ->selectRaw('kategori_produk.nama_kategori, SUM(detail_transaksi.subtotal) as total_omzet')
             ->groupBy('kategori_produk.nama_kategori')
             ->pluck('total_omzet', 'nama_kategori')
@@ -65,7 +66,7 @@ class DashboardController extends Controller
         $barangTerlaris = DetailTransaksi::join('transaksi', 'detail_transaksi.transaksi_id', '=', 'transaksi.id_transaksi')
             ->leftJoin('produk', 'detail_transaksi.produk_id', '=', 'produk.id_produk')
             ->whereYear('transaksi.tanggal', $tahun)
-            ->where('transaksi.status', 'lunas')
+            ->where('transaksi.status', 'selesai')
             ->selectRaw('COALESCE(produk.nama_produk, "Produk Dihapus") as nama_barang, SUM(detail_transaksi.qty) as jumlah_terjual')
             ->groupBy('detail_transaksi.produk_id', 'produk.nama_produk')
             ->orderByDesc('jumlah_terjual')
@@ -76,12 +77,12 @@ class DashboardController extends Controller
         $labaBersih = (float) DetailTransaksi::join('transaksi', 'detail_transaksi.transaksi_id', '=', 'transaksi.id_transaksi')
             ->join('produk', 'detail_transaksi.produk_id', '=', 'produk.id_produk')
             ->whereYear('transaksi.tanggal', $tahun)
-            ->where('transaksi.status', 'lunas')
+            ->where('transaksi.status', 'selesai')
             ->sum(DB::raw('(detail_transaksi.qty * detail_transaksi.harga) - (detail_transaksi.qty * produk.harga_beli)'));
 
         // 5. Data Pembeli
         $pembeli = Transaksi::whereYear('tanggal', $tahun)
-            ->where('status', 'lunas')
+            ->where('status', 'selesai')
             ->orderByDesc('tanggal')
             ->limit(10)
             ->get()
@@ -89,13 +90,15 @@ class DashboardController extends Controller
                 return [
                     'tanggal' => $trx->tanggal->format('Y-m-d'),
                     'kode_transaksi' => $trx->no_nota,
-                    'nama_pembeli' => 'Belum tersedia',
+                    'nama_pembeli' => $trx->nama_pembeli ?? '-',
+                    'no_tlp' => $trx->no_tlp ?? '-',
+                    'instansi' => $trx->instansi ?? '-',
                     'total' => $trx->grand_total,
                 ];
             });
 
         // 6. Kalkulasi & Default Values
-        $kasKeluar = 0; // Default: belum didukung DB
+        $kasKeluar = KasKeluar::whereYear('tanggal', $tahun)->sum('nominal');
         $donasi = RekapKasir::whereYear('tanggal', $tahun)
             ->where('selisih', '>', 0)
             ->sum('selisih');
