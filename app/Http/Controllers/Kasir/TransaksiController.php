@@ -70,6 +70,7 @@ class TransaksiController extends Controller
             'nama_pembeli'     => 'required|string|max:255',
             'no_tlp'           => 'required|string|max:20',
             'instansi'         => 'required|string|max:255',
+            'donasi'           => 'nullable|numeric|min:0',
         ]);
 
         DB::beginTransaction();
@@ -78,8 +79,15 @@ class TransaksiController extends Controller
             $noNota    = 'TRX-' . Carbon::now()->format('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
             $total     = $request->total;
             $bayar     = $request->bayar;
-            $kembalian = max(0, $bayar - $total);
+            $donasi    = (int) ($request->donasi ?? 0);
             $metode    = $request->metode === 'cash' ? 'tunai' : 'qris';
+
+            // QRIS tidak mendukung donasi (sesuai aturan di frontend)
+            if ($metode === 'qris') {
+                $donasi = 0;
+            }
+
+            $kembalian = max(0, $bayar - $total - $donasi);
 
             // 1. Simpan header transaksi
             $transaksi = Transaksi::create([
@@ -95,6 +103,7 @@ class TransaksiController extends Controller
                 'metode_pembayaran' => $metode,
                 'bayar'             => $bayar,
                 'kembalian'         => $kembalian,
+                'donasi'            => $donasi,
                 'status'            => 'selesai',
             ]);
 
@@ -170,6 +179,7 @@ class TransaksiController extends Controller
                     'total'        => $total,
                     'bayar'        => $bayar,
                     'kembalian'    => $kembalian,
+                    'donasi'       => $donasi,
                 ],
             ]);
 

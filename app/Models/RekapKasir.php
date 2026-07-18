@@ -19,6 +19,8 @@ class RekapKasir extends Model
         'modal_awal',
         'total_transaksi',
         'total_penjualan',
+        'total_kas_keluar',
+        'saldo_akhir',
         'uang_fisik',
         'selisih',
         'catatan',
