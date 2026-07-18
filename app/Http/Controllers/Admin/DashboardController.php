@@ -99,9 +99,7 @@ class DashboardController extends Controller
 
         // 6. Kalkulasi & Default Values
         $kasKeluar = KasKeluar::whereYear('tanggal', $tahun)->sum('nominal');
-        $donasi = RekapKasir::whereYear('tanggal', $tahun)
-            ->where('selisih', '>', 0)
-            ->sum('selisih');
+        $donasi = Transaksi::whereYear('tanggal', $tahun)->sum('donasi');
             
         $saldo = $kasMasuk - $kasKeluar + $donasi;
 
