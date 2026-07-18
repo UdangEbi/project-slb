@@ -226,65 +226,68 @@
 
             </div>
 
-            <div class="grid grid-cols-2 gap-15">
+            <form id="formTutupKas" action="{{ route('kasir.tutup-kas') }}" method="POST">
+                @csrf
+                <div class="grid grid-cols-2 gap-15">
 
-                <div class="space-y-5">
+                    <div class="space-y-5">
 
-                    <div class="flex justify-between border-b pb-4">
-                        <span class="text-2xl font-bold">CASH SISTEM</span>
-                        <span class="text-3xl font-extrabold">
-                            RP{{ number_format($tunai, 0, ',', '.') }}
-                        </span>
+                        <div class="flex justify-between border-b pb-4">
+                            <span class="text-2xl font-bold">CASH SISTEM</span>
+                            <span class="text-3xl font-extrabold">
+                                RP{{ number_format($tunai, 0, ',', '.') }}
+                            </span>
+                        </div>
+
+                        <div class="flex justify-between border-b pb-4">
+                            <span class="text-2xl font-bold">QRIS SISTEM</span>
+                            <span class="text-3xl font-extrabold">
+                                RP{{ number_format($qris, 0, ',', '.') }}
+                            </span>
+                        </div>
+
+                        <div class="flex justify-between border-b pb-4">
+                            <span class="text-2xl font-bold">TOTAL SISTEM</span>
+                            <span class="text-4xl font-extrabold">
+                                RP{{ number_format($totalPenerimaan, 0, ',', '.') }}
+                            </span>
+                        </div>
+
                     </div>
 
-                    <div class="flex justify-between border-b pb-4">
-                        <span class="text-2xl font-bold">QRIS SISTEM</span>
-                        <span class="text-3xl font-extrabold">
-                            RP{{ number_format($qris, 0, ',', '.') }}
-                        </span>
-                    </div>
+                    <div>
 
-                    <div class="flex justify-between border-b pb-4">
-                        <span class="text-2xl font-bold">TOTAL SISTEM</span>
-                        <span class="text-4xl font-extrabold">
-                            RP{{ number_format($totalPenerimaan, 0, ',', '.') }}
-                        </span>
-                    </div>
+                        <label class="block text-2xl font-extrabold text-[#212842] mb-3">
+                            NOMINAL AKTUAL
+                        </label>
 
-                </div>
+                        <input type="text" id="nominalAktual" name="uang_fisik"
+                            oninput="formatInputAktual(this); hitungSelisihKas();" placeholder="MASUKKAN NOMINAL ASLI"
+                            class="w-full border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-extrabold outline-none uppercase">
+                        <div id="hasilSelisih" class="rounded-xl bg-[#F4F6F9] px-6 py-5 mt-6 uppercase">
 
-                <div>
+                            <div class="flex justify-between items-center">
 
-                    <label class="block text-2xl font-extrabold text-[#212842] mb-3">
-                        NOMINAL AKTUAL
-                    </label>
+                                <div>
+                                    <h3 class="text-xl font-extrabold text-[#212842]">
+                                        STATUS KAS
+                                    </h3>
 
-                    <input type="text" id="nominalAktual" oninput="formatInputAktual(this); hitungSelisihKas();"
-                        placeholder="MASUKKAN NOMINAL ASLI"
-                        class="w-full border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-extrabold outline-none uppercase">
+                                    <p id="keteranganKas" class="text-base font-bold text-gray-500 mt-2">
+                                        BELUM DIHITUNG
+                                    </p>
+                                </div>
 
-                    <div id="hasilSelisih" class="rounded-xl bg-[#F4F6F9] px-6 py-5 mt-6 uppercase">
+                                <div class="text-right">
+                                    <p class="text-base font-bold text-gray-500">
+                                        SELISIH
+                                    </p>
 
-                        <div class="flex justify-between items-center">
+                                    <h2 id="nominalSelisih" class="text-2xl font-extrabold text-[#212842]">
+                                        RP0
+                                    </h2>
+                                </div>
 
-                            <div>
-                                <h3 class="text-xl font-extrabold text-[#212842]">
-                                    STATUS KAS
-                                </h3>
-
-                                <p id="keteranganKas" class="text-base font-bold text-gray-500 mt-2">
-                                    BELUM DIHITUNG
-                                </p>
-                            </div>
-
-                            <div class="text-right">
-                                <p class="text-base font-bold text-gray-500">
-                                    SELISIH
-                                </p>
-
-                                <h2 id="nominalSelisih" class="text-2xl font-extrabold text-[#212842]">
-                                    RP0
-                                </h2>
                             </div>
 
                         </div>
@@ -293,24 +296,22 @@
 
                 </div>
 
-            </div>
+                <div class="flex justify-end gap-4 mt-8">
 
-            <div class="flex justify-end gap-4 mt-8">
+                    <button onclick="closeModalTutupKasir()"
+                        class="px-8 py-4 border-2 border-[#212842] text-[#212842] rounded-xl font-extrabold text-2xl hover:bg-gray-100 transition uppercase">
+                        BATAL
+                    </button>
 
-                <button onclick="closeModalTutupKasir()"
-                    class="px-8 py-4 border-2 border-[#212842] text-[#212842] rounded-xl font-extrabold text-2xl hover:bg-gray-100 transition uppercase">
-                    BATAL
-                </button>
+                    <button type="submit" onclick="return openConfirmModal()"
+                        class="px-8 py-4 bg-[#CA0B00] text-white rounded-xl font-extrabold text-2xl hover:bg-red-700 transition uppercase">
+                        LANJUT
+                    </button>
 
-                <button onclick="openConfirmModal()"
-                    class="px-8 py-4 bg-[#CA0B00] text-white rounded-xl font-extrabold text-2xl hover:bg-red-700 transition uppercase">
-                    LANJUT
-                </button>
-
-            </div>
+                </div>
 
         </div>
-
+        </form>
     </div>
 
     <script>
@@ -338,13 +339,7 @@
         }
 
         function openConfirmModal() {
-
-            const yakin = confirm('APAKAH ANDA YAKIN INGIN MENUTUP KASIR HARI INI?');
-
-            if (yakin) {
-                alert('KASIR BERHASIL DITUTUP.');
-                closeModalTutupKasir();
-            }
+            return confirm('APAKAH ANDA YAKIN INGIN MENUTUP KASIR HARI INI?');
         }
 
         function angkaSaja(value) {
