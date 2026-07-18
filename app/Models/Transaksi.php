@@ -25,6 +25,7 @@ class Transaksi extends Model
         'metode_pembayaran',
         'bayar',
         'kembalian',
+        'donasi',
         'status',
     ];
 
