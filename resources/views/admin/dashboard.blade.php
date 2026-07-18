@@ -149,18 +149,18 @@
             </div>
 
             <!-- Kas Masuk -->
-            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-[#212842]">
+            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-blue-600">
                 <p class="text-gray-500 font-bold text-sm mb-2">Kas Masuk</p>
-                <h3 class="text-2xl font-extrabold text-[#212842]">
+                <h3 class="text-2xl font-extrabold text-blue-700">
                     Rp {{ number_format($kasMasuk, 0, ',', '.') }}
                 </h3>
             </div>
 
-            <!-- Laba Bersih -->
-            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-yellow-500">
-                <p class="text-gray-500 font-bold text-sm mb-2">Laba Bersih</p>
-                <h3 class="text-2xl font-extrabold text-yellow-600">
-                    Rp {{ number_format($labaBersih, 0, ',', '.') }}
+            <!-- Donasi -->
+            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-purple-600">
+                <p class="text-gray-500 font-bold text-sm mb-2">Donasi</p>
+                <h3 class="text-2xl font-extrabold text-purple-700">
+                    Rp {{ number_format($donasi, 0, ',', '.') }}
                 </h3>
             </div>
 
@@ -172,11 +172,11 @@
                 </h3>
             </div>
 
-            <!-- Donasi -->
-            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-blue-600">
-                <p class="text-gray-500 font-bold text-sm mb-2">Donasi</p>
-                <h3 class="text-2xl font-extrabold text-blue-700">
-                    Rp {{ number_format($donasi, 0, ',', '.') }}
+            <!-- Laba Bersih -->
+            <div class="bg-white rounded-xl shadow p-4 border-l-8 border-yellow-500">
+                <p class="text-gray-500 font-bold text-sm mb-2">Laba Bersih</p>
+                <h3 class="text-2xl font-extrabold text-yellow-600">
+                    Rp {{ number_format($labaBersih, 0, ',', '.') }}
                 </h3>
             </div>
         </div>

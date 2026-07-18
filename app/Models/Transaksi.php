@@ -22,6 +22,7 @@ class Transaksi extends Model
         'total',
         'diskon',
         'grand_total',
+        'donasi',
         'metode_pembayaran',
         'bayar',
         'kembalian',
