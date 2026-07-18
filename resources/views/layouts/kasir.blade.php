@@ -45,16 +45,42 @@
                     TRANSAKSI
                 </a>
 
-                <a href="{{ route('kasir.stok') }}" class="px-4 py-2 rounded-2xl shadow-md transition duration-200
-    {{ request()->routeIs('kasir.stok*')
-    ? 'bg-[#F0E7D5] text-[#212842]'
-    : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
-                    STOK
-                </a>
                 <div x-data="{ open: false }" class="relative">
 
                     <button type="button" @click="open = !open" class="px-4 py-2 rounded-2xl shadow-md transition duration-200 flex items-center gap-2
-        {{ request()->routeIs('kasir.rekapitulasi') || request()->routeIs('kasir.kas-keluar.*')
+        {{ request()->routeIs('kasir.stok*')
+    ? 'bg-[#F0E7D5] text-[#212842]'
+    : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
+
+                        STOK
+
+                        <i class="bi bi-chevron-down transition duration-200" :class="{ 'rotate-180': open }"></i>
+                    </button>
+
+                    <div x-cloak x-show="open" @click.outside="open = false" x-transition
+                        class="absolute left-1/2 -translate-x-1/2 mt-3 w-60 bg-[#F0E7D5] rounded-2xl shadow-xl overflow-hidden z-[9999]">
+
+                        <a href="{{ route('kasir.stok') }}" class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
+            hover:bg-[#212842] hover:text-[#F0E7D5] transition">
+
+                            <i class="bi bi-box-seam-fill"></i>
+                            <span>Stok</span>
+                        </a>
+
+                        <a href="{{ route('kasir.stok.titip-jual') }}" class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
+            hover:bg-[#212842] hover:text-[#F0E7D5] transition">
+
+                            <i class="bi bi-clock-history"></i>
+                            <span>Titip Jual</span>
+                        </a>
+
+                    </div>
+
+                </div>
+                <div x-data="{ open: false }" class="relative">
+
+                    <button type="button" @click="open = !open" class="px-4 py-2 rounded-2xl shadow-md transition duration-200 flex items-center gap-2
+        {{ request()->routeIs('kasir.rekapitulasi') || request()->routeIs('kasir.kas-keluar')
     ? 'bg-[#F0E7D5] text-[#212842]'
     : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
 
@@ -163,7 +189,7 @@
 
         <!-- BODY -->
         <div class="flex flex-1 overflow-hidden">
-            @if (!request()->routeIs(['kasir.rekapitulasi', 'kasir.kas-keluar']))
+            @if (!request()->routeIs(['kasir.rekapitulasi', 'kasir.kas-keluar', 'kasir.stok.titip-jual']))
                 <!-- SIDEBAR -->
                 <aside class="w-58 bg-[#F0E7D5] flex flex-col">
 
@@ -178,7 +204,7 @@
                                     <a href="{{ request()->routeIs('kasir.transaksi')
                             ? route('kasir.transaksi', ['kategori' => $item->id_kategori])
                             : route('kasir.stok', ['kategori' => $item->id_kategori]) }}" class="block px-2 py-1.5 text-2xl font-bold transition duration-200
-                                                                                {{ $kategoriId == $item->id_kategori
+                                                                                                {{ $kategoriId == $item->id_kategori
                             ? 'bg-[#212842] text-[#F0E7D5]'
                             : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
 

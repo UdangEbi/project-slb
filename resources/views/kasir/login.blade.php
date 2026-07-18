@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>LOGIN KASIR</title>
@@ -25,10 +26,8 @@
 
             <div class="text-center">
 
-                <div class="mx-auto w-36 h-36 bg-[#212842] rounded-3xl flex items-center justify-center shadow-lg mb-6">
-                    <span class="text-[#F0E7D5] text-7xl font-extrabold">
-                        G
-                    </span>
+                <div class="flex justify-center -mb-6">
+                    <img src="{{ asset('images/logo-gapura.png') }}" alt="Logo GAPURA" class="w-64 object-contain">
                 </div>
 
                 <h1 class="text-7xl font-extrabold text-[#212842] tracking-wide">
@@ -46,9 +45,7 @@
         {{-- KANAN: FORM LOGIN --}}
         <div class="flex items-center justify-center px-10">
 
-            <form
-                action="{{ route('login.process') }}"
-                method="POST"
+            <form action="{{ route('login.process') }}" method="POST"
                 class="bg-white rounded-3xl shadow-xl p-10 w-full max-w-xl">
 
                 @csrf
@@ -62,10 +59,7 @@
                         USERNAME
                     </label>
 
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="MASUKKAN USERNAME"
+                    <input type="text" name="username" placeholder="MASUKKAN USERNAME"
                         class="w-full border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold uppercase outline-none">
                 </div>
 
@@ -74,28 +68,11 @@
                         PASSWORD
                     </label>
 
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="MASUKKAN PASSWORD"
+                    <input type="password" name="password" placeholder="MASUKKAN PASSWORD"
                         class="w-full border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold outline-none">
                 </div>
 
-                <div class="flex justify-between items-center mb-7">
-
-                    <label class="flex items-center gap-3 text-base font-bold text-[#212842]">
-                        <input type="checkbox" class="w-5 h-5">
-                        INGAT SAYA
-                    </label>
-
-                    <a href="#" class="text-base font-extrabold text-[#212842]">
-                        LUPA PASSWORD?
-                    </a>
-
-                </div>
-
-                <button
-                    type="submit"
+                <button type="submit"
                     class="w-full bg-[#212842] text-[#F0E7D5] py-4 rounded-xl text-2xl font-extrabold shadow-md hover:bg-[#151b33] transition">
                     LOGIN
                 </button>
@@ -107,4 +84,5 @@
     </div>
 
 </body>
+
 </html>

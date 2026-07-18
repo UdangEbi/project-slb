@@ -77,7 +77,6 @@ Route::prefix('kasir')->group(function () {
 
     Route::put('/kas-keluar/{kasKeluar}', [KasKeluarController::class, 'update'])
         ->name('kasir.kas-keluar.update');
-
 });
 
 // Route::prefix('kasir/stok')->name('kasir.stok.')->group(function () {
@@ -107,11 +106,15 @@ Route::prefix('kasir/stok')->group(function () {
     Route::get('/riwayat', [StokController::class, 'riwayat'])
         ->name('kasir.stok.riwayat');
 
+    Route::get('/titip-jual', [StokController::class, 'titipJual'])
+        ->name('kasir.stok.titip-jual');
+
     Route::get('/kode-produk/{kategori}', [StokController::class, 'getKodeProduk'])
         ->name('kasir.stok.kode');
 
     Route::delete('/{produk}', [StokController::class, 'destroy'])
         ->name('kasir.stok.destroy');
+
 });
 
 use App\Http\Controllers\Admin\RekapitulasiController;
@@ -128,8 +131,3 @@ Route::prefix('admin')->group(function () {
 
 Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
     ->name('admin.rekapitulasi.pdf');
-
-Route::prefix('admin')->group(function () {
-    Route::get('/piutang', [PiutangController::class, 'index'])
-        ->name('admin.piutang');
-});

@@ -136,15 +136,6 @@
                         Rekapitulasi
                     </a>
 
-                    <a href="{{ route('admin.piutang') }}"
-                        class="block px-3 py-1.5 text-lg font-bold transition duration-200
-                        {{ request()->routeIs('admin.piutang')
-                            ? 'bg-[#212842] text-[#F0E7D5]'
-                            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
-                        Piutang
-                    </a>
-
-
                 </div>
             </aside>
 

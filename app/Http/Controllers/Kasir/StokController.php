@@ -280,4 +280,112 @@ class StokController extends Controller
             ->back()
             ->with('success', 'Barang berhasil dihapus.');
     }
+
+    public function titipJual(Request $request)
+    {
+        $kategori = KategoriProduk::orderBy('nama_kategori')->get();
+
+        $kategoriId = 14;
+        $tanggalAwal = $request->tanggal_awal;
+        $tanggalAkhir = $request->tanggal_akhir;
+
+        $query = Produk::select(
+            'produk.*',
+            DB::raw("
+            COALESCE(SUM(
+                CASE
+                    WHEN riwayat_stok.tipe='masuk'
+                    THEN riwayat_stok.jumlah
+                    ELSE 0
+                END
+            ),0) as total_masuk
+        "),
+            DB::raw("
+            COALESCE(SUM(
+                CASE
+                    WHEN riwayat_stok.tipe='keluar'
+                    THEN riwayat_stok.jumlah
+                    ELSE 0
+                END
+            ),0) as total_terjual
+        ")
+        )
+            ->leftJoin(
+                'riwayat_stok',
+                'produk.id_produk',
+                '=',
+                'riwayat_stok.produk_id'
+            )
+            ->where('produk.kategori_id', 14);
+
+        if ($tanggalAwal) {
+            $query->whereDate(
+                'riwayat_stok.tanggal',
+                '>=',
+                $tanggalAwal
+            );
+        }
+
+        if ($tanggalAkhir) {
+            $query->whereDate(
+                'riwayat_stok.tanggal',
+                '<=',
+                $tanggalAkhir
+            );
+        }
+
+        $produk = $query
+            ->groupBy(
+                'produk.id_produk',
+                'produk.kategori_id',
+                'produk.kode_produk',
+                'produk.nama_produk',
+                'produk.harga_beli',
+                'produk.harga_jual',
+                'produk.stok',
+                'produk.satuan',
+                'produk.created_at',
+                'produk.updated_at'
+            )
+            ->orderBy('produk.nama_produk')
+            ->get();
+
+        foreach ($produk as $item) {
+
+            $item->total_bayar =
+                $item->harga_beli *
+                $item->total_terjual;
+
+            $item->persentase =
+                $item->total_masuk == 0
+                ? 0
+                : round(
+                    ($item->total_terjual / $item->total_masuk) * 100,
+                    1
+                );
+        }
+
+        $totalProduk = $produk->count();
+
+        $totalTerjual = $produk->sum('total_terjual');
+
+        $totalSisa = $produk->sum('stok');
+
+        $totalBayar = $produk->sum('total_bayar');
+
+        return view(
+            'kasir.stok.titip-jual',
+            compact(
+                'produk',
+                'tanggalAwal',
+                'tanggalAkhir',
+                'totalProduk',
+                'totalTerjual',
+                'totalSisa',
+                'totalBayar',
+                'kategori',
+                'kategoriId'
+            )
+        );
+    }
 }

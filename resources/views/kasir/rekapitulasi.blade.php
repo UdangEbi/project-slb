@@ -165,6 +165,15 @@
                         </span>
                     </div>
 
+                    <div class="flex justify-between border-b py-5">
+                        <span class="text-2xl">
+                            DONASI
+                        </span>
+                        <span class="text-3xl text-[#0eb12f] font-extrabold">
+                            RP{{ number_format($kasKeluar, 0, ',', '.') }}
+                        </span>
+                    </div>
+
                     <div class="flex justify-between bg-yellow-50 rounded-xl px-6 py-6 font-extrabold mt-5">
                         <span class="text-3xl">SALDO AKHIR</span>
 

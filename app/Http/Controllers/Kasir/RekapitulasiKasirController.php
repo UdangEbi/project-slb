@@ -31,6 +31,7 @@ class RekapitulasiKasirController extends Controller
             ->count();
 
         $totalPenerimaan = $tunai + $qris;
+        //$totalPenerimaan = $tunai + $qris + $donasi;
         $kasKeluar = KasKeluar::whereDate('tanggal', $tanggal)
             ->sum('nominal');
 

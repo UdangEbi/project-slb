@@ -114,14 +114,26 @@
                     </div>
 
                 </div>
+                <div class="grid grid-cols-2 gap-10 mb-8">
+                    <div class="mb-16">
+                        <label class="block text-xl font-bold text-[#212842] mb-3">
+                            HARGA BELI (RP) *
+                        </label>
 
-                <div class="mb-16">
-                    <label class="block text-xl font-bold text-[#212842] mb-3">
-                        HARGA SATUAN (RP) *
-                    </label>
+                        <input type="text" name="harga_beli" id="hargaBarang"
+                            value="{{ number_format($produk->harga_beli, 0, ',', '.') }}"
+                            class="w-full max-w-sm bg-white border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold">
+                    </div>
+                    <div class="mb-16">
+                        <label class="block text-xl font-bold text-[#212842] mb-3">
+                            HARGA JUAL (RP) *
+                        </label>
 
-                    <input type="text" name="harga_jual" id="hargaBarang" value="{{ number_format($produk->harga_jual, 0, ',', '.') }}"
-                        class="w-full max-w-sm bg-white border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold">
+                        <input type="text" name="harga_jual" id="hargaBarang"
+                            value="{{ number_format($produk->harga_jual, 0, ',', '.') }}"
+                            class="w-full max-w-sm bg-white border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold">
+                    </div>
+
                 </div>
 
                 <div class="flex justify-between items-center">
