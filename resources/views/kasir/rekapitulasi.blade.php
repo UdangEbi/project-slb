@@ -211,93 +211,246 @@
     </div>
 
     {{-- MODAL --}}
-    <div id="modalTutupKasir" class="hidden fixed inset-0 z-50 bg-black/40 flex items-center justify-center uppercase">
+    <div id="modalTutupKasir" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-6 overflow-y-auto uppercase">
 
-        <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl px-10 py-8">
+        <div class="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl relative ">
 
-            <div class="flex items-center gap-5 mb-8">
+            <button type="button" onclick="closeModalTutupKasir()"
+                class="absolute right-6 top-6 text-gray-500 hover:text-black">
 
-                <div class="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center">
-                    <span class="text-4xl font-extrabold text-red-600">
-                        !
-                    </span>
-                </div>
+                <i class="bi bi-x-lg text-2xl"></i>
 
-                <div>
-                    <h2 class="text-4xl font-extrabold text-[#212842]">
-                        TUTUP KASIR
-                    </h2>
+            </button>
 
-                    <p class="text-xl text-gray-500 font-bold mt-2">
-                        COCOKKAN NOMINAL SISTEM DENGAN UANG AKTUAL
-                    </p>
+            <div class="px-8 py-5 border-b">
+
+                <div class="flex items-center gap-4">
+
+                    <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center">
+
+                        <i class="bi bi-safe2-fill text-red-600 text-3xl"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="text-3xl font-extrabold text-[#212842] leading-none">
+                            TUTUP KASIR
+                        </h2>
+
+                        <p class="text-gray-500 text-base mt-1">
+                            Cocokkan nominal sistem dengan uang aktual sebelum menutup kas.
+                        </p>
+
+                    </div>
+
                 </div>
 
             </div>
 
             <form id="formTutupKas" action="{{ route('kasir.tutup-kas') }}" method="POST">
+
                 @csrf
-                <div class="grid grid-cols-2 gap-15">
 
-                    <div class="space-y-5">
+                <div class="grid grid-cols-2 gap-8 p-8">
 
-                        <div class="flex justify-between border-b pb-4">
-                            <span class="text-2xl font-bold">CASH SISTEM</span>
-                            <span class="text-3xl font-extrabold">
-                                RP{{ number_format($tunai, 0, ',', '.') }}
-                            </span>
+                    <div>
+
+                        <h3 class="text-2xl font-extrabold text-[#212842] mb-6">
+
+                            RINGKASAN SISTEM
+
+                        </h3>
+
+                        <div class="border-b border-gray-200 overflow-hidden">
+
+                            <div class="flex justify-between items-center px-5 py-4 border-b">
+
+                                <div class="flex items-center gap-4">
+
+                                    <span class="font-bold text-lg">
+
+                                        Modal Awal
+
+                                    </span>
+
+                                </div>
+
+                                <span class="font-extrabold text-xl">
+
+                                    Rp{{ number_format($modalAwal, 0, ',', '.') }}
+
+                                </span>
+
+                            </div>
+
+                            <div class="flex justify-between items-center px-5 py-4 border-b">
+
+                                <div class="flex items-center gap-4">
+
+                                    <span class="font-bold text-lg">
+
+                                        Penerimaan Tunai
+
+                                    </span>
+
+                                </div>
+
+                                <span class="font-extrabold text-xl">
+
+                                    Rp{{ number_format($tunai, 0, ',', '.') }}
+
+                                </span>
+
+                            </div>
+
+                            <div class="flex justify-between items-center px-5 py-4 border-b">
+
+                                <div class="flex items-center gap-4">
+
+                                    <span class="font-bold text-lg">
+
+                                        Penerimaan QRIS
+
+                                    </span>
+
+                                </div>
+
+                                <span class="font-extrabold text-xl">
+
+                                    Rp{{ number_format($qris, 0, ',', '.') }}
+
+                                </span>
+
+                            </div>
+
+                            <div class="flex justify-between items-center px-5 py-4 border-b">
+
+                                <div class="flex items-center gap-4">
+
+                                    <span class="font-bold text-lg">
+
+                                        Total Penerimaan
+
+                                    </span>
+
+                                </div>
+
+                                <span class="font-extrabold text-xl">
+
+                                    Rp{{ number_format($totalPenerimaan, 0, ',', '.') }}
+
+                                </span>
+
+                            </div>
+
+                            <div class="flex justify-between items-center px-5 py-4 border-b">
+
+                                <div class="flex items-center gap-4">
+
+                                    <span class="font-bold text-lg">
+
+                                        Kas Keluar
+
+                                    </span>
+
+                                </div>
+
+                                <span class="font-extrabold text-xl text-red-600">
+
+                                    Rp{{ number_format($kasKeluar, 0, ',', '.') }}
+
+                                </span>
+
+                            </div>
                         </div>
 
-                        <div class="flex justify-between border-b pb-4">
-                            <span class="text-2xl font-bold">QRIS SISTEM</span>
-                            <span class="text-3xl font-extrabold">
-                                RP{{ number_format($qris, 0, ',', '.') }}
-                            </span>
-                        </div>
+                        <div
+                            class="flex justify-between items-center bg-yellow-50 rounded-2xl p-5 border-2 border-yellow-300 mt-5">
 
-                        <div class="flex justify-between border-b pb-4">
-                            <span class="text-2xl font-bold">TOTAL SISTEM</span>
-                            <span class="text-4xl font-extrabold">
-                                RP{{ number_format($totalPenerimaan, 0, ',', '.') }}
+                            <div class="flex items-center gap-4">
+
+                                <span class="font-bold text-xl">
+
+                                    Saldo Akhir Sistem
+
+                                </span>
+
+                            </div>
+
+                            <span class="font-black text-2xl text-yellow-700">
+
+                                Rp{{ number_format($saldoAkhir, 0, ',', '.') }}
+
                             </span>
+
                         </div>
 
                     </div>
 
                     <div>
 
-                        <label class="block text-2xl font-extrabold text-[#212842] mb-3">
+                        <h3 class="text-2xl font-extrabold text-[#212842] mb-6">
+
                             NOMINAL AKTUAL
-                        </label>
+
+                        </h3>
 
                         <input type="text" id="nominalAktual" name="uang_fisik"
-                            oninput="formatInputAktual(this); hitungSelisihKas();" placeholder="MASUKKAN NOMINAL ASLI"
-                            class="w-full border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-extrabold outline-none uppercase">
-                        <div id="hasilSelisih" class="rounded-xl bg-[#F4F6F9] px-6 py-5 mt-6 uppercase">
+                            oninput="formatInputAktual(this);hitungSelisihKas();" autocomplete="off"
+                            placeholder="MASUKKAN NOMINAL SALDO AKHIR"
+                            class="w-full border-2 border-[#212842] rounded-2xl px-5 py-4 text-lg font-extrabold">
+
+                        <div id="hasilSelisih" class="mt-6 rounded-2xl bg-gray-100 p-6">
 
                             <div class="flex justify-between items-center">
 
                                 <div>
-                                    <h3 class="text-xl font-extrabold text-[#212842]">
-                                        STATUS KAS
+
+                                    <p class="text-sm font-bold text-gray-500">
+
+                                        STATUS
+
+                                    </p>
+
+                                    <h3 id="keteranganKas" class="text-2xl font-extrabold text-[#212842]">
+
+                                        BELUM DIHITUNG
+
                                     </h3>
 
-                                    <p id="keteranganKas" class="text-base font-bold text-gray-500 mt-2">
-                                        BELUM DIHITUNG
-                                    </p>
                                 </div>
 
                                 <div class="text-right">
-                                    <p class="text-base font-bold text-gray-500">
+
+                                    <p class="text-sm font-bold text-gray-500">
+
                                         SELISIH
+
                                     </p>
 
-                                    <h2 id="nominalSelisih" class="text-2xl font-extrabold text-[#212842]">
-                                        RP0
+                                    <h2 id="nominalSelisih" class="text-3xl font-black">
+
+                                        Rp0
+
                                     </h2>
+
                                 </div>
 
                             </div>
+
+                        </div>
+
+                        <div class="mt-6">
+
+                            <label class="block text-lg font-bold mb-2">
+
+                                Catatan
+
+                            </label>
+
+                            <textarea name="catatan" rows="3" placeholder="Tambahkan catatan penutupan kas (opsional)..."
+                                class="w-full border rounded-2xl p-4 resize-none uppercase font-bold"></textarea>
 
                         </div>
 
@@ -305,22 +458,28 @@
 
                 </div>
 
-                <div class="flex justify-end gap-4 mt-8">
+                <div class="border-t px-8 py-6 flex justify-end gap-4">
 
-                    <button onclick="closeModalTutupKasir()"
-                        class="px-8 py-4 border-2 border-[#212842] text-[#212842] rounded-xl font-extrabold text-2xl hover:bg-gray-100 transition uppercase">
+                    <button type="button" onclick="closeModalTutupKasir()"
+                        class="px-8 py-3 rounded-xl border-2 border-[#212842] font-bold">
+
                         BATAL
+
                     </button>
 
                     <button type="submit" onclick="return openConfirmModal()"
-                        class="px-8 py-4 bg-[#CA0B00] text-white rounded-xl font-extrabold text-2xl hover:bg-red-700 transition uppercase">
-                        LANJUT
+                        class="px-8 py-3 rounded-xl bg-[#CA0B00] text-white font-bold hover:bg-red-700">
+
+                        TUTUP KASIR
+
                     </button>
 
                 </div>
 
+            </form>
+
         </div>
-        </form>
+
     </div>
 
     <script>
@@ -340,12 +499,45 @@
         }
 
         function openModalTutupKasir() {
-            document.getElementById('modalTutupKasir').classList.remove('hidden');
+
+            document
+                .getElementById("modalTutupKasir")
+                .classList
+                .remove("hidden");
+
+            document
+                .body
+                .classList
+                .add("overflow-hidden");
+
+            document.getElementById("nominalAktual").focus();
+
         }
 
         function closeModalTutupKasir() {
-            document.getElementById('modalTutupKasir').classList.add('hidden');
+
+            document
+                .getElementById("modalTutupKasir")
+                .classList
+                .add("hidden");
+
+            document
+                .body
+                .classList
+                .remove("overflow-hidden");
+
         }
+
+        window.addEventListener("keydown", function (e) {
+
+            if (e.key === "Escape") {
+
+                closeModalTutupKasir();
+
+            }
+
+        });
+
 
         function openConfirmModal() {
             return confirm('APAKAH ANDA YAKIN INGIN MENUTUP KASIR HARI INI?');
@@ -356,65 +548,152 @@
         }
 
         function formatRupiah(angka) {
-            return 'RP' + angka.toLocaleString('id-ID');
+
+            return new Intl.NumberFormat("id-ID").format(angka);
+
         }
 
         function formatInputAktual(input) {
 
-            let angka = angkaSaja(input.value);
+            let angka = input.value.replace(/\D/g, '');
 
-            if (angka === '') {
-                input.value = '';
+            if (angka === "") {
+
+                input.value = "";
+
                 return;
+
             }
 
-            input.value = parseInt(angka).toLocaleString('id-ID');
+            input.value = formatRupiah(parseInt(angka));
+
         }
 
         function hitungSelisihKas() {
 
-            const inputAktual = document.getElementById('nominalAktual').value;
+            const totalSistem = {{ $saldoAkhir }};
 
-            const aktual = parseInt(angkaSaja(inputAktual)) || 0;
+            const nominalInput = document
+                .getElementById("nominalAktual")
+                .value
+                .replace(/\./g, '');
 
-            const selisih = aktual - totalSistem;
+            const nominalAktual = nominalInput === ""
+                ? 0
+                : parseInt(nominalInput);
 
-            const nominalSelisih = document.getElementById('nominalSelisih');
+            const selisih = nominalAktual - totalSistem;
 
-            const keteranganKas = document.getElementById('keteranganKas');
+            const hasil = document.getElementById("hasilSelisih");
+            const nominal = document.getElementById("nominalSelisih");
+            const status = document.getElementById("keteranganKas");
 
-            const hasilSelisih = document.getElementById('hasilSelisih');
+            nominal.innerHTML = "Rp" + formatRupiah(Math.abs(selisih));
+
+            hasil.className =
+                "mt-6 rounded-2xl p-6";
+
+            if (nominalInput === "") {
+
+                hasil.classList.add("bg-gray-100");
+
+                status.innerHTML = "BELUM DIHITUNG";
+
+                status.className =
+                    "text-2xl font-extrabold text-gray-600";
+
+                nominal.className =
+                    "text-3xl font-black text-gray-600";
+
+                return;
+
+            }
 
             if (selisih === 0) {
 
-                nominalSelisih.innerText = formatRupiah(0);
+                hasil.classList.add(
+                    "bg-green-100",
+                    "border",
+                    "border-green-300"
+                );
 
-                keteranganKas.innerText = 'NOMINAL SESUAI DENGAN SISTEM';
+                status.innerHTML = "KAS SESUAI";
 
-                hasilSelisih.className =
-                    'rounded-xl bg-white border border-black px-6 py-5 mt-6 uppercase';
+                status.className =
+                    "text-2xl font-extrabold text-green-700";
 
-            } else if (selisih < 0) {
+                nominal.className =
+                    "text-3xl font-black text-green-700";
 
-                nominalSelisih.innerText =
-                    '- ' + formatRupiah(Math.abs(selisih));
-
-                keteranganKas.innerText = 'KAS MINUS';
-
-                hasilSelisih.className =
-                    'rounded-xl bg-red-50 border border-red-200 px-6 py-5 mt-6 uppercase';
-
-            } else {
-
-                nominalSelisih.innerText =
-                    formatRupiah(selisih);
-
-                keteranganKas.innerText = 'KAS LEBIH';
-
-                hasilSelisih.className =
-                    'rounded-xl bg-green-50 border border-green-200 px-6 py-5 mt-6 uppercase';
             }
+
+            else if (selisih > 0) {
+
+                hasil.classList.add(
+                    "bg-blue-100",
+                    "border",
+                    "border-blue-300"
+                );
+
+                status.innerHTML = "UANG LEBIH";
+
+                status.className =
+                    "text-2xl font-extrabold text-blue-700";
+
+                nominal.className =
+                    "text-3xl font-black text-blue-700";
+
+            }
+
+            else {
+
+                hasil.classList.add(
+                    "bg-red-100",
+                    "border",
+                    "border-red-300"
+                );
+
+                status.innerHTML = "UANG KURANG";
+
+                status.className =
+                    "text-2xl font-extrabold text-red-700";
+
+                nominal.className =
+                    "text-3xl font-black text-red-700";
+
+            }
+
         }
+
+        document
+            .getElementById("nominalAktual")
+            .addEventListener("keyup", hitungSelisihKas);
+
+        document
+            .getElementById("nominalAktual")
+            .addEventListener("change", hitungSelisihKas);
+
+        function openConfirmModal() {
+
+            const nominal = document
+                .getElementById("nominalAktual")
+                .value
+                .replace(/\./g, '');
+
+            if (nominal === "") {
+
+                alert("MASUKKAN NOMINAL SALDO AKHIR TERLEBIH DAHULU!");
+
+                return false;
+
+            }
+
+            return confirm(
+                "APAKAH ANDA YAKIN INGIN MENUTUP KASIR HARI INI?"
+            );
+
+        }
+
     </script>
 
 @endsection
