@@ -26,6 +26,10 @@ class RekapitulasiKasirController extends Controller
             ->where('metode_pembayaran', 'qris')
             ->sum('grand_total');
 
+        $donasi = Transaksi::whereNull('id_rekap')
+            ->where('status', 'selesai')
+            ->sum('donasi');
+
         $totalTransaksi = Transaksi::whereNull('id_rekap')
             ->where('status', 'selesai')
             ->count();
@@ -34,12 +38,13 @@ class RekapitulasiKasirController extends Controller
         $kasKeluar = KasKeluar::whereNull('id_rekap')
             ->sum('nominal');
 
-        $saldoAkhir = $modalAwal + $totalPenerimaan - $kasKeluar;
+        $saldoAkhir = $modalAwal + $totalPenerimaan + $donasi  - $kasKeluar;
 
         return view('kasir.rekapitulasi', compact(
             'modalAwal',
             'tunai',
             'qris',
+            'donasi',
             'totalTransaksi',
             'totalPenerimaan',
             'kasKeluar',
@@ -70,10 +75,14 @@ class RekapitulasiKasirController extends Controller
             ->where('status', 'selesai')
             ->sum('grand_total');
 
+        $totalDonasi = Transaksi::whereNull('id_rekap')
+            ->where('status', 'selesai')
+            ->sum('donasi');
+
         $totalKasKeluar = KasKeluar::whereNull('id_rekap')
             ->sum('nominal');
 
-        $saldoAkhir = $modalAwal + $totalPenjualan - $totalKasKeluar;
+        $saldoAkhir = $modalAwal + $totalPenjualan + $totalDonasi - $totalKasKeluar;
 
         $selisih = $request->uang_fisik - $saldoAkhir;
 
@@ -113,7 +122,6 @@ class RekapitulasiKasirController extends Controller
                 ]);
 
             session()->forget('modal_awal');
-
         });
 
         return redirect()

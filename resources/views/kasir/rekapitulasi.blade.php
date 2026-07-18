@@ -68,13 +68,13 @@
 
             <div class="bg-white rounded-3xl shadow-lg h-[200px] px-6 py-5">
                 <div class="flex flex-col items-center text-center h-full">
-                    <i class="bi bi-cash-stack text-3xl text-[#212842] mb-2"></i>
+                    <i class="bi bi-heart text-3xl text-[#0eb12f] mb-2"></i>
                     <h3
                         class="h-20 flex items-center justify-center text-2xl font-extrabold uppercase text-gray-500 leading-tight text-center">
-                        SALDO AKHIR
+                        DONASI
                     </h3>
-                    <h2 class="text-4xl font-black text-[#212842] whitespace-nowrap leading-none">
-                        RP{{ number_format($saldoAkhir, 0, ',', '.') }}
+                    <h2 class="text-4xl font-black text-[#0eb12f] whitespace-nowrap leading-none">
+                        RP{{ number_format($donasi, 0, ',', '.') }}
                     </h2>
                 </div>
             </div>
@@ -170,7 +170,7 @@
                             DONASI
                         </span>
                         <span class="text-3xl text-[#0eb12f] font-extrabold">
-                            RP{{ number_format($kasKeluar, 0, ',', '.') }}
+                            RP{{ number_format($donasi, 0, ',', '.') }}
                         </span>
                     </div>
 
@@ -179,26 +179,6 @@
 
                         <span class="text-4xl text-yellow-700">
                             RP{{ number_format($saldoAkhir, 0, ',', '.') }}
-                        </span>
-                    </div>
-
-                </div>
-
-            </div>
-
-            {{-- REKAP PEMASUKAN --}}
-            <div>
-
-                <h2 class="text-3xl font-extrabold text-[#212842] mb-6 tracking-wide">
-                    3. REKAP PEMASUKAN
-                </h2>
-
-                <div class="space-y-0 text-[#212842] font-bold">
-
-                    <div class="flex justify-between bg-green-50 rounded-xl px-6 py-6 font-extrabold mt-5">
-                        <span class="text-3xl">TOTAL PEMASUKAN</span>
-                        <span class="text-3xl text-green-700">
-                            RP{{ number_format($totalPenerimaan, 0, ',', '.') }}
                         </span>
                     </div>
 
