@@ -93,7 +93,7 @@
                     </p>
 
                     <h2 class="mt-2 text-3xl font-extrabold text-red-600">
-                        Rp {{ number_format($totalBayar, 0, ',', '.') }}
+                        Rp {{ number_format($totalBelumDibayar, 0, ',', '.') }}
                     </h2>
 
                     <p class="text-lg text-gray-400 mt-2 font-bold">
@@ -135,6 +135,9 @@
                                 <th class="px-4 py-3 text-right text-xl">Harga Beli</th>
 
                                 <th class="px-4 py-3 text-center text-xl">Harus Dibayar</th>
+                                <th class="px-4 py-3 text-center text-xl">
+                                    Status
+                                </th>
 
                             </tr>
 
@@ -172,6 +175,24 @@
 
                                     <td class="px-4 py-3 text-center font-bold text-red-600 text-lg">
                                         Rp {{ number_format($item->total_bayar, 0, ',', '.') }}
+                                    </td>
+
+                                    <td class="px-4 py-3 text-center">
+
+                                        @if($item->status_bayar)
+
+                                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold">
+                                                Sudah Dibayar
+                                            </span>
+
+                                        @else
+
+                                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-bold">
+                                                Belum Dibayar
+                                            </span>
+
+                                        @endif
+
                                     </td>
 
                                 </tr>

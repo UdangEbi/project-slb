@@ -7,6 +7,7 @@ use App\Models\KategoriProduk;
 use App\Models\Produk;
 use App\Models\RiwayatStok;
 use Illuminate\Http\Request;
+use App\Models\KasKeluar;
 use Illuminate\Support\Facades\DB;
 
 class StokController extends Controller
@@ -351,6 +352,11 @@ class StokController extends Controller
             ->get();
 
         foreach ($produk as $item) {
+            $pembayaran = KasKeluar::where('kategori_pengeluaran_id', 6)
+                ->where('kode_produk', $item->kode_produk)
+                ->exists();
+
+            $item->status_bayar = $pembayaran;
 
             $item->total_bayar =
                 $item->harga_beli *
@@ -364,6 +370,14 @@ class StokController extends Controller
                     1
                 );
         }
+
+        $totalBelumDibayar = $produk
+            ->where('status_bayar', false)
+            ->sum('total_bayar');
+
+        $totalSudahDibayar = $produk
+            ->where('status_bayar', true)
+            ->sum('total_bayar');
 
         $totalProduk = $produk->count();
 
@@ -383,6 +397,8 @@ class StokController extends Controller
                 'totalTerjual',
                 'totalSisa',
                 'totalBayar',
+                'totalBelumDibayar',
+                'totalSudahDibayar',
                 'kategori',
                 'kategoriId'
             )
