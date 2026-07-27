@@ -25,12 +25,6 @@
                 <h1 class="text-3xl font-extrabold text-[#F0E7D5] leading-none">
                     GAPURA
                 </h1>
-
-                <div class="w-px h-9 bg-[#F0E7D5]/50"></div>
-
-                <p class="text-sm font-semibold text-[#F0E7D5] whitespace-nowrap leading-none">
-                    Gerakan Aktif Produktif
-                </p>
             </div>
 
 
