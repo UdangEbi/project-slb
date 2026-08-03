@@ -7,16 +7,17 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::post('/logout', function (Request $request) {
-    Auth::logout();
+    // Sistem login di aplikasi ini custom (pakai session manual di
+    // AuthKasirController), bukan Auth::attempt() bawaan Laravel.
+    // Jadi logout juga harus membersihkan session secara manual,
+    // supaya middleware cek.login benar-benar menganggap user logout.
+    session()->flush();
 
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    return redirect('/login');
+    return redirect()->route('login');
 })->name('logout');
 
 Route::post('/password/reset', function () {
@@ -42,7 +43,7 @@ use App\Http\Controllers\Admin\PiutangController;
 use App\Http\Controllers\Kasir\AuthKasirController;
 
 Route::get('/kasir', function () {
-    return redirect()->route('kasir.login');
+    return redirect()->route('login');
 });
 
 Route::get('/login', [AuthKasirController::class, 'login'])
@@ -52,85 +53,94 @@ Route::post('/login', [AuthKasirController::class, 'processLogin'])
     ->name('login.process');
 
 Route::get('/logout', [AuthKasirController::class, 'logout'])
-    ->name('logout');
+    ->name('kasir.logout');
 
-Route::post('/kasir/modal-awal', [AuthKasirController::class, 'storeModalAwal'])
-    ->name('kasir.modal-awal.store');
+// ---------------------------------------------------------------------
+// SEMUA ROUTE DI BAWAH INI WAJIB LOGIN.
+// - 'cek.login:kasir' -> wajib login SEBAGAI KASIR
+// - 'cek.login:admin' -> wajib login SEBAGAI ADMIN
+// Kalau belum login sama sekali, otomatis dilempar ke halaman /login.
+// Kalau sudah login tapi rolenya beda (misal kasir buka URL admin),
+// akan kena 403 Forbidden.
+// ---------------------------------------------------------------------
 
-Route::prefix('kasir')->group(function () {
+Route::middleware('cek.login:kasir')->group(function () {
 
-    Route::get('/transaksi', [TransaksiController::class, 'index'])
-        ->name('kasir.transaksi');
+    Route::post('/kasir/modal-awal', [AuthKasirController::class, 'storeModalAwal'])
+        ->name('kasir.modal-awal.store');
 
+    Route::prefix('kasir')->group(function () {
 
-    Route::post('/transaksi/simpan', [TransaksiController::class, 'simpanTransaksi'])
-        ->name('kasir.transaksi.store');
+        Route::get('/transaksi', [TransaksiController::class, 'index'])
+            ->name('kasir.transaksi');
 
-    Route::get('/rekapitulasikasir', [RekapitulasiKasirController::class, 'index'])
-        ->name('kasir.rekapitulasi');
+        Route::post('/transaksi/simpan', [TransaksiController::class, 'simpanTransaksi'])
+            ->name('kasir.transaksi.store');
 
-    Route::post('/kasir/tutup-kas', [RekapitulasiKasirController::class, 'tutupKas'])
-        ->name('kasir.tutup-kas');
+        Route::get('/rekapitulasikasir', [RekapitulasiKasirController::class, 'index'])
+            ->name('kasir.rekapitulasi');
 
-    Route::get('/kas-keluar', [KasKeluarController::class, 'index'])
-        ->name('kasir.kas-keluar');
+        Route::post('/kasir/tutup-kas', [RekapitulasiKasirController::class, 'tutupKas'])
+            ->name('kasir.tutup-kas');
 
-    Route::post('/kas-keluar', [KasKeluarController::class, 'store'])
-        ->name('kasir.kas-keluar.store');
+        Route::get('/kas-keluar', [KasKeluarController::class, 'index'])
+            ->name('kasir.kas-keluar');
 
-    Route::put('/kas-keluar/{kasKeluar}', [KasKeluarController::class, 'update'])
-        ->name('kasir.kas-keluar.update');
-});
+        Route::post('/kas-keluar', [KasKeluarController::class, 'store'])
+            ->name('kasir.kas-keluar.store');
 
-// Route::prefix('kasir/stok')->name('kasir.stok.')->group(function () {
-//     Route::post('/', [StokController::class, 'store'])->name('store');
-//     Route::post('/tambah', [StokController::class, 'tambahStok'])->name('tambah');
-//     Route::post('/penyesuaian', [StokController::class, 'penyesuaian'])->name('penyesuaian');
-//     Route::get('/riwayat', [StokController::class, 'riwayat'])->name('riwayat');
-// });
+        Route::put('/kas-keluar/{kasKeluar}', [KasKeluarController::class, 'update'])
+            ->name('kasir.kas-keluar.update');
+    });
 
-Route::prefix('kasir/stok')->group(function () {
+    Route::prefix('kasir/stok')->group(function () {
 
-    Route::get('/', [StokController::class, 'index'])
-        ->name('kasir.stok');
+        Route::get('/', [StokController::class, 'index'])
+            ->name('kasir.stok');
 
-    Route::get('/tambah', [StokController::class, 'create'])
-        ->name('kasir.stok.create');
+        Route::get('/tambah', [StokController::class, 'create'])
+            ->name('kasir.stok.create');
 
-    Route::post('/tambah', [StokController::class, 'store'])
-        ->name('kasir.stok.store');
+        Route::post('/tambah', [StokController::class, 'store'])
+            ->name('kasir.stok.store');
 
-    Route::get('/{produk}/edit', [StokController::class, 'edit'])
-        ->name('kasir.stok.edit');
+        Route::get('/{produk}/edit', [StokController::class, 'edit'])
+            ->name('kasir.stok.edit');
 
-    Route::post('/tambah-stok', [StokController::class, 'tambahStok'])
-        ->name('kasir.stok.tambah');
+        Route::post('/tambah-stok', [StokController::class, 'tambahStok'])
+            ->name('kasir.stok.tambah');
 
-    Route::get('/riwayat', [StokController::class, 'riwayat'])
-        ->name('kasir.stok.riwayat');
+        Route::get('/riwayat', [StokController::class, 'riwayat'])
+            ->name('kasir.stok.riwayat');
 
-    Route::get('/titip-jual', [StokController::class, 'titipJual'])
-        ->name('kasir.stok.titip-jual');
+        Route::get('/titip-jual', [StokController::class, 'titipJual'])
+            ->name('kasir.stok.titip-jual');
 
-    Route::get('/kode-produk/{kategori}', [StokController::class, 'getKodeProduk'])
-        ->name('kasir.stok.kode');
+        Route::get('/kode-produk/{kategori}', [StokController::class, 'getKodeProduk'])
+            ->name('kasir.stok.kode');
 
-    Route::delete('/{produk}', [StokController::class, 'destroy'])
-        ->name('kasir.stok.destroy');
+        Route::delete('/{produk}', [StokController::class, 'destroy'])
+            ->name('kasir.stok.destroy');
+
+    });
 
 });
 
 use App\Http\Controllers\Admin\RekapitulasiController;
 use App\Http\Controllers\Admin\DashboardController;
 
-Route::prefix('admin')->group(function () {
+Route::middleware('cek.login:admin')->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('admin.dashboard');
+    Route::prefix('admin')->group(function () {
 
-    Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])
-        ->name('admin.rekapitulasi');
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+            ->name('admin.dashboard');
+
+        Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])
+            ->name('admin.rekapitulasi');
+    });
+
+    Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
+        ->name('admin.rekapitulasi.pdf');
+
 });
-
-Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
-    ->name('admin.rekapitulasi.pdf');
