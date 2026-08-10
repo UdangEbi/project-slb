@@ -8,6 +8,8 @@ use App\Models\Produk;
 use App\Models\RiwayatStok;
 use Illuminate\Http\Request;
 use App\Models\KasKeluar;
+use App\Models\DetailTransaksi;
+use App\Models\Transaksi;
 use Illuminate\Support\Facades\DB;
 
 class StokController extends Controller
@@ -287,80 +289,129 @@ class StokController extends Controller
         $kategori = KategoriProduk::orderBy('nama_kategori')->get();
 
         $kategoriId = 14;
+
         $tanggalAwal = $request->tanggal_awal;
         $tanggalAkhir = $request->tanggal_akhir;
 
-        $query = Produk::select(
-            'produk.*',
-            DB::raw("
-            COALESCE(SUM(
-                CASE
-                    WHEN riwayat_stok.tipe='masuk'
-                    THEN riwayat_stok.jumlah
-                    ELSE 0
-                END
-            ),0) as total_masuk
-        "),
-            DB::raw("
-            COALESCE(SUM(
-                CASE
-                    WHEN riwayat_stok.tipe='keluar'
-                    THEN riwayat_stok.jumlah
-                    ELSE 0
-                END
-            ),0) as total_terjual
-        ")
-        )
-            ->leftJoin(
-                'riwayat_stok',
-                'produk.id_produk',
-                '=',
-                'riwayat_stok.produk_id'
-            )
-            ->where('produk.kategori_id', 14);
-
-        if ($tanggalAwal) {
-            $query->whereDate(
-                'riwayat_stok.tanggal',
-                '>=',
-                $tanggalAwal
-            );
-        }
-
-        if ($tanggalAkhir) {
-            $query->whereDate(
-                'riwayat_stok.tanggal',
-                '<=',
-                $tanggalAkhir
-            );
-        }
-
-        $produk = $query
-            ->groupBy(
-                'produk.id_produk',
-                'produk.kategori_id',
-                'produk.kode_produk',
-                'produk.nama_produk',
-                'produk.harga_beli',
-                'produk.harga_jual',
-                'produk.stok',
-                'produk.satuan',
-                'produk.created_at',
-                'produk.updated_at'
-            )
-            ->orderBy('produk.nama_produk')
+        // Ambil seluruh produk kategori TITIP JUAL
+        $produk = Produk::where('kategori_id', 14)
+            ->orderBy('nama_produk')
             ->get();
 
         foreach ($produk as $item) {
-            $pembayaran = KasKeluar::where('kategori_pengeluaran_id', 6)
-                ->where('kode_produk', $item->kode_produk)
-                ->exists();
 
-            $item->status_bayar = $pembayaran;
+            /*
+        |--------------------------------------------------------------------------
+        | 1. TOTAL BARANG MASUK
+        |--------------------------------------------------------------------------
+        */
+
+            $queryMasuk = RiwayatStok::where('produk_id', $item->id_produk)
+                ->where('tipe', 'masuk');
+
+            if ($tanggalAwal) {
+                $queryMasuk->whereDate('tanggal', '>=', $tanggalAwal);
+            }
+
+            if ($tanggalAkhir) {
+                $queryMasuk->whereDate('tanggal', '<=', $tanggalAkhir);
+            }
+
+            $item->total_masuk = $queryMasuk->sum('jumlah');
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | 2. TOTAL BENAR-BENAR TERJUAL
+        |--------------------------------------------------------------------------
+        |
+        | Jangan lagi menggunakan riwayat_stok tipe keluar.
+        | Penjualan dihitung dari detail transaksi.
+        |
+        */
+
+            $queryTerjual = DetailTransaksi::where('produk_id', $item->id_produk)
+                ->whereHas('transaksi', function ($q) use ($tanggalAwal, $tanggalAkhir) {
+
+                    $q->where('status', 'selesai');
+
+                    if ($tanggalAwal) {
+                        $q->whereDate('tanggal', '>=', $tanggalAwal);
+                    }
+
+                    if ($tanggalAkhir) {
+                        $q->whereDate('tanggal', '<=', $tanggalAkhir);
+                    }
+                });
+
+            $item->total_terjual = $queryTerjual->sum('qty');
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | 3. TOTAL YANG HARUS DIBAYARKAN
+        |--------------------------------------------------------------------------
+        */
 
             $item->total_bayar =
-                $item->harga_beli *
-                $item->total_terjual;
+                $item->harga_beli * $item->total_terjual;
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | 4. TOTAL YANG SUDAH DIBAYAR KE PENITIP
+        |--------------------------------------------------------------------------
+        |
+        | Kategori 6 = Bayar Titip Jual
+        |
+        */
+
+            $item->sudah_dibayar = KasKeluar::where(
+                'kategori_pengeluaran_id',
+                6
+            )
+                ->where('kode_produk', $item->kode_produk)
+                ->sum('nominal');
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | 5. SISA YANG MASIH HARUS DIBAYAR
+        |--------------------------------------------------------------------------
+        */
+
+            $item->belum_dibayar = max(
+                $item->total_bayar - $item->sudah_dibayar,
+                0
+            );
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | 6. STATUS PEMBAYARAN
+        |--------------------------------------------------------------------------
+        */
+
+            if ($item->total_terjual == 0) {
+
+                $item->status_bayar = 'belum_ada_penjualan';
+            } elseif ($item->belum_dibayar == 0) {
+
+                $item->status_bayar = 'lunas';
+            } elseif ($item->sudah_dibayar > 0) {
+
+                $item->status_bayar = 'sebagian';
+            } else {
+
+                $item->status_bayar = 'belum_dibayar';
+            }
+
+
+            /*
+        |--------------------------------------------------------------------------
+        | 7. PERSENTASE
+        |--------------------------------------------------------------------------
+        */
 
             $item->persentase =
                 $item->total_masuk == 0
@@ -371,13 +422,12 @@ class StokController extends Controller
                 );
         }
 
-        $totalBelumDibayar = $produk
-            ->where('status_bayar', false)
-            ->sum('total_bayar');
 
-        $totalSudahDibayar = $produk
-            ->where('status_bayar', true)
-            ->sum('total_bayar');
+        /*
+    |--------------------------------------------------------------------------
+    | CARD ATAS
+    |--------------------------------------------------------------------------
+    */
 
         $totalProduk = $produk->count();
 
@@ -385,7 +435,15 @@ class StokController extends Controller
 
         $totalSisa = $produk->sum('stok');
 
+        // Yang benar-benar masih menjadi kewajiban
+        $totalBelumDibayar = $produk->sum('belum_dibayar');
+
+        // Historis pembayaran yang sudah dilakukan
+        $totalSudahDibayar = $produk->sum('sudah_dibayar');
+
+        // Total hasil penjualan titipan
         $totalBayar = $produk->sum('total_bayar');
+
 
         return view(
             'kasir.stok.titip-jual',

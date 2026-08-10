@@ -89,7 +89,7 @@
                 <div class="bg-white rounded-2xl shadow-md p-5 border border-gray-100">
 
                     <p class="text-xl text-gray-500 font-bold">
-                        Harus Dibayar
+                        Belum Dibayar
                     </p>
 
                     <h2 class="mt-2 text-3xl font-extrabold text-red-600">
@@ -97,7 +97,7 @@
                     </h2>
 
                     <p class="text-lg text-gray-400 mt-2 font-bold">
-                        Berdasarkan harga beli
+                        Sisa pembayaran kepada penitip
                     </p>
 
                 </div>
@@ -134,7 +134,13 @@
 
                                 <th class="px-4 py-3 text-right text-xl">Harga Beli</th>
 
-                                <th class="px-4 py-3 text-center text-xl">Harus Dibayar</th>
+                                <th class="px-4 py-3 text-center text-xl">
+                                    Sudah Dibayar
+                                </th>
+
+                                <th class="px-4 py-3 text-center text-xl">
+                                    Belum Dibayar
+                                </th>
                                 <th class="px-4 py-3 text-center text-xl">
                                     Status
                                 </th>
@@ -173,22 +179,42 @@
                                         Rp {{ number_format($item->harga_beli, 0, ',', '.') }}
                                     </td>
 
+                                    <td class="px-4 py-3 text-center font-bold text-green-600 text-lg">
+                                        Rp {{ number_format($item->sudah_dibayar, 0, ',', '.') }}
+                                    </td>
+
                                     <td class="px-4 py-3 text-center font-bold text-red-600 text-lg">
-                                        Rp {{ number_format($item->total_bayar, 0, ',', '.') }}
+                                        Rp {{ number_format($item->belum_dibayar, 0, ',', '.') }}
                                     </td>
 
                                     <td class="px-4 py-3 text-center">
 
-                                        @if($item->status_bayar)
+                                        @if($item->status_bayar === 'lunas')
 
-                                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold">
-                                                Sudah Dibayar
+                                            <span
+                                                class="bg-green-100 text-green-700 px-3 py-1 rounded-full font-bold whitespace-nowrap">
+                                                Lunas
+                                            </span>
+
+                                        @elseif($item->status_bayar === 'sebagian')
+
+                                            <span
+                                                class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full font-bold whitespace-nowrap">
+                                                Sebagian Dibayar
+                                            </span>
+
+                                        @elseif($item->status_bayar === 'belum_dibayar')
+
+                                            <span
+                                                class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-bold whitespace-nowrap">
+                                                Belum Dibayar
                                             </span>
 
                                         @else
 
-                                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-bold">
-                                                Belum Dibayar
+                                            <span
+                                                class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-bold whitespace-nowrap">
+                                                Belum Ada Penjualan
                                             </span>
 
                                         @endif
@@ -201,7 +227,7 @@
 
                                 <tr>
 
-                                    <td colspan="8" class="py-10 text-center text-gray-500">
+                                    <td colspan="9" class="py-10 text-center text-gray-500">
 
                                         Belum ada data titip jual.
 
