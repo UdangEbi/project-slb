@@ -14,7 +14,12 @@ class RekapitulasiKasirController extends Controller
     public function index()
     {
 
-        $modalAwal = session('modal_awal', 0);
+        $rekapAktif = RekapKasir::where('user_id', session('user_id'))
+            ->whereNull('waktu_tutup')
+            ->latest('id_rekap')
+            ->first();
+
+        $modalAwal = $rekapAktif?->modal_awal ?? 0;
 
         $tunai = Transaksi::whereNull('id_rekap')
             ->where('status', 'selesai')
@@ -60,12 +65,24 @@ class RekapitulasiKasirController extends Controller
 
         $request->validate([
             'uang_fisik' => 'required|numeric|min:0',
-            'catatan' => 'nullable|string',
+            'catatan'    => 'nullable|string',
         ]);
 
-        $tanggal = today();
+        $userId = session('user_id');
 
-        $modalAwal = session('modal_awal', 0);
+        // Cari rekap kasir yang sedang aktif.
+        $rekapAktif = RekapKasir::where('user_id', $userId)
+            ->whereNull('waktu_tutup')
+            ->latest('id_rekap')
+            ->first();
+
+        if (!$rekapAktif) {
+            return redirect()
+                ->route('kasir.transaksi')
+                ->with('error', 'Tidak ada sesi kasir yang sedang aktif.');
+        }
+
+        $modalAwal = $rekapAktif->modal_awal;
 
         $totalTransaksi = Transaksi::whereNull('id_rekap')
             ->where('status', 'selesai')
@@ -82,13 +99,15 @@ class RekapitulasiKasirController extends Controller
         $totalKasKeluar = KasKeluar::whereNull('id_rekap')
             ->sum('nominal');
 
-        $saldoAkhir = $modalAwal + $totalPenjualan + $totalDonasi - $totalKasKeluar;
+        $saldoAkhir = $modalAwal
+            + $totalPenjualan
+            + $totalDonasi
+            - $totalKasKeluar;
 
         $selisih = $request->uang_fisik - $saldoAkhir;
 
         DB::transaction(function () use (
-            $tanggal,
-            $modalAwal,
+            $rekapAktif,
             $totalTransaksi,
             $totalPenjualan,
             $totalKasKeluar,
@@ -96,32 +115,35 @@ class RekapitulasiKasirController extends Controller
             $selisih,
             $request
         ) {
-
-            $rekap = RekapKasir::create([
-                'user_id' => session('user_id'),
-                'tanggal' => $tanggal,
-                'modal_awal' => $modalAwal,
-                'total_transaksi' => $totalTransaksi,
-                'total_penjualan' => $totalPenjualan,
+            // Perbarui rekap yang dibuat saat memasukkan modal awal.
+            $rekapAktif->update([
+                'waktu_tutup'      => now(),
+                'total_transaksi'  => $totalTransaksi,
+                'total_penjualan'  => $totalPenjualan,
                 'total_kas_keluar' => $totalKasKeluar,
-                'saldo_akhir' => $saldoAkhir,
-                'uang_fisik' => $request->uang_fisik,
-                'selisih' => $selisih,
-                'catatan' => $request->catatan ?? '',
+                'saldo_akhir'      => $saldoAkhir,
+                'uang_fisik'       => $request->uang_fisik,
+                'selisih'          => $selisih,
+                'catatan'          => $request->catatan ?? '',
             ]);
 
+            // Hubungkan kas keluar dengan rekap yang ditutup.
             KasKeluar::whereNull('id_rekap')
                 ->update([
-                    'id_rekap' => $rekap->id_rekap,
+                    'id_rekap' => $rekapAktif->id_rekap,
                 ]);
 
+            // Hubungkan transaksi dengan rekap yang ditutup.
             Transaksi::whereNull('id_rekap')
                 ->where('status', 'selesai')
                 ->update([
-                    'id_rekap' => $rekap->id_rekap,
+                    'id_rekap' => $rekapAktif->id_rekap,
                 ]);
 
-            session()->forget('modal_awal');
+            session()->forget([
+                'modal_awal',
+                'id_rekap',
+            ]);
         });
 
         return redirect()

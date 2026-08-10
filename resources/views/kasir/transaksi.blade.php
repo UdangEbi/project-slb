@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @if (!session('modal_awal'))
+    @if (!$rekapAktif)
         <div id="modalAwalPopup" class="fixed inset-0 z-50 bg-black/40 flex items-center justify-center">
 
             <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl p-10 uppercase">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Kasir;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\RekapKasir;
 
 class AuthKasirController extends Controller
 {
@@ -109,8 +110,24 @@ class AuthKasirController extends Controller
             $request->modal_awal
         );
 
+        $rekap = RekapKasir::create([
+            'user_id'          => session('user_id'),
+            'tanggal'          => today(),
+            'waktu_buka'       => now(),
+            'waktu_tutup'      => null,
+            'modal_awal'       => $modalAwal,
+            'total_transaksi'  => 0,
+            'total_penjualan'  => 0,
+            'total_kas_keluar' => 0,
+            'saldo_akhir'      => 0,
+            'uang_fisik'       => 0,
+            'selisih'          => 0,
+            'catatan'          => '',
+        ]);
+
         session([
             'modal_awal' => $modalAwal,
+            'id_rekap'   => $rekap->id_rekap,
         ]);
 
         return redirect()->route('kasir.transaksi');
