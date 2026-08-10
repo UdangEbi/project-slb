@@ -8,6 +8,7 @@ use App\Models\KasKeluar;
 use App\Models\KategoriPengeluaran;
 use Carbon\Carbon;
 use App\Models\Produk;
+use App\Models\DetailTransaksi;
 
 class KasKeluarController extends Controller
 {
@@ -113,5 +114,42 @@ class KasKeluarController extends Controller
         return redirect()
             ->route('kasir.kas-keluar')
             ->with('success', 'Pengeluaran kas berhasil diperbarui.');
+    }
+
+    public function getSisaTitipJual($kodeProduk)
+    {
+        $produk = Produk::where('kode_produk', $kodeProduk)
+            ->firstOrFail();
+
+        // Total barang yang benar-benar terjual
+        $totalTerjual = \App\Models\DetailTransaksi::where('produk_id', $produk->id_produk)
+            ->whereHas('transaksi', function ($q) {
+                $q->where('status', 'selesai');
+            })
+            ->sum('qty');
+
+        // Total kewajiban pembayaran ke penitip
+        $totalHarusDibayar = $totalTerjual * $produk->harga_beli;
+
+        // Total yang sudah pernah dibayar
+        $totalSudahDibayar = KasKeluar::where('kategori_pengeluaran_id', 6)
+            ->where('kode_produk', $produk->kode_produk)
+            ->sum('nominal');
+
+        // Sisa yang masih harus dibayar
+        $sisaBelumDibayar = max(
+            $totalHarusDibayar - $totalSudahDibayar,
+            0
+        );
+
+        return response()->json([
+            'kode_produk' => $produk->kode_produk,
+            'nama_produk' => $produk->nama_produk,
+            'harga_beli' => $produk->harga_beli,
+            'total_terjual' => $totalTerjual,
+            'total_harus_dibayar' => $totalHarusDibayar,
+            'total_sudah_dibayar' => $totalSudahDibayar,
+            'sisa_belum_dibayar' => $sisaBelumDibayar,
+        ]);
     }
 }
