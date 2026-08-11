@@ -40,21 +40,88 @@ class TransaksiController extends Controller
             ];
         })->toArray();
 
-        return view('kasir.transaksi', compact('produk', 'kategori', 'kategoriId'));
-    }
+        // Cari rekap kasir yang masih aktif.
+        // waktu_tutup NULL berarti kasir belum ditutup.
+        $rekapAktif = RekapKasir::where('user_id', session('user_id'))
+            ->whereNull('waktu_tutup')
+            ->latest('id_rekap')
+            ->first();
 
+
+        // Tetap simpan ke session agar kode lama yang menggunakan
+        // session('modal_awal') belum langsung rusak.
+        if ($rekapAktif) {
+            session([
+                'modal_awal' => $rekapAktif->modal_awal,
+                'id_rekap'   => $rekapAktif->id_rekap,
+            ]);
+        } else {
+            session()->forget([
+                'modal_awal',
+                'id_rekap',
+            ]);
+        }
+
+        return view('kasir.transaksi', compact(
+            'produk',
+            'kategori',
+            'kategoriId',
+            'rekapAktif'
+        ));
+    }
     // ── MODAL AWAL ───────────────────────────────────────────
     public function storeModalAwal(Request $request)
     {
         $request->validate([
-            'modal_awal' => 'required'
+            'modal_awal' => 'required',
         ]);
 
-        $nominal = (int) str_replace(['.', ','], ['', ''], $request->modal_awal);
+        $nominal = (int) str_replace(
+            ['.', ','],
+            ['', ''],
+            $request->modal_awal
+        );
 
-        session(['modal_awal' => $nominal]);
+        $userId = session('user_id');
 
-        return redirect()->route('kasir.transaksi');
+        // Cegah pembuatan rekap baru jika kasir masih aktif.
+        $rekapAktif = RekapKasir::where('user_id', $userId)
+            ->whereNull('waktu_tutup')
+            ->latest('id_rekap')
+            ->first();
+
+        if ($rekapAktif) {
+            session([
+                'modal_awal' => $rekapAktif->modal_awal,
+                'id_rekap'   => $rekapAktif->id_rekap,
+            ]);
+
+            return redirect()->route('kasir.transaksi');
+        }
+
+        $rekap = RekapKasir::create([
+            'user_id'          => $userId,
+            'tanggal'          => Carbon::today(),
+            'waktu_buka'       => Carbon::now(),
+            'waktu_tutup'      => null,
+            'modal_awal'       => $nominal,
+            'total_transaksi'  => 0,
+            'total_penjualan'  => 0,
+            'total_kas_keluar' => 0,
+            'saldo_akhir'      => 0,
+            'uang_fisik'       => 0,
+            'selisih'          => 0,
+            'catatan'          => null,
+        ]);
+
+        session([
+            'modal_awal' => $rekap->modal_awal,
+            'id_rekap'   => $rekap->id_rekap,
+        ]);
+
+        return redirect()
+            ->route('kasir.transaksi')
+            ->with('success', 'Modal awal berhasil disimpan.');
     }
 
     // ── SIMPAN TRANSAKSI (dipanggil via fetch dari JS) ───────

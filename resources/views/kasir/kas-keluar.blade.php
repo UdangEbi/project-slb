@@ -85,37 +85,32 @@
                             @forelse($kasKeluar as $index => $item)
                                 <tr class="border-b">
 
-                                    <td
-                                        class="px-6 py-6 text-xl font-bold text-[#212842] text-center uppercase tracking-wide">
+                                    <td class="px-6 py-6 text-xl font-bold text-[#212842] text-center uppercase tracking-wide">
                                         {{ $index + 1 }}
                                     </td>
 
-                                    <td
-                                        class="px-6 py-6 text-xl font-bold text-[#212842] text-center uppercase tracking-wide">
+                                    <td class="px-6 py-6 text-xl font-bold text-[#212842] text-center uppercase tracking-wide">
                                         {{ $item->tanggal->format('d/m/Y') }}
                                     </td>
 
-                                    <td
-                                        class="px-6 py-6 text-xl font-bold text-[#212842] text-center uppercase tracking-wide">
+                                    <td class="px-6 py-6 text-xl font-bold text-[#212842] text-center uppercase tracking-wide">
                                         {{ $item->kategori->nama_kategori }}
                                     </td>
 
-                                    <td
-                                        class="px-6 py-6 text-xl font-bold text-[#212842] text-left uppercase tracking-wide">
+                                    <td class="px-6 py-6 text-xl font-bold text-[#212842] text-left uppercase tracking-wide">
                                         {{ $item->keterangan }}
                                     </td>
 
                                     <td class="px-6 py-5">
                                         <span
                                             class="inline-flex items-center justify-center
-                                            bg-red-100 text-red-700 rounded-full
-                                            px-6 py-3 text-2xl font-extrabold whitespace-nowrap">
+                                                                                                                                                                    bg-red-100 text-red-700 rounded-full
+                                                                                                                                                                    px-6 py-3 text-2xl font-extrabold whitespace-nowrap">
                                             {{ 'Rp ' . number_format((int) $item->nominal, 0, ',', '.') }}
                                         </span>
                                     </td>
 
-                                    <td
-                                        class="px-6 py-6 text-xl font-bold text-[#212842] text-center uppercase tracking-wide">
+                                    <td class="px-6 py-6 text-xl font-bold text-[#212842] text-center uppercase tracking-wide">
                                         {{ $item->user->name }}
                                     </td>
 
@@ -123,17 +118,18 @@
 
                                         <button type="button"
                                             onclick="editKasKeluar(
-                                                '{{ $item->id_kas_keluar }}',
-                                                '{{ $item->tanggal->format('Y-m-d') }}',
-                                                '{{ $item->kategori_pengeluaran_id }}',
-                                                '{{ $item->nominal }}',
-                                                '{{ addslashes($item->keterangan) }}'
-                                            )"
+                                                                                                                                                                        '{{ $item->id_kas_keluar }}',
+                                                                                                                                                                        '{{ $item->tanggal->format('Y-m-d') }}',
+                                                                                                                                                                        '{{ $item->kategori_pengeluaran_id }}',
+                                                                                                                                                                        '{{ $item->kode_produk }}',
+                                                                                                                                                                        '{{ $item->nominal }}',
+                                                                                                                                                                        '{{ addslashes($item->keterangan) }}'
+                                                                                                                                                                    )"
                                             class="bg-[#212842] text-[#F0E7D5]
-                                                px-5 py-3 rounded-xl
-                                                text-xl font-extrabold
-                                                uppercase tracking-wide
-                                                hover:opacity-90 transition">
+                                                                                                                                                                        px-5 py-3 rounded-xl
+                                                                                                                                                                        text-xl font-extrabold
+                                                                                                                                                                        uppercase tracking-wide
+                                                                                                                                                                        hover:opacity-90 transition">
 
                                             <i class="bi bi-pencil-square me-2"></i>
 
@@ -199,7 +195,7 @@
                 <input type="hidden" name="_method" id="formMethod" value="POST">
                 <input type="hidden" id="kas_keluar_id" name="kas_keluar_id">
 
-                <div class="grid grid-cols-2 gap-6 p-6">
+                <div class="grid grid-cols-2 gap-1 p-6">
 
                     {{-- Tanggal --}}
                     <div>
@@ -222,9 +218,9 @@
 
                         <select id="kategori_pengeluaran_id" name="kategori_pengeluaran_id" required
                             class="w-full rounded-2xl border-2 border-gray-300
-                                px-5 py-4
-                                text-lg font-black uppercase tracking-wide
-                                focus:border-[#212842] focus:outline-none">
+                                                                                            px-5 py-4
+                                                                                            text-lg font-black uppercase tracking-wide
+                                                                                            focus:border-[#212842] focus:outline-none">
 
                             <option value="" selected disabled hidden>
                                 PILIH KATEGORI
@@ -240,6 +236,30 @@
 
                     </div>
 
+                    {{-- Prouduk --}}
+                    <div id="produkTitipJualArea" class="hidden">
+                        <label class="block text-xl font-extrabold text-[#212842] mb-3">
+                            Produk
+                        </label>
+
+                        <select name="kode_produk" id="kode_produk" class="w-full rounded-2xl border-2 border-gray-300
+                                                       px-5 py-4 text-lg font-bold
+                                                       focus:border-[#212842] focus:outline-none">
+
+                            <option value="" selected disabled hidden>
+                                PILIH PRODUK
+                            </option>
+
+                            @foreach($produkTitipJual as $produk)
+                                <option value="{{ $produk->kode_produk }}" data-harga="{{ $produk->harga_beli }}" class="font-bold uppercase">
+                                    {{ $produk->kode_produk }} - {{ $produk->nama_produk }}
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+
                     {{-- Nominal --}}
                     <div>
 
@@ -247,20 +267,19 @@
                             Nominal
                         </label>
 
-                        <input id="nominal" type="text" name="nominal" inputmode="numeric"
-                            placeholder="Masukkan nominal"
+                        <input id="nominal" type="text" name="nominal" inputmode="numeric" placeholder="Masukkan nominal"
                             class="w-full rounded-2xl border-2 border-gray-300 px-5 py-4 text-lg font-bold uppercase tracking-wide placeholder:text-gray-400 focus:border-[#212842] focus:outline-none">
 
                     </div>
 
                     {{-- Keterangan --}}
-                    <div>
+                    <div class="col-span-2">
 
                         <label class="block text-xl font-extrabold text-[#212842] mb-3 uppercase tracking-wide">
                             Keterangan
                         </label>
 
-                        <textarea id="keterangan" name="keterangan" rows="4" placeholder="Masukkan keterangan"
+                        <textarea id="keterangan" name="keterangan" rows="1" placeholder="Masukkan keterangan"
                             class="w-full rounded-2xl border-2 border-gray-300 px-5 py-4 text-lg font-bold uppercase tracking-wide placeholder:text-gray-400 resize-none focus:border-[#212842] focus:outline-none"></textarea>
 
                     </div>
@@ -268,17 +287,17 @@
                 </div>
 
                 {{-- Footer --}}
-                <div class="border-t px-8 py-6 flex justify-end gap-4">
+                <div class="border-t px-6 py-4 flex justify-end gap-4">
 
                     <button type="button" onclick="closeKasKeluarModal()"
-                        class="px-8 py-4 rounded-2xl bg-gray-300 text-[#212842] text-2xl uppercase tracking-wide font-bold hover:bg-gray-400 transition">
+                        class="px-6 py-2 rounded-2xl bg-gray-300 text-[#212842] text-2xl uppercase tracking-wide font-bold hover:bg-gray-400 transition">
 
                         Batal
 
                     </button>
 
                     <button id="submitButton" type="submit"
-                        class="px-8 py-4 rounded-2xl bg-[#212842] text-[#F0E7D5] text-2xl uppercase tracking-wide font-bold hover:opacity-90 transition">
+                        class="px-6 py-2 rounded-2xl bg-[#212842] text-[#F0E7D5] text-2xl uppercase tracking-wide font-bold hover:opacity-90 transition">
 
                         Simpan
 
@@ -322,6 +341,13 @@
             document.getElementById('tanggal').value =
                 "{{ date('Y-m-d') }}";
 
+            kategoriSelect.selectedIndex = 0;
+
+            produkArea.classList.add('hidden');
+            produkSelect.required = false;
+            produkSelect.value = '';
+
+            nominalInput.value = '';
             const modal = document.getElementById('kasKeluarModal');
 
             modal.classList.remove('hidden');
@@ -337,7 +363,7 @@
 
         }
 
-        function editKasKeluar(id, tanggal, kategori, nominal, keterangan) {
+        function editKasKeluar(id, tanggal, kategori, kodeProduk, nominal, keterangan) {
             openKasKeluarModal();
 
             // simpan id
@@ -346,6 +372,17 @@
             // isi form
             document.getElementById('tanggal').value = tanggal;
             document.getElementById('kategori_pengeluaran_id').value = kategori;
+
+            toggleProdukTitipJual();
+
+            document.getElementById('kode_produk').value = kodeProduk;
+            document.getElementById('kategori_pengeluaran_id').value = kategori;
+            toggleProdukTitipJual();
+
+            if (kodeProduk) {
+                document.getElementById('kode_produk').value = kodeProduk;
+                document.getElementById('kode_produk').dispatchEvent(new Event('change'));
+            }
             document.getElementById('nominal').value =
                 new Intl.NumberFormat('id-ID').format(nominal);
             document.getElementById('keterangan').value = keterangan;
@@ -370,7 +407,7 @@
 
         const nominal = document.getElementById('nominal');
 
-        nominal.addEventListener('input', function() {
+        nominal.addEventListener('input', function () {
             let angka = this.value.replace(/\D/g, '');
 
             this.value = angka ?
@@ -378,8 +415,51 @@
                 '';
         });
 
-        document.getElementById('kasKeluarForm').addEventListener('submit', function() {
+        document.getElementById('kasKeluarForm').addEventListener('submit', function () {
             nominal.value = nominal.value.replace(/\./g, '');
+        });
+
+        // ===== TITIP JUAL =====
+
+        const kategoriSelect = document.getElementById('kategori_pengeluaran_id');
+        const produkArea = document.getElementById('produkTitipJualArea');
+        const produkSelect = document.getElementById('kode_produk');
+        const nominalInput = document.getElementById('nominal');
+
+        function toggleProdukTitipJual() {
+
+            const text =
+                kategoriSelect.options[kategoriSelect.selectedIndex]?.text
+                    ?.trim()
+                    .toUpperCase();
+
+            if (text === 'BAYAR TITIP JUAL') {
+
+                produkArea.classList.remove('hidden');
+                produkSelect.required = true;
+
+            } else {
+
+                produkArea.classList.add('hidden');
+                produkSelect.required = false;
+                produkSelect.value = '';
+
+            }
+        }
+
+        kategoriSelect.addEventListener('change', toggleProdukTitipJual);
+
+        produkSelect.addEventListener('change', function () {
+
+            const option = this.options[this.selectedIndex];
+
+            if (!option) return;
+
+            const harga = option.dataset.harga ?? '';
+
+            nominalInput.value = harga
+                ? new Intl.NumberFormat('id-ID').format(harga)
+                : '';
         });
     </script>
 @endpush

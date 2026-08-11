@@ -141,6 +141,9 @@ class RekapitulasiController extends Controller
             ];
         });
         // dd($kasKeluar);
+        $transaksiMasuk = collect($transaksiMasuk);
+        $kasKeluar = collect($kasKeluar);
+
         $rekapitulasi = $transaksiMasuk
             ->merge($kasKeluar)
             ->sortBy('tanggal')

@@ -16,6 +16,7 @@ class KasKeluar extends Model
         'tanggal',
         'user_id',
         'kategori_pengeluaran_id',
+        'kode_produk',
         'nominal',
         'keterangan',
         'id_rekap',
@@ -52,5 +53,10 @@ class KasKeluar extends Model
             'id_rekap',
             'id_rekap'
         );
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'kode_produk', 'kode_produk');
     }
 }

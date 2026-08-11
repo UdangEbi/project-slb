@@ -140,7 +140,12 @@ Route::middleware('cek.login:admin')->group(function () {
             ->name('admin.rekapitulasi');
     });
 
-    Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
-        ->name('admin.rekapitulasi.pdf');
+Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
+    ->name('admin.rekapitulasi.pdf');
+
+Route::get(
+    '/kasir/kas-keluar/titip-jual/{kodeProduk}',
+    [KasKeluarController::class, 'getSisaTitipJual']
+)->name('kasir.kas-keluar.sisa-titip-jual');
 
 });
