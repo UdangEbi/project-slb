@@ -11,29 +11,10 @@ Route::get('/', function () {
 });
 
 Route::post('/logout', function (Request $request) {
-    // Sistem login di aplikasi ini custom (pakai session manual di
-    // AuthKasirController), bukan Auth::attempt() bawaan Laravel.
-    // Jadi logout juga harus membersihkan session secara manual,
-    // supaya middleware cek.login benar-benar menganggap user logout.
     session()->flush();
 
     return redirect()->route('login');
 })->name('logout');
-
-Route::post('/password/reset', function () {
-
-    $user = Auth::user();
-
-    if (!($user instanceof User)) {
-        return redirect('/login');
-    }
-
-    $user->password = Hash::make('12345678');
-    $user->save();
-
-
-    return back()->with('success', 'Password berhasil direset');
-})->name('password.reset');
 
 use App\Http\Controllers\Kasir\TransaksiController;
 use App\Http\Controllers\Kasir\StokController;
@@ -55,6 +36,28 @@ Route::post('/login', [AuthKasirController::class, 'processLogin'])
 Route::get('/logout', [AuthKasirController::class, 'logout'])
     ->name('kasir.logout');
 
+Route::get('/forgot-password', function () {
+    return view('forgot-password');
+})->name('password.request');
+
+
+Route::post('/forgot-password', function (Request $request) {
+
+    $request->validate([
+        'email' => 'required|email|exists:users,email',
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    $user->password = Hash::make('12345678');
+    $user->save();
+
+    return redirect()->route('login')
+        ->with('success', 'Password berhasil direset menjadi 12345678.');
+
+})->name('password.email');
+
+
 // ---------------------------------------------------------------------
 // SEMUA ROUTE DI BAWAH INI WAJIB LOGIN.
 // - 'cek.login:kasir' -> wajib login SEBAGAI KASIR
@@ -68,6 +71,54 @@ Route::middleware('cek.login:kasir')->group(function () {
 
     Route::post('/kasir/modal-awal', [AuthKasirController::class, 'storeModalAwal'])
         ->name('kasir.modal-awal.store');
+
+    Route::post('/kasir/reset-password', function () {
+
+        $user = User::find(session('user_id'));
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $user->password = Hash::make('12345678');
+        $user->save();
+
+        return back()->with(
+            'success',
+            'Password berhasil direset menjadi 12345678.'
+        );
+
+    })->name('kasir.password.reset');
+
+    Route::post('/kasir/ganti-password', function (Request $request) {
+
+        $request->validate([
+            'password_lama' => 'required',
+            'password_baru' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::find(session('user_id'));
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if (!Hash::check($request->password_lama, $user->password)) {
+            return back()->with(
+                'error',
+                'Password lama tidak sesuai.'
+            );
+        }
+
+        $user->password = Hash::make($request->password_baru);
+        $user->save();
+
+        return back()->with(
+            'success',
+            'Password berhasil diubah.'
+        );
+
+    })->name('kasir.password.change');
 
     Route::prefix('kasir')->group(function () {
 
@@ -131,6 +182,54 @@ use App\Http\Controllers\Admin\DashboardController;
 
 Route::middleware('cek.login:admin')->group(function () {
 
+    Route::post('/admin/reset-password', function () {
+
+        $user = User::find(session('user_id'));
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $user->password = Hash::make('12345678');
+        $user->save();
+
+        return back()->with(
+            'success',
+            'Password berhasil direset menjadi 12345678.'
+        );
+
+    })->name('admin.password.reset');
+
+    Route::post('/admin/ganti-password', function (Request $request) {
+
+        $request->validate([
+            'password_lama' => 'required',
+            'password_baru' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::find(session('user_id'));
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if (!Hash::check($request->password_lama, $user->password)) {
+            return back()->with(
+                'error',
+                'Password lama tidak sesuai.'
+            );
+        }
+
+        $user->password = Hash::make($request->password_baru);
+        $user->save();
+
+        return back()->with(
+            'success',
+            'Password berhasil diubah.'
+        );
+
+    })->name('admin.password.change');
+
     Route::prefix('admin')->group(function () {
 
         Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -140,12 +239,12 @@ Route::middleware('cek.login:admin')->group(function () {
             ->name('admin.rekapitulasi');
     });
 
-Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
-    ->name('admin.rekapitulasi.pdf');
+    Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
+        ->name('admin.rekapitulasi.pdf');
 
-Route::get(
-    '/kasir/kas-keluar/titip-jual/{kodeProduk}',
-    [KasKeluarController::class, 'getSisaTitipJual']
-)->name('kasir.kas-keluar.sisa-titip-jual');
+    Route::get(
+        '/kasir/kas-keluar/titip-jual/{kodeProduk}',
+        [KasKeluarController::class, 'getSisaTitipJual']
+    )->name('kasir.kas-keluar.sisa-titip-jual');
 
 });

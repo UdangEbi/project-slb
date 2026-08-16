@@ -16,6 +16,39 @@
 
 <body class="bg-[#F0E7D5] text-black overflow-hidden">
 
+    @if (session('success'))
+        <div id="notification" class="fixed top-6 left-1/2 -translate-x-1/2 z-[10000] transition-opacity duration-500">
+
+            <div
+                class="bg-green-100 border border-green-300 text-green-700 px-6 py-4 rounded-xl shadow-xl font-bold text-center min-w-[320px]">
+                {{ session('success') }}
+            </div>
+
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div id="notification" class="fixed top-6 left-1/2 -translate-x-1/2 z-[10000] transition-opacity duration-500">
+
+            <div
+                class="bg-red-100 border border-red-300 text-red-700 px-6 py-4 rounded-xl shadow-xl font-bold text-center min-w-[320px]">
+                {{ session('error') }}
+            </div>
+
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div id="notification" class="fixed top-6 left-1/2 -translate-x-1/2 z-[10000] transition-opacity duration-500">
+
+            <div
+                class="bg-red-100 border border-red-300 text-red-700 px-6 py-4 rounded-xl shadow-xl font-bold text-center min-w-[320px]">
+                {{ $errors->first() }}
+            </div>
+
+        </div>
+    @endif
+
     <div class="h-screen flex flex-col">
 
         <!-- HEADER -->
@@ -32,19 +65,21 @@
             <!-- TAB MENU -->
             <nav class="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 text-2xl font-extrabold">
 
-                <a href="{{ route('kasir.transaksi') }}" class="px-4 py-2 rounded-2xl shadow-md transition duration-200
+                <a href="{{ route('kasir.transaksi') }}"
+                    class="px-4 py-2 rounded-2xl shadow-md transition duration-200
     {{ request()->routeIs('kasir.transaksi')
-    ? 'bg-[#F0E7D5] text-[#212842]'
-    : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
+        ? 'bg-[#F0E7D5] text-[#212842]'
+        : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
                     TRANSAKSI
                 </a>
 
                 <div x-data="{ open: false }" class="relative">
 
-                    <button type="button" @click="open = !open" class="px-4 py-2 rounded-2xl shadow-md transition duration-200 flex items-center gap-2
+                    <button type="button" @click="open = !open"
+                        class="px-4 py-2 rounded-2xl shadow-md transition duration-200 flex items-center gap-2
         {{ request()->routeIs('kasir.stok*')
-    ? 'bg-[#F0E7D5] text-[#212842]'
-    : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
+            ? 'bg-[#F0E7D5] text-[#212842]'
+            : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
 
                         STOK
 
@@ -54,14 +89,16 @@
                     <div x-cloak x-show="open" @click.outside="open = false" x-transition
                         class="absolute left-1/2 -translate-x-1/2 mt-3 w-60 bg-[#F0E7D5] rounded-2xl shadow-xl overflow-hidden z-[9999]">
 
-                        <a href="{{ route('kasir.stok') }}" class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
+                        <a href="{{ route('kasir.stok') }}"
+                            class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
             hover:bg-[#212842] hover:text-[#F0E7D5] transition">
 
                             <i class="bi bi-box-seam-fill"></i>
                             <span>Stok</span>
                         </a>
 
-                        <a href="{{ route('kasir.stok.titip-jual') }}" class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
+                        <a href="{{ route('kasir.stok.titip-jual') }}"
+                            class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
             hover:bg-[#212842] hover:text-[#F0E7D5] transition">
 
                             <i class="bi bi-clock-history"></i>
@@ -73,10 +110,11 @@
                 </div>
                 <div x-data="{ open: false }" class="relative">
 
-                    <button type="button" @click="open = !open" class="px-4 py-2 rounded-2xl shadow-md transition duration-200 flex items-center gap-2
+                    <button type="button" @click="open = !open"
+                        class="px-4 py-2 rounded-2xl shadow-md transition duration-200 flex items-center gap-2
         {{ request()->routeIs('kasir.rekapitulasi') || request()->routeIs('kasir.kas-keluar')
-    ? 'bg-[#F0E7D5] text-[#212842]'
-    : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
+            ? 'bg-[#F0E7D5] text-[#212842]'
+            : 'bg-[#212842] text-[#F0E7D5] hover:bg-[#F0E7D5] hover:text-[#212842]' }}">
 
                         REKAPITULASI
 
@@ -87,7 +125,8 @@
                     <div x-cloak x-show="open" @click.outside="open = false" x-transition
                         class="absolute left-1/2 -translate-x-1/2 mt-3 w-60 bg-[#F0E7D5] rounded-2xl shadow-xl overflow-hidden z-[9999]">
 
-                        <a href="{{ route('kasir.rekapitulasi') }}" class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
+                        <a href="{{ route('kasir.rekapitulasi') }}"
+                            class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
                     hover:bg-[#212842] hover:text-[#F0E7D5] transition">
 
                             <i class="bi bi-bar-chart-fill"></i>
@@ -96,7 +135,8 @@
 
                         </a>
 
-                        <a href="{{ route('kasir.kas-keluar') }}" class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
+                        <a href="{{ route('kasir.kas-keluar') }}"
+                            class="flex items-center gap-3 px-5 py-4 font-bold text-[#212842]
                     hover:bg-[#212842] hover:text-[#F0E7D5] transition">
 
                             <i class="bi bi-cash-stack"></i>
@@ -195,16 +235,17 @@
                     <div class="px-3 space-y-2 flex-1 overflow-y-auto max-h-[500px]">
 
                         @foreach ($kategori as $item)
-                                    <a href="{{ request()->routeIs('kasir.transaksi')
-                            ? route('kasir.transaksi', ['kategori' => $item->id_kategori])
-                            : route('kasir.stok', ['kategori' => $item->id_kategori]) }}" class="block px-2 py-1.5 text-2xl font-bold transition duration-200
+                            <a href="{{ request()->routeIs('kasir.transaksi')
+                                ? route('kasir.transaksi', ['kategori' => $item->id_kategori])
+                                : route('kasir.stok', ['kategori' => $item->id_kategori]) }}"
+                                class="block px-2 py-1.5 text-2xl font-bold transition duration-200
                                                                                                 {{ $kategoriId == $item->id_kategori
-                            ? 'bg-[#212842] text-[#F0E7D5]'
-                            : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
+                                                                                                    ? 'bg-[#212842] text-[#F0E7D5]'
+                                                                                                    : 'bg-[#F0E7D5] text-[#212842] hover:bg-[#212842] hover:text-[#F0E7D5]' }}">
 
-                                        {{ strtoupper($item->nama_kategori) }}
+                                {{ strtoupper($item->nama_kategori) }}
 
-                                    </a>
+                            </a>
                         @endforeach
 
                     </div>
@@ -229,6 +270,21 @@
             const modal = document.getElementById('passwordModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+        }
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            const icon = button.querySelector('i');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
         }
 
         function openResetPasswordModal() {
@@ -277,17 +333,44 @@
                 Ganti Password
             </h2>
 
-            <form action="/ganti-password" method="POST" class="space-y-4">
+            <form action="{{ route('kasir.password.change') }}" method="POST" class="space-y-4">
                 @csrf
 
-                <input type="password" name="password_lama" placeholder="Password Lama"
-                    class="w-full border rounded-xl px-4 py-3" required>
+                {{-- PASSWORD LAMA --}}
+                <div class="relative">
+                    <input type="password" id="password_lama" name="password_lama" placeholder="Password Lama"
+                        class="w-full border rounded-xl px-4 py-3 pr-12" required>
 
-                <input type="password" name="password_baru" placeholder="Password Baru"
-                    class="w-full border rounded-xl px-4 py-3" required>
+                    <button type="button" onclick="togglePassword('password_lama', this)"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-[#212842]">
+                        <i class="bi bi-eye text-xl"></i>
+                    </button>
+                </div>
 
-                <input type="password" name="password_baru_confirmation" placeholder="Konfirmasi Password Baru"
-                    class="w-full border rounded-xl px-4 py-3" required>
+
+                {{-- PASSWORD BARU --}}
+                <div class="relative">
+                    <input type="password" id="password_baru" name="password_baru" placeholder="Password Baru"
+                        class="w-full border rounded-xl px-4 py-3 pr-12" required>
+
+                    <button type="button" onclick="togglePassword('password_baru', this)"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-[#212842]">
+                        <i class="bi bi-eye text-xl"></i>
+                    </button>
+                </div>
+
+
+                {{-- KONFIRMASI PASSWORD BARU --}}
+                <div class="relative">
+                    <input type="password" id="password_baru_confirmation" name="password_baru_confirmation"
+                        placeholder="Konfirmasi Password Baru" class="w-full border rounded-xl px-4 py-3 pr-12"
+                        required>
+
+                    <button type="button" onclick="togglePassword('password_baru_confirmation', this)"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-[#212842]">
+                        <i class="bi bi-eye text-xl"></i>
+                    </button>
+                </div>
                 <div class="text-right">
                     <button type="button" onclick="openResetPasswordModal()"
                         class="text-sm font-bold text-[#212842] hover:underline">
@@ -314,14 +397,14 @@
         <div class="bg-white w-[420px] rounded-2xl p-6 shadow-2xl">
 
             <h2 class="text-2xl font-extrabold text-[#212842] mb-3">
-                Lupa Password
+                Reset Password
             </h2>
 
             <p class="text-sm text-gray-600 mb-5">
-                Masukkan email akun kasir
+                Apakah Anda yakin ingin mereset password akun ini?
             </p>
 
-            <form action="{{ route('password.reset') }}" method="POST" class="space-y-4">
+            <form action="{{ route('kasir.password.reset') }}" method="POST" class="space-y-4">
                 @csrf
 
                 <p class="text-sm text-gray-600">
@@ -346,6 +429,20 @@
             </form>
         </div>
     </div>
+
+    <script>
+        setTimeout(() => {
+            const notification = document.getElementById('notification');
+
+            if (notification) {
+                notification.classList.add('opacity-0');
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }
+        }, 2500);
+    </script>
 </body>
 @stack('scripts')
 

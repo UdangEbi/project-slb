@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\RekapKasir;
+use Illuminate\Support\Facades\Hash;
 
 class AuthKasirController extends Controller
 {
@@ -39,12 +40,13 @@ class AuthKasirController extends Controller
         |--------------------------------------------------------------------------
         */
 
+        $user = User::where('email', 'admin@slb.local')->first();
+
         if (
             $request->username === 'admin' &&
-            $request->password === 'admin'
+            $user &&
+            Hash::check($request->password, $user->password)
         ) {
-            $user = User::where('email', 'admin@slb.local')->first();
-
             session([
                 'login'    => true,
                 'user_id'  => $user->id,
@@ -61,12 +63,13 @@ class AuthKasirController extends Controller
         |--------------------------------------------------------------------------
         */
 
+        $user = User::where('email', 'kasir@slb.local')->first();
+
         if (
             $request->username === 'kasir' &&
-            $request->password === 'kasir'
+            $user &&
+            Hash::check($request->password, $user->password)
         ) {
-            $user = User::where('email', 'kasir@slb.local')->first();
-
             session([
                 'login'      => true,
                 'user_id'    => $user->id,
