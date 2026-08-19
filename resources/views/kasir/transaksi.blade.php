@@ -122,7 +122,8 @@
                                 data-nama="{{ strtolower($item['nama']) }}"
                                 data-nama-asli="{{ $item['nama'] }}"
                                 data-kode="{{ $item['kode'] ?? 'PRD-' . rand(10000, 99999) }}"
-                                data-harga="{{ $item['harga'] }}">
+                                data-harga="{{ $item['harga'] }}"
+                                data-stok="{{ $item['stok'] ?? 0 }}">
 
                                 <div class="flex justify-center mb-2">
                                     <svg class="barcode-produk"
@@ -143,8 +144,12 @@
                                     Rp {{ number_format($item['harga'], 0, ',', '.') }}
                                 </p>
 
+                                <p class="text-sm font-bold text-center text-gray-500 mt-0.5">
+                                    Stok: {{ $item['stok'] ?? 0 }}
+                                </p>
+
                                 <button
-                                    onclick="tambahKeranjang({{ $item['id'] }}, '{{ $item['nama'] }}', {{ $item['harga'] }}, '{{ $item['kode'] ?? '' }}')"
+                                    onclick="tambahKeranjang({{ $item['id'] }}, '{{ $item['nama'] }}', {{ $item['harga'] }}, '{{ $item['kode'] ?? '' }}', {{ $item['stok'] ?? 0 }})"
                                     class="mt-2 w-full bg-[#212842] text-[#F0E7D5] py-3 rounded-md text-lg font-extrabold hover:bg-[#11172d] transition">
                                     + TAMBAH
                                 </button>
@@ -457,10 +462,25 @@
             }
         });
 
-        function tambahKeranjang(id, nama, harga, kode) {
+        function tambahKeranjang(id, nama, harga, kode, stok) {
+            stok = parseInt(stok) || 0;
             let item = keranjang.find(p => p.id === id);
             let itemBaru = false;
-            if (item) { item.qty++; } else { keranjang.push({ id, nama, harga, kode: kode || '', qty: 1 }); itemBaru = true; }
+
+            if (item) {
+                // Selalu sinkronkan batas stok terbaru ke item yang sudah ada
+                item.stok = stok;
+                if (item.qty >= stok) {
+                    alert(`Stok "${nama}" tersisa ${stok}. Jumlah di keranjang sudah maksimal.`);
+                    simpanKeranjang(); renderKeranjang();
+                    return;
+                }
+                item.qty++;
+            } else {
+                if (stok <= 0) { alert(`Stok "${nama}" habis.`); return; }
+                keranjang.push({ id, nama, harga, kode: kode || '', qty: 1, stok });
+                itemBaru = true;
+            }
             simpanKeranjang(); renderKeranjang(itemBaru);
         }
         function kurangiQty(id) {
@@ -470,7 +490,31 @@
         }
         function tambahQty(id) {
             let item = keranjang.find(p => p.id === id);
-            if (item) item.qty++;
+            if (item) {
+                if (item.qty >= item.stok) {
+                    alert(`Stok "${item.nama}" tersisa ${item.stok}. Jumlah di keranjang sudah maksimal.`);
+                } else {
+                    item.qty++;
+                }
+            }
+            simpanKeranjang(); renderKeranjang();
+        }
+        // Dipanggil saat kasir mengetik langsung angka qty di keranjang.
+        // Otomatis dibatasi minimal 1 dan maksimal sebesar stok yang tersedia.
+        function ubahQtyManual(id, value) {
+            let item = keranjang.find(p => p.id === id);
+            if (!item) return;
+
+            let qty = parseInt(String(value).replace(/\D/g, '')) || 0;
+
+            if (qty < 1) qty = 1;
+
+            if (qty > item.stok) {
+                qty = item.stok;
+                alert(`Stok "${item.nama}" tersisa ${item.stok}. Jumlah otomatis disesuaikan ke ${item.stok}.`);
+            }
+
+            item.qty = qty;
             simpanKeranjang(); renderKeranjang();
         }
         function hapusItem(id) { keranjang = keranjang.filter(p => p.id !== id); simpanKeranjang(); renderKeranjang(); }
@@ -495,7 +539,7 @@
                         <div class="flex justify-between items-start gap-2">
                             <div class="flex-1 min-w-0">
                                 <p class="text-lg font-extrabold text-[#212842] leading-tight truncate">${item.nama}</p>
-                                <p class="text-base text-gray-500">${item.qty} \xd7 ${formatRupiah(item.harga)}</p>
+                                <p class="text-base text-gray-500">${item.qty} \xd7 ${formatRupiah(item.harga)} <span class="text-gray-400">(stok: ${item.stok})</span></p>
                             </div>
                             <button onclick="hapusItem(${item.id})"
                                 class="w-8 h-8 flex-shrink-0 rounded-full border-2 border-red-600 text-red-600 font-extrabold text-lg leading-none">\xd7</button>
@@ -503,7 +547,9 @@
                         <div class="flex justify-between items-center mt-2">
                             <div class="flex items-center gap-1">
                                 <button onclick="kurangiQty(${item.id})" class="w-9 h-9 bg-gray-200 rounded text-lg font-bold">-</button>
-                                <span class="text-lg font-extrabold px-2">${item.qty}</span>
+                                <input type="number" min="1" max="${item.stok}" value="${item.qty}"
+                                    onchange="ubahQtyManual(${item.id}, this.value)"
+                                    class="w-14 text-center text-lg font-extrabold border border-gray-300 rounded px-1 py-1">
                                 <button onclick="tambahQty(${item.id})" class="w-9 h-9 bg-[#212842] text-[#F0E7D5] rounded text-lg font-bold">+</button>
                             </div>
                             <p class="text-lg font-extrabold">${formatRupiah(subtotal)}</p>
@@ -549,8 +595,9 @@
                 const nama  = card.getAttribute('data-nama-asli');
                 const harga = parseInt(card.getAttribute('data-harga'));
                 const kode  = card.getAttribute('data-kode');
+                const stok  = parseInt(card.getAttribute('data-stok')) || 0;
 
-                tambahKeranjang(id, nama, harga, kode);
+                tambahKeranjang(id, nama, harga, kode, stok);
 
                 // efek highlight sebentar biar kasir tahu barangnya kena scan
                 card.classList.add('ring-2', 'ring-green-500');

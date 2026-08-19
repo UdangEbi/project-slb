@@ -37,6 +37,7 @@ class TransaksiController extends Controller
                 'nama'  => $item->nama_produk,
                 'harga' => $item->harga_jual,
                 'kode'  => $item->kode_produk,
+                'stok'  => $item->stok,
             ];
         })->toArray();
 
@@ -144,7 +145,17 @@ class TransaksiController extends Controller
         DB::beginTransaction();
 
         try {
-            $noNota    = 'TRX-' . Carbon::now()->format('Ymd') . '-' . strtoupper(substr(uniqid(), -4));
+            // Nomor struk urut per hari (TRX-YYYYMMDD-0001, 0002, ...).
+            // lockForUpdate() mengunci baris transaksi hari ini sehingga
+            // dua transaksi yang masuk bersamaan tidak akan dapat nomor
+            // urut yang sama.
+            $tanggalHariIni = Carbon::now()->format('Ymd');
+
+            $nomorUrut = Transaksi::whereDate('tanggal', Carbon::today())
+                ->lockForUpdate()
+                ->count() + 1;
+
+            $noNota    = 'TRX-' . $tanggalHariIni . '-' . str_pad($nomorUrut, 4, '0', STR_PAD_LEFT);
             $total     = $request->total;
             $bayar     = $request->bayar;
             $donasi    = (int) ($request->donasi ?? 0);
@@ -178,7 +189,11 @@ class TransaksiController extends Controller
 
             // 2. Simpan detail + kurangi stok + catat riwayat
             foreach ($request->keranjang as $item) {
-                $produk = Produk::findOrFail($item['id']);
+                // Kunci baris produk supaya aman dari transaksi lain yang
+                // masuk bersamaan untuk barang yang sama.
+                $produk = Produk::where('id_produk', $item['id'])
+                    ->lockForUpdate()
+                    ->firstOrFail();
 
                 // Cek stok mencukupi
                 if ($produk->stok < $item['qty']) {
