@@ -7,32 +7,14 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::post('/logout', function (Request $request) {
-    Auth::logout();
+    session()->flush();
 
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    return redirect('/login');
+    return redirect()->route('login');
 })->name('logout');
-
-Route::post('/password/reset', function () {
-
-    $user = Auth::user();
-
-    if (!($user instanceof User)) {
-        return redirect('/login');
-    }
-
-    $user->password = Hash::make('12345678');
-    $user->save();
-
-
-    return back()->with('success', 'Password berhasil direset');
-})->name('password.reset');
 
 use App\Http\Controllers\Kasir\TransaksiController;
 use App\Http\Controllers\Kasir\StokController;
@@ -42,7 +24,7 @@ use App\Http\Controllers\Admin\PiutangController;
 use App\Http\Controllers\Kasir\AuthKasirController;
 
 Route::get('/kasir', function () {
-    return redirect()->route('kasir.login');
+    return redirect()->route('login');
 });
 
 Route::get('/login', [AuthKasirController::class, 'login'])
@@ -52,90 +34,217 @@ Route::post('/login', [AuthKasirController::class, 'processLogin'])
     ->name('login.process');
 
 Route::get('/logout', [AuthKasirController::class, 'logout'])
-    ->name('logout');
+    ->name('kasir.logout');
 
-Route::post('/kasir/modal-awal', [AuthKasirController::class, 'storeModalAwal'])
-    ->name('kasir.modal-awal.store');
-
-Route::prefix('kasir')->group(function () {
-
-    Route::get('/transaksi', [TransaksiController::class, 'index'])
-        ->name('kasir.transaksi');
+Route::get('/forgot-password', function () {
+    return view('forgot-password');
+})->name('password.request');
 
 
-    Route::post('/transaksi/simpan', [TransaksiController::class, 'simpanTransaksi'])
-        ->name('kasir.transaksi.store');
+Route::post('/forgot-password', function (Request $request) {
 
-    Route::get('/rekapitulasikasir', [RekapitulasiKasirController::class, 'index'])
-        ->name('kasir.rekapitulasi');
+    $request->validate([
+        'email' => 'required|email|exists:users,email',
+    ]);
 
-    Route::post('/kasir/tutup-kas', [RekapitulasiKasirController::class, 'tutupKas'])
-        ->name('kasir.tutup-kas');
+    $user = User::where('email', $request->email)->first();
 
-    Route::get('/kas-keluar', [KasKeluarController::class, 'index'])
-        ->name('kasir.kas-keluar');
+    $user->password = Hash::make('12345678');
+    $user->save();
 
-    Route::post('/kas-keluar', [KasKeluarController::class, 'store'])
-        ->name('kasir.kas-keluar.store');
+    return redirect()->route('login')
+        ->with('success', 'Password berhasil direset menjadi 12345678.');
 
-    Route::put('/kas-keluar/{kasKeluar}', [KasKeluarController::class, 'update'])
-        ->name('kasir.kas-keluar.update');
-});
+})->name('password.email');
 
-// Route::prefix('kasir/stok')->name('kasir.stok.')->group(function () {
-//     Route::post('/', [StokController::class, 'store'])->name('store');
-//     Route::post('/tambah', [StokController::class, 'tambahStok'])->name('tambah');
-//     Route::post('/penyesuaian', [StokController::class, 'penyesuaian'])->name('penyesuaian');
-//     Route::get('/riwayat', [StokController::class, 'riwayat'])->name('riwayat');
-// });
 
-Route::prefix('kasir/stok')->group(function () {
+// ---------------------------------------------------------------------
+// SEMUA ROUTE DI BAWAH INI WAJIB LOGIN.
+// - 'cek.login:kasir' -> wajib login SEBAGAI KASIR
+// - 'cek.login:admin' -> wajib login SEBAGAI ADMIN
+// Kalau belum login sama sekali, otomatis dilempar ke halaman /login.
+// Kalau sudah login tapi rolenya beda (misal kasir buka URL admin),
+// akan kena 403 Forbidden.
+// ---------------------------------------------------------------------
 
-    Route::get('/', [StokController::class, 'index'])
-        ->name('kasir.stok');
+Route::middleware('cek.login:kasir')->group(function () {
 
-    Route::get('/tambah', [StokController::class, 'create'])
-        ->name('kasir.stok.create');
+    Route::post('/kasir/modal-awal', [AuthKasirController::class, 'storeModalAwal'])
+        ->name('kasir.modal-awal.store');
 
-    Route::post('/tambah', [StokController::class, 'store'])
-        ->name('kasir.stok.store');
+    Route::post('/kasir/reset-password', function () {
 
-    Route::get('/{produk}/edit', [StokController::class, 'edit'])
-        ->name('kasir.stok.edit');
+        $user = User::find(session('user_id'));
 
-    Route::post('/tambah-stok', [StokController::class, 'tambahStok'])
-        ->name('kasir.stok.tambah');
+        if (!$user) {
+            return redirect()->route('login');
+        }
 
-    Route::get('/riwayat', [StokController::class, 'riwayat'])
-        ->name('kasir.stok.riwayat');
+        $user->password = Hash::make('12345678');
+        $user->save();
 
-    Route::get('/titip-jual', [StokController::class, 'titipJual'])
-        ->name('kasir.stok.titip-jual');
+        return back()->with(
+            'success',
+            'Password berhasil direset menjadi 12345678.'
+        );
 
-    Route::get('/kode-produk/{kategori}', [StokController::class, 'getKodeProduk'])
-        ->name('kasir.stok.kode');
+    })->name('kasir.password.reset');
 
-    Route::delete('/{produk}', [StokController::class, 'destroy'])
-        ->name('kasir.stok.destroy');
+    Route::post('/kasir/ganti-password', function (Request $request) {
+
+        $request->validate([
+            'password_lama' => 'required',
+            'password_baru' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::find(session('user_id'));
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if (!Hash::check($request->password_lama, $user->password)) {
+            return back()->with(
+                'error',
+                'Password lama tidak sesuai.'
+            );
+        }
+
+        $user->password = Hash::make($request->password_baru);
+        $user->save();
+
+        return back()->with(
+            'success',
+            'Password berhasil diubah.'
+        );
+
+    })->name('kasir.password.change');
+
+    Route::prefix('kasir')->group(function () {
+
+        Route::get('/transaksi', [TransaksiController::class, 'index'])
+            ->name('kasir.transaksi');
+
+        Route::post('/transaksi/simpan', [TransaksiController::class, 'simpanTransaksi'])
+            ->name('kasir.transaksi.store');
+
+        Route::get('/rekapitulasikasir', [RekapitulasiKasirController::class, 'index'])
+            ->name('kasir.rekapitulasi');
+
+        Route::post('/kasir/tutup-kas', [RekapitulasiKasirController::class, 'tutupKas'])
+            ->name('kasir.tutup-kas');
+
+        Route::get('/kas-keluar', [KasKeluarController::class, 'index'])
+            ->name('kasir.kas-keluar');
+
+        Route::post('/kas-keluar', [KasKeluarController::class, 'store'])
+            ->name('kasir.kas-keluar.store');
+
+        Route::put('/kas-keluar/{kasKeluar}', [KasKeluarController::class, 'update'])
+            ->name('kasir.kas-keluar.update');
+    });
+
+    Route::prefix('kasir/stok')->group(function () {
+
+        Route::get('/', [StokController::class, 'index'])
+            ->name('kasir.stok');
+
+        Route::get('/tambah', [StokController::class, 'create'])
+            ->name('kasir.stok.create');
+
+        Route::post('/tambah', [StokController::class, 'store'])
+            ->name('kasir.stok.store');
+
+        Route::get('/{produk}/edit', [StokController::class, 'edit'])
+            ->name('kasir.stok.edit');
+
+        Route::post('/tambah-stok', [StokController::class, 'tambahStok'])
+            ->name('kasir.stok.tambah');
+
+        Route::get('/riwayat', [StokController::class, 'riwayat'])
+            ->name('kasir.stok.riwayat');
+
+        Route::get('/titip-jual', [StokController::class, 'titipJual'])
+            ->name('kasir.stok.titip-jual');
+
+        Route::get('/kode-produk/{kategori}', [StokController::class, 'getKodeProduk'])
+            ->name('kasir.stok.kode');
+
+        Route::delete('/{produk}', [StokController::class, 'destroy'])
+            ->name('kasir.stok.destroy');
+
+    });
 
 });
 
 use App\Http\Controllers\Admin\RekapitulasiController;
 use App\Http\Controllers\Admin\DashboardController;
 
-Route::prefix('admin')->group(function () {
+Route::middleware('cek.login:admin')->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('admin.dashboard');
+    Route::post('/admin/reset-password', function () {
 
-    Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])
-        ->name('admin.rekapitulasi');
+        $user = User::find(session('user_id'));
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $user->password = Hash::make('12345678');
+        $user->save();
+
+        return back()->with(
+            'success',
+            'Password berhasil direset menjadi 12345678.'
+        );
+
+    })->name('admin.password.reset');
+
+    Route::post('/admin/ganti-password', function (Request $request) {
+
+        $request->validate([
+            'password_lama' => 'required',
+            'password_baru' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::find(session('user_id'));
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if (!Hash::check($request->password_lama, $user->password)) {
+            return back()->with(
+                'error',
+                'Password lama tidak sesuai.'
+            );
+        }
+
+        $user->password = Hash::make($request->password_baru);
+        $user->save();
+
+        return back()->with(
+            'success',
+            'Password berhasil diubah.'
+        );
+
+    })->name('admin.password.change');
+
+    Route::prefix('admin')->group(function () {
+
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+            ->name('admin.dashboard');
+
+        Route::get('/rekapitulasi', [RekapitulasiController::class, 'index'])
+            ->name('admin.rekapitulasi');
+    });
+
+    Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
+        ->name('admin.rekapitulasi.pdf');
+
+    Route::get(
+        '/kasir/kas-keluar/titip-jual/{kodeProduk}',
+        [KasKeluarController::class, 'getSisaTitipJual']
+    )->name('kasir.kas-keluar.sisa-titip-jual');
+
 });
-
-Route::get('/admin/rekapitulasi/pdf', [RekapitulasiController::class, 'downloadRekapitulasiPdf'])
-    ->name('admin.rekapitulasi.pdf');
-
-Route::get(
-    '/kasir/kas-keluar/titip-jual/{kodeProduk}',
-    [KasKeluarController::class, 'getSisaTitipJual']
-)->name('kasir.kas-keluar.sisa-titip-jual');
