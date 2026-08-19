@@ -77,6 +77,12 @@
                             class="rupiah w-full max-w-md bg-[#FFFFFF] border rounded-xl px-5 py-4 text-xl font-bold"
                             autocomplete="off" required>
 
+                        @error('harga_jual')
+                            <p class="text-red-600 text-base font-bold mt-2 normal-case">
+                                {{ $message }}
+                            </p>
+                        @enderror
+
                     </div>
 
                 </div>
@@ -137,10 +143,41 @@
 
                 let angka = this.value.replace(/\D/g, '');
 
-                this.value = new Intl.NumberFormat('id-ID').format(angka);
+                if (angka === '') {
+                    this.value = '';
+                    return;
+                }
 
+                this.value = new Intl.NumberFormat('id-ID').format(angka);
             });
 
+        });
+
+        const form = document.querySelector('form');
+        const hargaBeli = document.getElementById('hargaBeli');
+        const hargaJual = document.getElementById('hargaJual');
+
+        form.addEventListener('submit', function (e) {
+
+            const beli = parseInt(hargaBeli.value.replace(/\D/g, '')) || 0;
+            const jual = parseInt(hargaJual.value.replace(/\D/g, '')) || 0;
+
+            if (jual <= beli) {
+                e.preventDefault();
+
+                hargaJual.setCustomValidity(
+                    'Harga jual harus lebih tinggi dari harga beli.'
+                );
+
+                hargaJual.reportValidity();
+                hargaJual.focus();
+            } else {
+                hargaJual.setCustomValidity('');
+            }
+        });
+
+        hargaJual.addEventListener('input', function () {
+            hargaJual.setCustomValidity('');
         });
 
     </script>

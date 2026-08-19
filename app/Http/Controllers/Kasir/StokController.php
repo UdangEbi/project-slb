@@ -52,9 +52,11 @@ class StokController extends Controller
             'kategori_id' => 'required|exists:kategori_produk,id_kategori',
             'nama_produk' => 'required|max:150',
             'harga_beli'  => 'required|numeric|min:0',
-            'harga_jual'  => 'required|numeric|min:0',
+            'harga_jual'  => 'required|numeric|gt:harga_beli',
             'stok'        => 'required|integer|min:0',
             'satuan'      => 'required|max:50',
+        ], [
+            'harga_jual.gt' => 'Harga jual harus lebih tinggi dari harga beli.',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -90,15 +92,20 @@ class StokController extends Controller
 
     public function tambahStok(Request $request)
     {
+        // Hilangkan titik dari format rupiah
         $request->merge([
+            'harga_beli' => str_replace('.', '', $request->harga_beli),
             'harga_jual' => str_replace('.', '', $request->harga_jual),
         ]);
 
         $request->validate([
-            'produk_id'   => 'required|exists:produk,id_produk',
-            'jumlah'      => 'required|integer|min:0',
-            'harga_jual'  => 'required|numeric|min:0',
-            'keterangan'  => 'nullable|string',
+            'produk_id'  => 'required|exists:produk,id_produk',
+            'jumlah'     => 'required|integer|min:0',
+            'harga_beli' => 'required|numeric|min:0',
+            'harga_jual' => 'required|numeric|gt:harga_beli',
+            'keterangan' => 'nullable|string',
+        ], [
+            'harga_jual.gt' => 'Harga jual harus lebih tinggi dari harga beli.',
         ]);
 
         // Ambil produk dan kategori sebelum transaction
@@ -109,6 +116,7 @@ class StokController extends Controller
 
             // Update harga
             $produk->update([
+                'harga_beli' => $request->harga_beli,
                 'harga_jual' => $request->harga_jual,
             ]);
 
@@ -120,14 +128,14 @@ class StokController extends Controller
                 $produk->increment('stok', $request->jumlah);
 
                 RiwayatStok::create([
-                    'produk_id'      => $produk->id_produk,
-                    'user_id'        => session('user_id'),
-                    'tipe'           => 'masuk',
-                    'jumlah'         => $request->jumlah,
-                    'stok_sebelum'   => $stokSebelum,
-                    'stok_sesudah'   => $stokSebelum + $request->jumlah,
-                    'keterangan'     => 'Tambah stok',
-                    'tanggal'        => now(),
+                    'produk_id'     => $produk->id_produk,
+                    'user_id'       => session('user_id'),
+                    'tipe'          => 'masuk',
+                    'jumlah'        => $request->jumlah,
+                    'stok_sebelum'  => $stokSebelum,
+                    'stok_sesudah'  => $stokSebelum + $request->jumlah,
+                    'keterangan'    => 'Tambah stok',
+                    'tanggal'       => now(),
                 ]);
             }
         });

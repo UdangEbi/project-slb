@@ -191,7 +191,8 @@
     </div>
 
     {{-- MODAL --}}
-    <div id="modalTutupKasir" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-6 overflow-y-auto uppercase">
+    <div id="modalTutupKasir"
+        class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-6 overflow-y-auto uppercase">
 
         <div class="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl relative ">
 
@@ -266,40 +267,28 @@
 
                             <div class="flex justify-between items-center px-5 py-4 border-b">
 
-                                <div class="flex items-center gap-4">
-
+                                <div class="flex items-center gap-4 ml-8">
                                     <span class="font-bold text-lg">
-
                                         Penerimaan Tunai
-
                                     </span>
-
                                 </div>
 
                                 <span class="font-extrabold text-xl">
-
                                     Rp{{ number_format($tunai, 0, ',', '.') }}
-
                                 </span>
 
                             </div>
 
                             <div class="flex justify-between items-center px-5 py-4 border-b">
 
-                                <div class="flex items-center gap-4">
-
+                                <div class="flex items-center gap-4 ml-8">
                                     <span class="font-bold text-lg">
-
                                         Penerimaan QRIS
-
                                     </span>
-
                                 </div>
 
                                 <span class="font-extrabold text-xl">
-
                                     Rp{{ number_format($qris, 0, ',', '.') }}
-
                                 </span>
 
                             </div>

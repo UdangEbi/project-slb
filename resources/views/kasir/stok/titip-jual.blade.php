@@ -132,7 +132,7 @@
 
                                 <th class="px-4 py-3 text-center text-xl">Sisa</th>
 
-                                <th class="px-4 py-3 text-right text-xl">Harga Beli</th>
+                                <th class="px-4 py-3 text-center text-xl">Harga Beli</th>
 
                                 <th class="px-4 py-3 text-center text-xl">
                                     Sudah Dibayar

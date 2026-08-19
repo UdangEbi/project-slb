@@ -120,18 +120,24 @@
                             HARGA BELI (RP) *
                         </label>
 
-                        <input type="text" name="harga_beli" id="hargaBarang"
+                        <input type="text" name="harga_beli" id="hargaBeli"
                             value="{{ number_format($produk->harga_beli, 0, ',', '.') }}"
-                            class="w-full max-w-sm bg-white border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold">
+                            class="rupiah w-full max-w-sm bg-white border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold">
                     </div>
                     <div class="mb-16">
                         <label class="block text-xl font-bold text-[#212842] mb-3">
                             HARGA JUAL (RP) *
                         </label>
 
-                        <input type="text" name="harga_jual" id="hargaBarang"
+                        <input type="text" name="harga_jual" id="hargaJual"
                             value="{{ number_format($produk->harga_jual, 0, ',', '.') }}"
-                            class="w-full max-w-sm bg-white border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold">
+                            class="rupiah w-full max-w-sm bg-white border-2 border-[#212842] rounded-xl px-5 py-4 text-xl font-bold">
+
+                        @error('harga_jual')
+                            <p class="text-red-600 text-base font-bold mt-2 normal-case">
+                                {{ $message }}
+                            </p>
+                        @enderror
                     </div>
 
                 </div>
@@ -175,18 +181,47 @@
             hitungStokSetelah();
         }
 
-        const hargaInput = document.getElementById('hargaBarang');
+        document.querySelectorAll('.rupiah').forEach(function (input) {
 
-        hargaInput.addEventListener('input', function () {
+            input.addEventListener('input', function () {
 
-            let angka = this.value.replace(/\D/g, '');
+                let angka = this.value.replace(/\D/g, '');
 
-            if (angka === '') {
-                this.value = '';
-                return;
+                if (angka === '') {
+                    this.value = '';
+                    return;
+                }
+
+                this.value = new Intl.NumberFormat('id-ID').format(angka);
+            });
+
+        });
+
+        const form = document.querySelector('form');
+        const hargaBeli = document.getElementById('hargaBeli');
+        const hargaJual = document.getElementById('hargaJual');
+
+        form.addEventListener('submit', function (e) {
+
+            const beli = parseInt(hargaBeli.value.replace(/\D/g, '')) || 0;
+            const jual = parseInt(hargaJual.value.replace(/\D/g, '')) || 0;
+
+            if (jual <= beli) {
+                e.preventDefault();
+
+                hargaJual.setCustomValidity(
+                    'Harga jual harus lebih tinggi dari harga beli.'
+                );
+
+                hargaJual.reportValidity();
+                hargaJual.focus();
+            } else {
+                hargaJual.setCustomValidity('');
             }
+        });
 
-            this.value = new Intl.NumberFormat('id-ID').format(angka);
+        hargaJual.addEventListener('input', function () {
+            hargaJual.setCustomValidity('');
         });
     </script>
 @endsection
